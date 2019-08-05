@@ -4,7 +4,12 @@ console applications :)
 
 ## Usage
 
-A simple usage example:
+This package uses FFI. Currently, I've wrapped the underlying system
+calls I need from `glibc` into a single C file (termlib.c), which is
+then wrapped with a Dart file (termlib.dart). The C file is commented
+with instructions on how to create a shared library from it.
+
+A simple usage example for the `dart_console` package:
 
 ```dart
 import 'package:dart_console/dart_console.dart';
