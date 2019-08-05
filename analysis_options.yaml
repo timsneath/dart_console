@@ -1,0 +1,4 @@
+# Defines a default set of lint rules
+include: package:pedantic/analysis_options.yaml
+
+analyzer:
