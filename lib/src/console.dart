@@ -80,7 +80,7 @@ class Console {
         final originalCursor = cursorPosition;
         stdout.write(ansiMoveCursorToScreenEdge);
         final newCursor = cursorPosition;
-        setCursorPosition(originalCursor);
+        cursorPosition = originalCursor;
 
         if (newCursor != null) {
           _windowHeight = newCursor.row;
@@ -97,8 +97,7 @@ class Console {
   // Cursor settings
   void hideCursor() => stdout.write(ansiHideCursor);
   void showCursor() => stdout.write(ansiShowCursor);
-  void setCursorPosition(Coordinate coordinate) => stdout
-      .write(ansiCursorPosition(row: coordinate.row, col: coordinate.col));
+
   void resetCursorPosition() => stdout.write(ansiCursorPosition());
 
   Coordinate get cursorPosition {
@@ -123,10 +122,14 @@ class Console {
     if (coords.length != 2) return null;
     if ((int.tryParse(coords[0]) != null) &&
         (int.tryParse(coords[1]) != null)) {
-      return Coordinate(int.parse(coords[0]), int.parse(coords[1]));
+      return Coordinate(int.parse(coords[0]) - 1, int.parse(coords[1]) - 1);
     } else {
       return null;
     }
+  }
+
+  set cursorPosition(Coordinate cursor) {
+    stdout.write(ansiCursorPosition(col: cursor.col + 1, row: cursor.row + 1));
   }
 
   // Printing text to the console
