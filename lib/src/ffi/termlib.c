@@ -1,6 +1,7 @@
-// Compile with (Linux):
-//    gcc -shared -fPIC -o ffi/termlib.so ffi/termlib.c
-
+// Linux: Compile with:
+//  gcc -shared -fPIC -o termlib.so termlib.c
+// macOS: Compile with:
+//  gcc -dynamiclib -undefined suppress -flat_namespace termlib.c -o termlib.dylib
 #include <stdlib.h>
 #include <sys/ioctl.h>
 #include <termios.h>
