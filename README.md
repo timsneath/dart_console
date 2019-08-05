@@ -34,6 +34,6 @@ main() {
 
 Please file feature requests and bugs at the [issue tracker][tracker].
 
-[dart_kilo]: https://github.com/timsneath/kilo/tree/dart
+[dart_kilo]: https://github.com/timsneath/dart_kilo
 [FFI]: https://dart.dev/server/c-interop
 [tracker]: https://github.com/timsneath/dart_console/issues
