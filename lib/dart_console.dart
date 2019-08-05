@@ -3,5 +3,6 @@
 library dart_console;
 
 export 'src/console.dart';
+export 'src/enums.dart';
 
 // TODO: Export any libraries intended for clients of this package.

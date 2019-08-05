@@ -6,10 +6,26 @@ main() {
   console.clearScreen();
   console.resetCursorPosition();
 
+  console.setBackgroundColor(ConsoleColor.blue);
+  console.setForegroundColor(ConsoleColor.white);
   console.writeAligned(
       'Console size is ${console.windowWidth} cols and ${console.windowHeight} rows.',
-      TextAlignment.Center);
+      TextAlignment.center);
   console.writeLine();
+  console.resetColorAttributes();
+
+  console.writeAligned('Left aligned', TextAlignment.left);
+  console.writeLine();
+  console.writeAligned('Center aligned', TextAlignment.center);
+  console.writeLine();
+  console.writeAligned('Right aligned', TextAlignment.right);
+  console.writeLine();
+
+  for (ConsoleColor color in ConsoleColor.values) {
+    console.setForegroundColor(color);
+    console.writeLine(color.toString().split('.').last);
+  }
+  console.resetColorAttributes();
 
   return 0;
 }

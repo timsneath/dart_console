@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'ansi.dart';
+import 'enums.dart';
 import 'key.dart';
 import 'ffi/termlib.dart';
 
@@ -16,9 +17,6 @@ class Coordinate {
       other is Coordinate && row == other.row && col == other.col;
 }
 
-enum TextAlignment { Left, Center, Right }
-
-// TODO: check for off-by-one errors (terminal is 1-based)
 class Console {
   // We cache these values so we don't have to keep retrieving them. The
   // downside is that the class isn't dynamically responsive to a resized
@@ -140,6 +138,16 @@ class Console {
   }
 
   // Printing text to the console
+  void setForegroundColor(ConsoleColor foreground) {
+    stdout.write(ansiSetColor(ansiForegroundColors[foreground]));
+  }
+
+  void setBackgroundColor(ConsoleColor background) {
+    stdout.write(ansiSetColor(ansiBackgroundColors[background]));
+  }
+
+  void resetColorAttributes() => stdout.write(ansiResetColor);
+
   void write(String text) => stdout.write(text);
 
   void writeLine([String text]) {
@@ -155,16 +163,16 @@ class Console {
 
   void writeAligned(String text, TextAlignment alignment) {
     switch (alignment) {
-      case TextAlignment.Center:
-        int padding = ((windowWidth - text.length) / 2).round();
-        while (padding-- > 0) {
-          stdout.write(' ');
-        }
+      case TextAlignment.center:
+        final padding = ((windowWidth - text.length) / 2).round();
+        text = text.padLeft(text.length + padding);
+        text = text.padRight(windowWidth);
         break;
-      case TextAlignment.Right:
+      case TextAlignment.right:
         text = text.padLeft(windowWidth);
         break;
-      case TextAlignment.Left:
+      case TextAlignment.left:
+        text = text.padRight(windowWidth);
     }
     stdout.write(text);
   }
