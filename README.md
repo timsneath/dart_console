@@ -4,7 +4,8 @@ May be missing key features for other console applications :)
 
 ## Usage
 
-This package uses FFI. Currently, I've wrapped the underlying system
+This package uses [FFI][FFI], which is itself still in development.
+Currently, I've wrapped the underlying system
 calls I need from `glibc` into a single C file (`termlib.c`), which is
 then wrapped with a Dart file (`termlib.dart`). The C file is commented
 with instructions on how to create a shared library from it.
@@ -33,5 +34,6 @@ main() {
 
 Please file feature requests and bugs at the [issue tracker][tracker].
 
-[tracker]: https://github.com/timsneath/dart_console/issues
 [dart_kilo]: https://github.com/timsneath/kilo/tree/dart
+[FFI]: https://dart.dev/server/c-interop
+[tracker]: https://github.com/timsneath/dart_console/issues
