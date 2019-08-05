@@ -17,6 +17,7 @@ class Coordinate {
 
 enum TextAlignment { Left, Center, Right }
 
+// TODO: check for off-by-one errors (terminal is 1-based)
 class Console {
   // We cache these values so we don't have to keep retrieving them. The
   // downside is that the class isn't dynamically responsive to a resized
