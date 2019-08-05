@@ -1,4 +1,5 @@
 import 'dart:ffi' as ffi;
+import 'dart:io' show Platform;
 
 typedef void_void_native_t = ffi.Void Function();
 typedef int_void_native_t = ffi.Int32 Function();
@@ -13,7 +14,13 @@ class TermLib {
   int Function() getWindowWidth;
 
   TermLib() {
-    termlib = ffi.DynamicLibrary.open('/mnt/c/git/dart_console/termlib.so');
+    if (Platform.isLinux) {
+      termlib = ffi.DynamicLibrary.open('/mnt/c/git/dart_console/termlib.so');
+    }
+    if (Platform.isMacOS) {
+      termlib = ffi.DynamicLibrary.open(
+          '/users/timsneath/git/me/dart_console/lib/src/ffi/termlib.dylib');
+    }
 
     enableRawMode = termlib
         .lookup<ffi.NativeFunction<void_void_native_t>>('enableRawMode')
