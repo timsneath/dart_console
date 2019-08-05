@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'ansi.dart';
+import 'key.dart';
 import 'ffi/termlib.dart';
 
 class Coordinate {
@@ -41,7 +42,7 @@ class Console {
   }
 
   void clearScreen() => stdout.write(ansiEraseInDisplayAll);
-  void clearToLineEnd() => stdout.write(ansiEraseInLine);
+  void clearToLineEnd() => stdout.write(ansiEraseInLineRight);
 
   int get windowWidth {
     if (_windowWidth == 0) {
@@ -99,11 +100,16 @@ class Console {
   void hideCursor() => stdout.write(ansiHideCursor);
   void showCursor() => stdout.write(ansiShowCursor);
 
+  void cursorLeft() => stdout.write(ansiCursorLeft);
+  void cursorRight() => stdout.write(ansiCursorRight);
+  void cursorUp() => stdout.write(ansiCursorUp);
+  void cursorDown() => stdout.write(ansiCursorDown);
+
   void resetCursorPosition() => stdout.write(ansiCursorPosition());
 
   Coordinate get cursorPosition {
     stdout.write(ansiDeviceStatusReportCursorPosition);
-    // returns a result in the form <ESC>[24;80R
+    // returns a Cursor Position Report result in the form <ESC>[24;80R
     // which we have to parse apart, unfortunately
     String result = '';
     int i = 0;
@@ -161,5 +167,28 @@ class Console {
       case TextAlignment.Left:
     }
     stdout.write(text);
+  }
+
+  // reading text from the keyboard
+  Key readKey() {
+    var key = Key();
+
+    final codeUnit = stdin.readByteSync();
+    if (codeUnit >= 0x00 && codeUnit <= 0x1f) {
+      key.isControl = true;
+      key.char = '';
+      key.controlChar = ControlCharacter.Unknown;
+      return key;
+    } else if (codeUnit == 0x7f) {
+      key.isControl = true;
+      key.char = '';
+      key.controlChar = ControlCharacter.Backspace;
+      return key;
+    } else {
+      key.isControl = false;
+      key.char = String.fromCharCode(codeUnit);
+      key.controlChar = ControlCharacter.None;
+      return key;
+    }
   }
 }
