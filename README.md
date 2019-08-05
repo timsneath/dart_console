@@ -1,6 +1,6 @@
-Dart library for writing console applications. Developed with a Dart port
-of the Kilo text editor in mind. May be missing key features for other
-console applications :)
+Dart library for writing console applications. Developed with 
+[a Dart port of the Kilo text editor][dart_kilo] in mind. 
+May be missing key features for other console applications :)
 
 ## Usage
 
@@ -34,3 +34,4 @@ main() {
 Please file feature requests and bugs at the [issue tracker][tracker].
 
 [tracker]: https://github.com/timsneath/dart_console/issues
+[dart_kilo]: https://github.com/timsneath/kilo/tree/dart
