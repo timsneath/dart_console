@@ -4,7 +4,6 @@ main() {
   final console = Console();
 
   console.clearScreen();
-  console.resetCursorPosition();
 
   console.setBackgroundColor(ConsoleColor.blue);
   console.setForegroundColor(ConsoleColor.white);
@@ -26,6 +25,11 @@ main() {
     console.writeLine(color.toString().split('.').last);
   }
   console.resetColorAttributes();
+
+  console.writeLine();
+  console.writeLine('Press any key to continue...');
+  console.readKey();
+  console.clearScreen();
 
   return 0;
 }

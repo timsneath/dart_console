@@ -39,7 +39,9 @@ class Console {
     termlib.disableRawMode();
   }
 
-  void clearScreen() => stdout.write(ansiEraseInDisplayAll);
+  void clearScreen() =>
+      stdout.write(ansiEraseInDisplayAll + ansiResetCursorPosition);
+
   void clearToLineEnd() => stdout.write(ansiEraseInLineRight);
 
   int get windowWidth {
@@ -181,22 +183,22 @@ class Console {
   Key readKey() {
     var key = Key();
 
+    if (!_rawMode) enableRawMode();
     final codeUnit = stdin.readByteSync();
     if (codeUnit >= 0x00 && codeUnit <= 0x1f) {
       key.isControl = true;
       key.char = '';
       key.controlChar = ControlCharacter.Unknown;
-      return key;
     } else if (codeUnit == 0x7f) {
       key.isControl = true;
       key.char = '';
       key.controlChar = ControlCharacter.Backspace;
-      return key;
     } else {
       key.isControl = false;
       key.char = String.fromCharCode(codeUnit);
       key.controlChar = ControlCharacter.None;
-      return key;
     }
+    if (!_rawMode) disableRawMode();
+    return key;
   }
 }
