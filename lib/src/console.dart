@@ -55,7 +55,7 @@ class Console {
         final originalCursor = cursorPosition;
         stdout.write(ansiMoveCursorToScreenEdge);
         final newCursor = cursorPosition;
-        setCursorPosition(originalCursor);
+        cursorPosition = originalCursor;
 
         if (newCursor != null) {
           _windowWidth = newCursor.col;
