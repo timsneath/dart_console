@@ -47,7 +47,8 @@ class Console {
   int get windowWidth {
     if (_windowWidth == 0) {
       // try using ioctl() to give us the screen size
-      final width = termlib.getWindowWidth();
+      // final width = termlib.getWindowWidth();
+      final width = -1;
       if (width != -1) {
         _windowWidth = width;
       } else {
@@ -73,7 +74,8 @@ class Console {
   int get windowHeight {
     if (_windowHeight == 0) {
       // try using ioctl() to give us the screen size
-      final height = termlib.getWindowHeight();
+      // final height = termlib.getWindowHeight();
+      final height = -1;
       if (height != -1) {
         _windowHeight = height;
       } else {
