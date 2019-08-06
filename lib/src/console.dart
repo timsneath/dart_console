@@ -166,8 +166,19 @@ class Console {
 
   void write(String text) => stdout.write(text);
 
-  void writeLine([String text]) {
+  void writeLine([String text, TextAlignment alignment]) {
     if (text != null) {
+      switch (alignment) {
+        case TextAlignment.center:
+          final padding = ((windowWidth - text.length) / 2).round();
+          text = text.padLeft(text.length + padding);
+          text = text.padRight(windowWidth);
+          break;
+        case TextAlignment.right:
+          text = text.padLeft(windowWidth);
+          break;
+        default:
+      }
       stdout.write(text);
     }
     if (_rawMode) {
@@ -175,22 +186,6 @@ class Console {
     } else {
       stdout.write('\n');
     }
-  }
-
-  void writeAligned(String text, TextAlignment alignment) {
-    switch (alignment) {
-      case TextAlignment.center:
-        final padding = ((windowWidth - text.length) / 2).round();
-        text = text.padLeft(text.length + padding);
-        text = text.padRight(windowWidth);
-        break;
-      case TextAlignment.right:
-        text = text.padLeft(windowWidth);
-        break;
-      case TextAlignment.left:
-        text = text.padRight(windowWidth);
-    }
-    writeLine(text);
   }
 
   // reading text from the keyboard

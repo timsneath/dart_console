@@ -18,10 +18,10 @@ final demoScreens = <Function>[
     final progressBarWidth = max(console.windowWidth - 10, 10);
 
     console.cursorPosition = Coordinate(row - 2, 0);
-    console.writeAligned('L O A D I N G', TextAlignment.center);
+    console.writeLine('L O A D I N G', TextAlignment.center);
 
     console.cursorPosition = Coordinate(row + 2, 0);
-    console.writeAligned('Please wait while we make you some avocado toast...',
+    console.writeLine('Please wait while we make you some avocado toast...',
         TextAlignment.center);
 
     console.hideCursor();
@@ -45,7 +45,7 @@ final demoScreens = <Function>[
     // General demonstration of basic color set and alignment.
     console.setBackgroundColor(ConsoleColor.blue);
     console.setForegroundColor(ConsoleColor.white);
-    console.writeAligned('Simple Demo', TextAlignment.center);
+    console.writeLine('Simple Demo', TextAlignment.center);
     console.resetColorAttributes();
 
     console.writeLine();
@@ -54,9 +54,9 @@ final demoScreens = <Function>[
         '${console.windowHeight} rows.');
     console.writeLine();
 
-    console.writeAligned('This text is left aligned.', TextAlignment.left);
-    console.writeAligned('This text is center aligned.', TextAlignment.center);
-    console.writeAligned('This text is right aligned.', TextAlignment.right);
+    console.writeLine('This text is left aligned.', TextAlignment.left);
+    console.writeLine('This text is center aligned.', TextAlignment.center);
+    console.writeLine('This text is right aligned.', TextAlignment.right);
 
     for (ConsoleColor color in ConsoleColor.values) {
       console.setForegroundColor(color);
@@ -68,7 +68,7 @@ final demoScreens = <Function>[
     // Show foreground colors
     console.setBackgroundColor(ConsoleColor.red);
     console.setForegroundColor(ConsoleColor.white);
-    console.writeAligned(
+    console.writeLine(
         'ANSI Extended 256-Color Foreground Test', TextAlignment.center);
     console.resetColorAttributes();
 
@@ -89,7 +89,7 @@ final demoScreens = <Function>[
     // Show bacgkround colors
     console.setBackgroundColor(ConsoleColor.green);
     console.setForegroundColor(ConsoleColor.white);
-    console.writeAligned(
+    console.writeLine(
         'ANSI Extended 256-Color Background Test', TextAlignment.center);
     console.resetColorAttributes();
 
