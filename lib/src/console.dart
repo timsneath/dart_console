@@ -144,6 +144,20 @@ class Console {
     stdout.write(ansiSetColor(ansiForegroundColors[foreground]));
   }
 
+  void setForegroundExtendedColor(int colorValue) {
+    assert(colorValue >= 0 && colorValue <= 0xFF,
+        "Color must be a value between 0 and 255.");
+
+    stdout.write(ansiSetExtendedForegroundColor(colorValue));
+  }
+
+  void setBackgroundExtendedColor(int colorValue) {
+    assert(colorValue >= 0 && colorValue <= 0xFF,
+        "Color must be a value between 0 and 255.");
+
+    stdout.write(ansiSetExtendedBackgroundColor(colorValue));
+  }
+
   void setBackgroundColor(ConsoleColor background) {
     stdout.write(ansiSetColor(ansiBackgroundColors[background]));
   }
@@ -176,7 +190,7 @@ class Console {
       case TextAlignment.left:
         text = text.padRight(windowWidth);
     }
-    stdout.write(text);
+    writeLine(text);
   }
 
   // reading text from the keyboard

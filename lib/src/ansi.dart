@@ -13,11 +13,13 @@ const ansiResetCursorPosition = '\x1b[H';
 const ansiMoveCursorToScreenEdge = '\x1b[999C\x1b[999B';
 String ansiCursorPosition({int row = 1, int col = 1}) => '\x1b[${row};${col}H';
 String ansiSetColor(int color) => '\x1b[${color}m';
+String ansiSetExtendedForegroundColor(int color) => '\x1b[38;5;${color}m';
+String ansiSetExtendedBackgroundColor(int color) => '\x1b[48;5;${color}m';
 
 const ansiResetColor = '\x1b[0m';
 
 /// A list of ANSI/VT100 color codes for foreground colors.
-const Map<ConsoleColor, int> ansiForegroundColors = {
+const ansiForegroundColors = {
   ConsoleColor.black: 30,
   ConsoleColor.red: 31,
   ConsoleColor.green: 32,
@@ -37,7 +39,7 @@ const Map<ConsoleColor, int> ansiForegroundColors = {
 };
 
 /// A list of ANSI/VT100 color codes for background colors.
-const Map<ConsoleColor, int> ansiBackgroundColors = {
+const ansiBackgroundColors = {
   ConsoleColor.black: 40,
   ConsoleColor.red: 41,
   ConsoleColor.green: 42,
@@ -55,6 +57,3 @@ const Map<ConsoleColor, int> ansiBackgroundColors = {
   ConsoleColor.brightCyan: 106,
   ConsoleColor.brightWhite: 107
 };
-
-// console.Write('${ConsoleColor(ForegroundColors.BrightBlue)}This is some text.$fgReset');
-// console.setForeground(ConsoleColors.brightBlue);
