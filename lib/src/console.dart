@@ -197,15 +197,23 @@ class Console {
     if (codeUnit >= 0x00 && codeUnit <= 0x1f) {
       key.isControl = true;
       key.char = '';
-      key.controlChar = ControlCharacter.Unknown;
+      if (codeUnit >= 1 && codeUnit <= 26) {
+        // Ctrl+A thru Ctrl+Z are mapped to the 1st-26th entries in the
+        // enum, so it's easy to convert them across
+        key.controlChar = ControlCharacter.values[codeUnit];
+      } else {
+        // For now, ignore the rarely used control keys
+        //   (^@, ^[, ^\, ^], ^^ or ^_)
+        key.controlChar = ControlCharacter.unknown;
+      }
     } else if (codeUnit == 0x7f) {
       key.isControl = true;
       key.char = '';
-      key.controlChar = ControlCharacter.Backspace;
+      key.controlChar = ControlCharacter.backspace;
     } else {
       key.isControl = false;
       key.char = String.fromCharCode(codeUnit);
-      key.controlChar = ControlCharacter.None;
+      key.controlChar = ControlCharacter.none;
     }
     if (!_rawMode) disableRawMode();
     return key;
