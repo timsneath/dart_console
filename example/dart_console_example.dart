@@ -6,8 +6,8 @@ import 'package:dart_console/dart_console.dart';
 final console = Console();
 
 final demoScreens = <Function>[
+  // SCREEN 1: Whimsical loading screen :)
   (() {
-    // Whimsical loading screen :)
     console.setBackgroundColor(ConsoleColor.blue);
     console.setForegroundColor(ConsoleColor.white);
     console.clearScreen();
@@ -39,8 +39,9 @@ final demoScreens = <Function>[
 
     console.cursorPosition = Coordinate(console.windowHeight - 3, 0);
   }),
+
+  // SCREEN 2: General demonstration of basic color set and alignment.
   (() {
-    // General demonstration of basic color set and alignment.
     console.setBackgroundColor(ConsoleColor.blue);
     console.setForegroundColor(ConsoleColor.white);
     console.writeLine('Simple Demo', TextAlignment.center);
@@ -62,8 +63,9 @@ final demoScreens = <Function>[
     }
     console.resetColorAttributes();
   }),
+
+  // SCREEN 3: Show extended foreground colors
   (() {
-    // Show foreground colors
     console.setBackgroundColor(ConsoleColor.red);
     console.setForegroundColor(ConsoleColor.white);
     console.writeLine(
@@ -83,8 +85,9 @@ final demoScreens = <Function>[
 
     console.resetColorAttributes();
   }),
+
+  // SCREEN 4: Show extended background colors
   (() {
-    // Show bacgkround colors
     console.setBackgroundColor(ConsoleColor.green);
     console.setForegroundColor(ConsoleColor.white);
     console.writeLine(
@@ -106,6 +109,9 @@ final demoScreens = <Function>[
   }),
 ];
 
+//
+// main
+//
 main() {
   for (final demo in demoScreens) {
     console.clearScreen();
