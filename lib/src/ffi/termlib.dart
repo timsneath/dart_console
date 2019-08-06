@@ -4,24 +4,44 @@ import 'dylib_utils.dart';
 
 typedef void_void_native_t = Void Function();
 typedef int_void_native_t = Int32 Function();
-typedef ioctl_native_t = Int32 Function(
-    Int32 fd, Int32 cmd, Pointer<WinSize> winsize);
+
+// int ioctl(int, unsigned long, ...);
+typedef ioctl_native_t = Int16 Function(
+    Int16 fd, Int32 cmd, Pointer<WinSize> winsize);
 
 const STDIN_FILENO = 0;
+const STDOUT_FILENO = 1;
+const STDERR_FILENO = 2;
+
 const TIOCGWINSZ = 0x5413;
 
+// struct winsize {
+// 	unsigned short  ws_row;         /* rows, in characters */
+// 	unsigned short  ws_col;         /* columns, in characters */
+// 	unsigned short  ws_xpixel;      /* horizontal size, pixels */
+// 	unsigned short  ws_ypixel;      /* vertical size, pixels */
+// };
 class WinSize extends Struct<WinSize> {
   @Int8()
-  int ws_row; // rows, in characters
+  int ws_row;
 
   @Int8()
-  int ws_col; // columns, in characters
+  int ws_col;
 
   @Int8()
-  int ws_xpixel; // horizontal size, pixels
+  int ws_xpixel;
 
   @Int8()
-  int ws_ypixel; // vertical size, pixels
+  int ws_ypixel;
+
+  factory WinSize.allocate(
+      int ws_row, int ws_col, int ws_xpixel, int ws_ypixel) {
+    Pointer<WinSize>.allocate().load<WinSize>()
+      ..ws_row = ws_row
+      ..ws_col = ws_col
+      ..ws_xpixel = ws_xpixel
+      ..ws_ypixel = ws_ypixel;
+  }
 }
 
 class TermLib {
@@ -41,16 +61,16 @@ class TermLib {
     ioctl = libc.lookup<NativeFunction<ioctl_native_t>>('ioctl').asFunction();
 
     getWindowHeight = () {
-      Pointer<WinSize> ws = Pointer.allocate();
-      ioctl(STDIN_FILENO, TIOCGWINSZ, ws);
-      final winSize = ws.load();
+      Pointer<WinSize> winSizePointer = Pointer<WinSize>.allocate();
+      ioctl(STDOUT_FILENO, TIOCGWINSZ, winSizePointer);
+      final winSize = winSizePointer.load();
       return winSize.ws_row;
     };
 
     getWindowWidth = () {
-      Pointer<WinSize> ws = Pointer.allocate();
-      ioctl(STDIN_FILENO, TIOCGWINSZ, ws);
-      final winSize = ws.load();
+      Pointer<WinSize> winSizePointer = Pointer<WinSize>.allocate();
+      ioctl(STDOUT_FILENO, TIOCGWINSZ, winSizePointer);
+      final winSize = winSizePointer.load();
       return winSize.ws_col;
     };
 
