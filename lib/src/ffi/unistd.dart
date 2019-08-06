@@ -1,0 +1,3 @@
+const STDIN_FILENO = 0;
+const STDOUT_FILENO = 1;
+const STDERR_FILENO = 2;
