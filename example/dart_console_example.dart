@@ -1,9 +1,7 @@
 import 'dart:io';
+import 'dart:math' show max;
 
 import 'package:dart_console/dart_console.dart';
-import 'dart:math' show min, max;
-
-import 'package:dart_console/src/enums.dart';
 
 final console = Console();
 
@@ -114,9 +112,13 @@ main() {
     demo();
     console.writeLine();
     console.writeLine('Press any key to continue...');
-    console.readKey();
+
+    final key = console.readKey();
     console.resetColorAttributes();
-    console.clearScreen();
+
+    if (key.controlChar == ControlCharacter.ctrlC) {
+      return 1;
+    }
   }
 
   return 0;
