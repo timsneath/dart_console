@@ -190,30 +190,113 @@ class Console {
 
   // reading text from the keyboard
   Key readKey() {
-    var key = Key();
+    var key;
 
     if (!_rawMode) enableRawMode();
     final codeUnit = stdin.readByteSync();
-    if (codeUnit >= 0x00 && codeUnit <= 0x1f) {
-      key.isControl = true;
-      key.char = '';
-      if (codeUnit >= 1 && codeUnit <= 26) {
-        // Ctrl+A thru Ctrl+Z are mapped to the 1st-26th entries in the
-        // enum, so it's easy to convert them across
-        key.controlChar = ControlCharacter.values[codeUnit];
+    if (codeUnit >= 0x01 && codeUnit <= 0x1a) {
+      // Ctrl+A thru Ctrl+Z are mapped to the 1st-26th entries in the
+      // enum, so it's easy to convert them across
+      key = Key()
+        ..isControl = true
+        ..char = ''
+        ..controlChar = ControlCharacter.values[codeUnit];
+    } else if (codeUnit == 0x1b) {
+      // escape sequence (e.g. \x1b[A for up arrow)
+      key = Key()
+        ..isControl = true
+        ..char = '';
+
+      final escapeSequence = [];
+
+      escapeSequence.add(stdin.readByteSync());
+      escapeSequence.add(stdin.readByteSync());
+
+      if (escapeSequence[0] == '[') {
+        switch (escapeSequence[1]) {
+          case 'A':
+            key.contolChar = ControlCharacter.arrowUp;
+            break;
+          case 'B':
+            key.controlChar = ControlCharacter.arrowDown;
+            break;
+          case 'C':
+            key.controlChar = ControlCharacter.arrowRight;
+            break;
+          case 'D':
+            key.controlChar = ControlCharacter.arrowLeft;
+            break;
+          case 'H':
+            key.controlChar = ControlCharacter.home;
+            break;
+          case 'F':
+            key.controlChar = ControlCharacter.end;
+            break;
+          default:
+            if (escapeSequence[1] > '0' && escapeSequence[1] < '9') {
+              escapeSequence.add(stdin.readByteSync());
+              if (escapeSequence[2] != '~') {
+                key.controlChar = ControlCharacter.unknown;
+              } else {
+                switch (escapeSequence[1]) {
+                  case '1':
+                    key.controlChar = ControlCharacter.home;
+                    break;
+                  case '3':
+                    key.controlChar = ControlCharacter.delete;
+                    break;
+                  case '4':
+                    key.controlChar = ControlCharacter.end;
+                    break;
+                  case '5':
+                    key.controlChar = ControlCharacter.pageUp;
+                    break;
+                  case '6':
+                    key.controlChar = ControlCharacter.pageDown;
+                    break;
+                  case '7':
+                    key.controlChar = ControlCharacter.home;
+                    break;
+                  case '8':
+                    key.controlChar = ControlCharacter.end;
+                    break;
+                  default:
+                    key.controlChar = ControlCharacter.unknown;
+                }
+              }
+            } else {
+              key.controlChar = ControlCharacter.unknown;
+            }
+        }
+      } else if (escapeSequence[0] == 'O') {
+        switch (escapeSequence[1]) {
+          case 'H':
+            key.controlChar = ControlCharacter.home;
+            break;
+          case 'F':
+            key.controlChar = ControlCharacter.end;
+            break;
+          default:
+        }
       } else {
-        // For now, ignore the rarely used control keys
-        //   (^@, ^[, ^\, ^], ^^ or ^_)
         key.controlChar = ControlCharacter.unknown;
       }
     } else if (codeUnit == 0x7f) {
-      key.isControl = true;
-      key.char = '';
-      key.controlChar = ControlCharacter.backspace;
+      key = Key()
+        ..isControl = true
+        ..char = ''
+        ..controlChar = ControlCharacter.backspace;
+    } else if (codeUnit == 0x00 || (codeUnit >= 0x1c && codeUnit <= 0x1f)) {
+      key = Key()
+        ..isControl = true
+        ..char = ''
+        ..controlChar = ControlCharacter.unknown;
     } else {
-      key.isControl = false;
-      key.char = String.fromCharCode(codeUnit);
-      key.controlChar = ControlCharacter.none;
+      // assume other characters are printable
+      key = Key()
+        ..isControl = false
+        ..char = String.fromCharCode(codeUnit)
+        ..controlChar = ControlCharacter.none;
     }
     if (!_rawMode) disableRawMode();
     return key;
