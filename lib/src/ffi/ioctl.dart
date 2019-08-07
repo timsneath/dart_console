@@ -9,16 +9,16 @@ const int TIOCGWINSZ = 0x5413;
 // 	unsigned short  ws_ypixel;      /* vertical size, pixels */
 // };
 class WinSize extends Struct<WinSize> {
-  @Int16()
+  @Int32()
   int ws_row;
 
-  @Int16()
+  @Int32()
   int ws_col;
 
-  @Int16()
+  @Int32()
   int ws_xpixel;
 
-  @Int16()
+  @Int32()
   int ws_ypixel;
 
   factory WinSize.allocate(
@@ -31,5 +31,5 @@ class WinSize extends Struct<WinSize> {
 }
 
 // int ioctl(int, unsigned long, ...);
-typedef ioctl_native_t = Int16 Function(
-    Int16 fd, Int32 cmd, Pointer<WinSize> winsize);
+typedef ioctl_native_t = Int32 Function(
+    Int32 fd, Int32 cmd, Pointer<WinSize> winsize);
