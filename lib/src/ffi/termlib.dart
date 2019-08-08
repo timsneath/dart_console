@@ -12,7 +12,7 @@ class TermLib {
   DynamicLibrary stdlib;
   TermIOS orig_termios;
 
-  int Function(int fd, int cmd, Pointer<WinSize> ws) ioctl;
+  var ioctl;
 
   int Function(int fildes, Pointer<TermIOS> termios) tcgetattr;
   int Function(int fildes, int optional_actions, Pointer<TermIOS> termios)
@@ -54,7 +54,7 @@ class TermLib {
   TermLib() {
     stdlib = dlopenPlatformSpecific('System');
 
-    ioctl = stdlib.lookup<NativeFunction<ioctl_native_t>>('ioctl').asFunction();
+    ioctl = stdlib.lookupFunction<ioctlNative, ioctlDart>('ioctl');
     tcgetattr = stdlib
         .lookup<NativeFunction<tcgetattr_native_t>>('tcgetattr')
         .asFunction();
