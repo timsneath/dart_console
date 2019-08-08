@@ -40,7 +40,7 @@ class Console {
   void clearScreen() =>
       stdout.write(ansiEraseInDisplayAll + ansiResetCursorPosition);
 
-  void clearToLineEnd() => stdout.write(ansiEraseInLineRight);
+  void clearLine() => stdout.write(ansiEraseInLineAll);
 
   int get windowWidth {
     if (_windowWidth == 0) {
