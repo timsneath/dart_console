@@ -9,9 +9,7 @@ class Coordinate {
   final int row;
   final int col;
 
-  const Coordinate(int row, int col)
-      : this.row = row,
-        this.col = col;
+  const Coordinate(this.row, this.col);
 
   bool operator ==(dynamic other) =>
       other is Coordinate && row == other.row && col == other.col;
@@ -105,7 +103,7 @@ class Console {
   void cursorUp() => stdout.write(ansiCursorUp);
   void cursorDown() => stdout.write(ansiCursorDown);
 
-  void resetCursorPosition() => stdout.write(ansiCursorPosition());
+  void resetCursorPosition() => stdout.write(ansiCursorPosition(1, 1));
 
   Coordinate get cursorPosition {
     stdout.write(ansiDeviceStatusReportCursorPosition);
@@ -136,7 +134,7 @@ class Console {
   }
 
   set cursorPosition(Coordinate cursor) {
-    stdout.write(ansiCursorPosition(col: cursor.col + 1, row: cursor.row + 1));
+    stdout.write(ansiCursorPosition(cursor.row + 1, cursor.col + 1));
   }
 
   // Printing text to the console
@@ -207,15 +205,15 @@ class Console {
         ..isControl = true
         ..char = '';
 
-      final escapeSequence = [];
+      final escapeSequence = <String>[];
 
-      escapeSequence.add(stdin.readByteSync());
-      escapeSequence.add(stdin.readByteSync());
+      escapeSequence.add(String.fromCharCode(stdin.readByteSync()));
+      escapeSequence.add(String.fromCharCode(stdin.readByteSync()));
 
       if (escapeSequence[0] == '[') {
         switch (escapeSequence[1]) {
           case 'A':
-            key.contolChar = ControlCharacter.arrowUp;
+            key.controlChar = ControlCharacter.arrowUp;
             break;
           case 'B':
             key.controlChar = ControlCharacter.arrowDown;
@@ -233,8 +231,9 @@ class Console {
             key.controlChar = ControlCharacter.end;
             break;
           default:
-            if (escapeSequence[1] > '0' && escapeSequence[1] < '9') {
-              escapeSequence.add(stdin.readByteSync());
+            if (escapeSequence[1].codeUnits[0] > '0'.codeUnits[0] &&
+                escapeSequence[1].codeUnits[0] < '9'.codeUnits[0]) {
+              escapeSequence.add(String.fromCharCode(stdin.readByteSync()));
               if (escapeSequence[2] != '~') {
                 key.controlChar = ControlCharacter.unknown;
               } else {

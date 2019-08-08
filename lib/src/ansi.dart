@@ -11,7 +11,7 @@ const ansiCursorUp = '\x1b[A';
 const ansiCursorDown = '\x1b[B';
 const ansiResetCursorPosition = '\x1b[H';
 const ansiMoveCursorToScreenEdge = '\x1b[999C\x1b[999B';
-String ansiCursorPosition({int row = 1, int col = 1}) => '\x1b[${row};${col}H';
+String ansiCursorPosition(int row, int col) => '\x1b[${row};${col}H';
 String ansiSetColor(int color) => '\x1b[${color}m';
 String ansiSetExtendedForegroundColor(int color) => '\x1b[38;5;${color}m';
 String ansiSetExtendedBackgroundColor(int color) => '\x1b[48;5;${color}m';
