@@ -5,10 +5,14 @@ May be missing key features for other console applications :)
 ## Usage
 
 This package uses [FFI][FFI], which is itself still in development.
-Currently, I've wrapped the underlying system
-calls I need from `glibc` into a single C file (`termlib.c`), which is
-then wrapped with a Dart file (`termlib.dart`). The C file is commented
-with instructions on how to create a shared library from it.
+In original versions, I wrapped the underlying system
+calls I need from `stdlib` into a single C file (`termlib.c`), which was
+then wrapped with a Dart file (`termlib.dart`). Now the package calls
+into the stdlib library directly. 
+
+This is only successfully tested on macOS; there are known problems on
+Linux, and the equivalent system calls on Windows are not yet
+implemented.
 
 A simple usage example for the `dart_console` package:
 
