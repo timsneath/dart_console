@@ -68,66 +68,69 @@ const int TCSAFLUSH = 2; // drain output, flush input
 // 	speed_t         c_ospeed;       /* output speed */
 // };
 class TermIOS extends Struct<TermIOS> {
-  @Int32()
+  @Int64()
   int c_iflag;
-  @Int32()
+  @Int64()
   int c_oflag;
-  @Int32()
+  @Int64()
   int c_cflag;
-  @Int32()
+  @Int64()
   int c_lflag;
 
-  @Int16()
+  @Int8()
   int c_cc0;
-  @Int16()
+  @Int8()
   int c_cc1;
-  @Int16()
+  @Int8()
   int c_cc2;
-  @Int16()
+  @Int8()
   int c_cc3;
-  @Int16()
+  @Int8()
   int c_cc4;
-  @Int16()
+  @Int8()
   int c_cc5;
-  @Int16()
+  @Int8()
   int c_cc6;
-  @Int16()
+  @Int8()
   int c_cc7;
-  @Int16()
+  @Int8()
   int c_cc8;
-  @Int16()
+  @Int8()
   int c_cc9;
-  @Int16()
+  @Int8()
   int c_cc10;
-  @Int16()
+  @Int8()
   int c_cc11;
-  @Int16()
+  @Int8()
   int c_cc12;
-  @Int16()
+  @Int8()
   int c_cc13;
-  @Int16()
+  @Int8()
   int c_cc14;
-  @Int16()
+  @Int8()
   int c_cc15;
-  @Int16()
+  @Int8()
   int c_cc16;
-  @Int16()
+  @Int8()
   int c_cc17;
-  @Int16()
+  @Int8()
   int c_cc18;
-  @Int16()
+  @Int8()
   int c_cc19;
 
-  @Int32()
+  @Int64()
   int c_ispeed;
-  @Int32()
+  @Int64()
   int c_ospeed;
 }
 
 // int tcgetattr(int, struct termios *);
-typedef tcgetattr_native_t = Int16 Function(
-    Int16 fildes, Pointer<TermIOS> termios);
+typedef tcgetattrNative = Int32 Function(
+    Int32 fildes, Pointer<TermIOS> termios);
+typedef tcgetattrDart = int Function(int fildes, Pointer<TermIOS> termios);
 
 // int tcsetattr(int, int, const struct termios *);
-typedef tcsetattr_native_t = Int16 Function(
+typedef tcsetattrNative = Int16 Function(
     Int16 fildes, Int16 optional_actions, Pointer<TermIOS> termios);
+typedef tcsetattrDart = int Function(
+    int fildes, int optional_actions, Pointer<TermIOS> termios);

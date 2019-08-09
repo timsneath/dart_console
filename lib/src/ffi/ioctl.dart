@@ -10,16 +10,16 @@ final TIOCGWINSZ = Platform.isMacOS ? 0x40087468 : 0x5413;
 // 	unsigned short  ws_ypixel;      /* vertical size, pixels */
 // };
 class WinSize extends Struct<WinSize> {
-  @Int32()
+  @Int16()
   int ws_row;
 
-  @Int32()
+  @Int16()
   int ws_col;
 
-  @Int32()
+  @Int16()
   int ws_xpixel;
 
-  @Int32()
+  @Int16()
   int ws_ypixel;
 
   factory WinSize.allocate(
@@ -32,6 +32,5 @@ class WinSize extends Struct<WinSize> {
 }
 
 // int ioctl(int, unsigned long, ...);
-typedef ioctlNative = Int32 Function(
-    Int32 fd, Int32 cmd, Pointer<WinSize> winsize);
-typedef ioctlDart = int Function(int fd, int cmd, Pointer<WinSize> ws);
+typedef ioctlNative = Int32 Function(Int32, Int32, Pointer<Void>);
+typedef ioctlDart = int Function(int, int, Pointer<Void>);

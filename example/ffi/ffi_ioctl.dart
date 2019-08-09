@@ -38,11 +38,6 @@ class WinSize extends Struct<WinSize> {
         ..ws_ypixel = ws_ypixel;
 }
 
-// int ioctl(int, unsigned long, ...);
-typedef ioctlNative = Int32 Function(
-    Int32 fd, Int32 cmd, Pointer<WinSize> winsize);
-typedef ioctlDart = int Function(int fd, int cmd, Pointer<WinSize> ws);
-
 main() {
   final DynamicLibrary libc = Platform.isMacOS
       ? DynamicLibrary.open('libSystem.dylib')
