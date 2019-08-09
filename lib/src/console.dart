@@ -19,6 +19,7 @@ class Coordinate {
       other is Coordinate && row == other.row && col == other.col;
 }
 
+// TODO: Document this
 class Console {
   // We cache these values so we don't have to keep retrieving them. The
   // downside is that the class isn't dynamically responsive to a resized
@@ -190,6 +191,7 @@ class Console {
     }
   }
 
+  // TODO: Ctrl+Q isn't working on Linux for some reason
   // reading text from the keyboard
   Key readKey() {
     var key;
