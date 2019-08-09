@@ -17,16 +17,28 @@ class TermLib {
 
   int getWindowHeight() {
     Pointer<WinSize> winSizePointer = Pointer<WinSize>.allocate();
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, winSizePointer.cast());
+    final result = ioctl(STDOUT_FILENO, TIOCGWINSZ, winSizePointer.cast());
+    if (result == -1) return -1;
+
     final WinSize winSize = winSizePointer.load<WinSize>();
-    return winSize.ws_row;
+    if (winSize.ws_row == 0) {
+      return -1;
+    } else {
+      return winSize.ws_row;
+    }
   }
 
   int getWindowWidth() {
     Pointer<WinSize> winSizePointer = Pointer<WinSize>.allocate();
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, winSizePointer.cast());
+    final result = ioctl(STDOUT_FILENO, TIOCGWINSZ, winSizePointer.cast());
+    if (result == -1) return -1;
+
     final WinSize winSize = winSizePointer.load<WinSize>();
-    return winSize.ws_col;
+    if (winSize.ws_col == 0) {
+      return -1;
+    } else {
+      return winSize.ws_col;
+    }
   }
 
   void enableRawMode() {

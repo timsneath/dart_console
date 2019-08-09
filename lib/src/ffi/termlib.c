@@ -1,9 +1,6 @@
 // termlib.c
 
-// TODO: This class shouldn't be needed at all. It's simply a wrapper around 
-//   some glibc functions. Next job is to simply expose the underlying
-//   APIs through FFI, rather than the wrapper functions themselves.
-
+// (No longer used, kept just as a reference for the Dart implementation.)
 
 // Linux: Compile with:
 //  gcc -shared -fPIC -o termlib.so termlib.c
