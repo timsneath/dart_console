@@ -80,7 +80,7 @@ class TermLib {
   TermLib() {
     _stdlib = Platform.isMacOS
         ? DynamicLibrary.open('libSystem.dylib')
-        : DynamicLibrary.open("libc.so");
+        : DynamicLibrary.open("libc-2.28.so");
 
     ioctl = _stdlib.lookupFunction<ioctlNative, ioctlDart>("ioctl");
     tcgetattr =
