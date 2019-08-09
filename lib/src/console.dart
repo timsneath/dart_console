@@ -301,7 +301,7 @@ class Console {
         ..char = String.fromCharCode(codeUnit)
         ..controlChar = ControlCharacter.none;
     }
-    if (!_rawMode) disableRawMode();
+    disableRawMode();
     return key;
   }
 }

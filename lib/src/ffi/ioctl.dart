@@ -32,5 +32,5 @@ class WinSize extends Struct<WinSize> {
 }
 
 // int ioctl(int, unsigned long, ...);
-typedef ioctlNative = Int32 Function(Int32, Int32, Pointer<Void>);
+typedef ioctlNative = Int32 Function(Int32, Int64, Pointer<Void>);
 typedef ioctlDart = int Function(int, int, Pointer<Void>);

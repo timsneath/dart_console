@@ -9,7 +9,6 @@ class TermLib {
   DynamicLibrary _stdlib;
 
   Pointer<TermIOS> _origTermIOSPointer;
-  TermIOS _origTermIOS;
 
   ioctlDart ioctl;
   tcgetattrDart tcgetattr;
@@ -42,10 +41,7 @@ class TermLib {
   }
 
   void enableRawMode() {
-    Pointer<TermIOS> origTermIOSPointer = Pointer<TermIOS>.allocate();
-    tcgetattr(STDIN_FILENO, origTermIOSPointer);
-
-    _origTermIOS = origTermIOSPointer.load();
+    final _origTermIOS = _origTermIOSPointer.load();
 
     Pointer<TermIOS> newTermIOSPointer = Pointer<TermIOS>.allocate();
     TermIOS newTermIOS = newTermIOSPointer.load();
@@ -85,8 +81,8 @@ class TermLib {
   }
 
   void disableRawMode() {
-    tcsetattr(STDIN_FILENO, TCSAFLUSH, _origTermIOS.addressOf);
-    _origTermIOSPointer.free();
+    if (nullptr == _origTermIOSPointer.cast()) return;
+    tcsetattr(STDIN_FILENO, TCSAFLUSH, _origTermIOSPointer);
   }
 
   TermLib() {
@@ -99,5 +95,9 @@ class TermLib {
         _stdlib.lookupFunction<tcgetattrNative, tcgetattrDart>("tcgetattr");
     tcsetattr =
         _stdlib.lookupFunction<tcsetattrNative, tcsetattrDart>("tcsetattr");
+
+    // store console mode settings so we can return them again as necessary
+    _origTermIOSPointer = Pointer<TermIOS>.allocate();
+    tcgetattr(STDIN_FILENO, _origTermIOSPointer);
   }
 }

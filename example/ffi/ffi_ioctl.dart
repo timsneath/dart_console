@@ -2,7 +2,7 @@ import 'dart:ffi';
 import 'dart:io';
 
 // int ioctl(int, unsigned long, ...);
-typedef ioctlVoidNative = Int32 Function(Int32, Int32, Pointer<Void>);
+typedef ioctlVoidNative = Int32 Function(Int32, Int64, Pointer<Void>);
 typedef ioctlVoidDart = int Function(int, int, Pointer<Void>);
 
 final TIOCGWINSZ = Platform.isMacOS ? 0x40087468 : 0x5413;

@@ -6,8 +6,14 @@
 
 int main()
 {
-    printf("On this platform, TIOCGWINSZ is 0x%lx\n", TIOCGWINSZ);
-    printf("On this platform, TIOCSTI is 0x%lx\n", TIOCSTI);
+    printf("On this platform:\n");
+    printf("TIOCGWINSZ is 0x%lx\n", TIOCGWINSZ);
+    printf("TIOCSTI is 0x%lx\n\n", TIOCSTI);
+
+    printf("sizeof(char) is %lu\n", sizeof(char));
+    printf("sizeof(short) is %lu\n", sizeof(short));
+    printf("sizeof(int) is %lu\n", sizeof(int));
+    printf("sizeof(long) is %lu\n\n", sizeof(long));
 
     printf("sizeof(tcflag_t) is %lu\n", sizeof(tcflag_t));
     printf("sizeof(cc_t) is %lu\n", sizeof(cc_t));

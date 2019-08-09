@@ -7,8 +7,8 @@ typedef tcgetattrNative = Int32 Function(
 typedef tcgetattrDart = int Function(int fildes, Pointer<TermIOS> termios);
 
 // int tcsetattr(int, int, const struct termios *);
-typedef tcsetattrNative = Int16 Function(
-    Int16 fildes, Int16 optional_actions, Pointer<TermIOS> termios);
+typedef tcsetattrNative = Int32 Function(
+    Int32 fildes, Int32 optional_actions, Pointer<TermIOS> termios);
 typedef tcsetattrDart = int Function(
     int fildes, int optional_actions, Pointer<TermIOS> termios);
 
