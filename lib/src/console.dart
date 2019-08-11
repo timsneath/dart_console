@@ -216,7 +216,6 @@ class Console {
   Key readKey() {
     var key;
 
-    // if (!_isRawMode)
     rawMode = true;
     final codeUnit = stdin.readByteSync();
     if (codeUnit >= 0x01 && codeUnit <= 0x1a) {
