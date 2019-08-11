@@ -1,0 +1,6 @@
+name: console_example
+description: Demonstrates how to use the Console package.
+
+dependencies:
+  dart_console:
+    path: ../

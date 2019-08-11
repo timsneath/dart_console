@@ -67,7 +67,9 @@ class Console {
   void clearScreen() =>
       stdout.write(ansiEraseInDisplayAll + ansiResetCursorPosition);
 
-  void clearLine() => stdout.write(ansiEraseInLineAll);
+  void eraseLine() => stdout.write(ansiEraseInLineAll);
+
+  void eraseCursorToEnd() => stdout.write(ansiEraseCursorToEnd);
 
   int get windowWidth {
     if (_windowWidth == 0) {
@@ -133,6 +135,7 @@ class Console {
   void resetCursorPosition() => stdout.write(ansiCursorPosition(1, 1));
 
   Coordinate get cursorPosition {
+    rawMode = true;
     stdout.write(ansiDeviceStatusReportCursorPosition);
     // returns a Cursor Position Report result in the form <ESC>[24;80R
     // which we have to parse apart, unfortunately
@@ -145,6 +148,7 @@ class Console {
       if (result.endsWith('R')) break;
       i++;
     }
+    rawMode = false;
 
     if (result[0] != '\x1b') return null;
 

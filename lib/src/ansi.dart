@@ -3,6 +3,7 @@ import 'enums.dart';
 const ansiDeviceStatusReportCursorPosition = '\x1b[6n';
 const ansiEraseInDisplayAll = '\x1b[2J';
 const ansiEraseInLineAll = '\x1b[2K';
+const ansiEraseCursorToEnd = '\x1b[K';
 
 const ansiHideCursor = '\x1b[?25l';
 const ansiShowCursor = '\x1b[?25h';
