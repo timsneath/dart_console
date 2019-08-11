@@ -5,17 +5,12 @@ May be missing key features for other console applications :)
 ## Usage
 
 This package uses [FFI][FFI], which is itself still in development.
-In original versions, I wrapped the underlying system
-calls I need from `stdlib` into a single C file (`termlib.c`), which was
-then wrapped with a Dart file (`termlib.dart`). Now the package calls
-into the stdlib library directly. 
 
-This is only successfully tested on macOS; there are known problems on
+This is successfully tested on macOS; there are known problems on
 Linux, and the equivalent system calls on Windows are not yet
 implemented.
 
 A simple usage example for the `dart_console` package:
-
 ```dart
 import 'package:dart_console/dart_console.dart';
 
@@ -33,6 +28,10 @@ main() {
   return 0;
 }
 ```
+
+A more comprehensive set of demos of the Console class are included in the 
+`example/demo.dart` file.
+
 
 ## Features and bugs
 

@@ -1,11 +1,12 @@
 import 'dart:io';
-import 'dart:math' show max;
+import 'dart:collection';
+import 'dart:math';
 
 import 'package:dart_console/dart_console.dart';
 
 final console = Console();
 
-final demoScreens = <Function>[
+var demoScreens = <Function>[
   // SCREEN 1: Whimsical loading screen :)
   (() {
     console.setBackgroundColor(ConsoleColor.blue);
@@ -24,13 +25,11 @@ final demoScreens = <Function>[
 
     console.hideCursor();
 
-    for (int i = 0; i < 50; i++) {
-      console.cursorPosition = Coordinate(row, 5);
+    for (int i = 0; i <= 50; i++) {
+      console.cursorPosition = Coordinate(row, 4);
       final progress = (i / 50 * progressBarWidth).ceil();
-      final bar = '[' +
-          ('#' * progress) +
-          (' ' * (progressBarWidth - progress - 2)) +
-          ']';
+      final bar =
+          '[' + ('#' * progress) + (' ' * (progressBarWidth - progress)) + ']';
       console.write(bar);
       sleep(Duration(milliseconds: 40));
     }
@@ -107,17 +106,75 @@ final demoScreens = <Function>[
 
     console.resetColorAttributes();
   }),
+
+  // SCREEN 5: Twinkling stars
+  (() {
+    final stars = Queue<Coordinate>();
+    final rng = Random();
+    const numStars = 2000;
+    const maxStarsOnScreen = 250;
+
+    void addStar() {
+      final star = Coordinate(rng.nextInt(console.windowHeight - 1) + 1,
+          rng.nextInt(console.windowWidth));
+      console.cursorPosition = star;
+      console.write('*');
+      stars.addLast(star);
+    }
+
+    void removeStar() {
+      final star = stars.first;
+      console.cursorPosition = star;
+      console.write(' ');
+      stars.removeFirst();
+    }
+
+    console.setBackgroundColor(ConsoleColor.yellow);
+    console.setForegroundColor(ConsoleColor.brightBlack);
+    console.writeLine('Stars', TextAlignment.center);
+    console.resetColorAttributes();
+
+    console.hideCursor();
+    console.setForegroundColor(ConsoleColor.brightYellow);
+
+    for (int i = 0; i < numStars; i++) {
+      if (i < numStars - maxStarsOnScreen) {
+        addStar();
+      }
+      if (i >= maxStarsOnScreen) {
+        removeStar();
+      }
+      sleep(Duration(milliseconds: 1));
+    }
+
+    console.resetColorAttributes();
+    console.cursorPosition = Coordinate(console.windowHeight - 3, 0);
+    console.showCursor();
+  }),
 ];
 
 //
 // main
 //
-main() {
+main(List<String> arguments) {
+  if (arguments.isNotEmpty) {
+    final selectedDemo = int.tryParse(arguments.first);
+    if (selectedDemo != null &&
+        selectedDemo > 0 &&
+        selectedDemo <= demoScreens.length) {
+      demoScreens = <Function>[demoScreens[selectedDemo - 1]];
+    }
+  }
+
   for (final demo in demoScreens) {
     console.clearScreen();
     demo();
     console.writeLine();
-    console.writeLine('Press any key to continue...');
+    if (demoScreens.indexOf(demo) != demoScreens.length - 1) {
+      console.writeLine('Press any key to continue, or Ctrl+C to quit...');
+    } else {
+      console.writeLine('Press any key to end the demo sequence...');
+    }
 
     final key = console.readKey();
     console.resetColorAttributes();

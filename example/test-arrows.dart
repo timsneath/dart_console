@@ -13,7 +13,7 @@ main() {
         case ControlCharacter.ctrlQ:
           console.clearScreen();
           console.resetCursorPosition();
-          console.disableRawMode();
+          console.rawMode = false;
           exit(0);
           break;
         case ControlCharacter.arrowLeft:

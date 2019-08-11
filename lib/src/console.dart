@@ -14,12 +14,15 @@ class Coordinate {
   final int col;
 
   const Coordinate(this.row, this.col);
-
-  bool operator ==(dynamic other) =>
-      other is Coordinate && row == other.row && col == other.col;
 }
 
-// TODO: Document this
+/// A representation of the current console window.
+///
+/// Use the [Console] to get information about the current window and to read
+/// and write to it.
+///
+/// A comprehensive set of demos of using the Console class can be found in the
+/// `demo.dart` file in the `examples/` subdirectory.
 class Console {
   // We cache these values so we don't have to keep retrieving them. The
   // downside is that the class isn't dynamically responsive to a resized
@@ -27,20 +30,39 @@ class Console {
   int _windowWidth = 0;
   int _windowHeight = 0;
 
-  bool _rawMode = false;
+  bool _isRawMode = false;
 
   final termlib = TermLib();
 
-  // Console options and screen information
-  void enableRawMode() {
-    _rawMode = true;
-    termlib.enableRawMode();
+  /// Enables or disables raw mode.
+  ///
+  /// There are a series of flags applied to a UNIX-like terminal that together
+  /// constitute 'raw mode'. These flags turn off echoing of character input,
+  /// processing of input signals like Ctrl+C, and output processing, as well as
+  /// buffering of input until a full line is entered.
+  ///
+  /// Raw mode is useful for console applications like text editors, which
+  /// perform their own input and output processing, as well as for reading a
+  /// single key from the input.
+  ///
+  /// If you use raw mode, you should disable it before your program returns, to
+  /// avoid the console being left in a state unsuitable for interactive input.
+  ///
+  /// When raw mode is enabled, the newline command (`\n`) does not also perform
+  /// a carriage return (`\r`). You can use the [newLine] property or the
+  /// [writeLine] function instead of explicitly using `\n` to ensure the
+  /// correct results.
+  ///
+  set rawMode(bool value) {
+    this._isRawMode = value;
+    if (value) {
+      termlib.enableRawMode();
+    } else {
+      termlib.disableRawMode();
+    }
   }
 
-  void disableRawMode() {
-    _rawMode = false;
-    termlib.disableRawMode();
-  }
+  bool get rawMode => _isRawMode;
 
   void clearScreen() =>
       stdout.write(ansiEraseInDisplayAll + ansiResetCursorPosition);
@@ -169,6 +191,8 @@ class Console {
 
   void write(String text) => stdout.write(text);
 
+  String get newLine => _isRawMode ? '\r\n' : '\n';
+
   void writeLine([String text, TextAlignment alignment]) {
     if (text != null) {
       switch (alignment) {
@@ -184,11 +208,7 @@ class Console {
       }
       stdout.write(text);
     }
-    if (_rawMode) {
-      stdout.write('\r\n');
-    } else {
-      stdout.write('\n');
-    }
+    stdout.write(newLine);
   }
 
   // TODO: Ctrl+Q isn't working on Linux for some reason
@@ -196,7 +216,8 @@ class Console {
   Key readKey() {
     var key;
 
-    if (!_rawMode) enableRawMode();
+    // if (!_isRawMode)
+    rawMode = true;
     final codeUnit = stdin.readByteSync();
     if (codeUnit >= 0x01 && codeUnit <= 0x1a) {
       // Ctrl+A thru Ctrl+Z are mapped to the 1st-26th entries in the
@@ -303,7 +324,7 @@ class Console {
         ..char = String.fromCharCode(codeUnit)
         ..controlChar = ControlCharacter.none;
     }
-    disableRawMode();
+    rawMode = false;
     return key;
   }
 }
