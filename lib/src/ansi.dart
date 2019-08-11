@@ -21,7 +21,10 @@ String ansiSetColor(int color) => '\x1b[${color}m';
 String ansiSetExtendedForegroundColor(int color) => '\x1b[38;5;${color}m';
 String ansiSetExtendedBackgroundColor(int color) => '\x1b[48;5;${color}m';
 String ansiSetTextStyles(
-    {bool bold, bool underscore, bool blink, bool inverted}) {
+    {bool bold = false,
+    bool underscore = false,
+    bool blink = false,
+    bool inverted = false}) {
   var styles = <int>[];
   if (bold) styles.add(1);
   if (underscore) styles.add(4);
