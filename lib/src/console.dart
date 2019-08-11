@@ -187,7 +187,11 @@ class Console {
     stdout.write(ansiSetColor(ansiBackgroundColors[background]));
   }
 
-  void setTextStyle({bool bold, bool underscore, bool blink, bool inverted}) {
+  void setTextStyle(
+      {bool bold = false,
+      bool underscore = false,
+      bool blink = false,
+      bool inverted = false}) {
     stdout.write(ansiSetTextStyles(
         bold: bold, underscore: underscore, blink: blink, inverted: inverted));
   }

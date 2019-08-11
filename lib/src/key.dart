@@ -9,11 +9,11 @@ enum ControlCharacter {
   ctrlF,
   ctrlG, // Bell
   ctrlH, // Backspace
-  ctrlI,
+  tab,
   ctrlJ,
   ctrlK,
   ctrlL,
-  ctrlM,
+  enter,
   ctrlN,
   ctrlO,
   ctrlP,
