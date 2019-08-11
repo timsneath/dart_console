@@ -187,6 +187,11 @@ class Console {
     stdout.write(ansiSetColor(ansiBackgroundColors[background]));
   }
 
+  void setTextStyle({bool bold, bool underscore, bool blink, bool inverted}) {
+    stdout.write(ansiSetTextStyles(
+        bold: bold, underscore: underscore, blink: blink, inverted: inverted));
+  }
+
   void resetColorAttributes() => stdout.write(ansiResetColor);
 
   void write(String text) => stdout.write(text);
