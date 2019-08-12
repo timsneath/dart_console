@@ -1,6 +1,7 @@
 name: dart_console
 description: A starting point for Dart libraries or applications.
 version: 0.1.0
+homepage: https://github.com/timsneath/dart_console
 author: Tim Sneath <timsneath@google.com>
 
 environment:
