@@ -134,6 +134,17 @@ class Console {
 
   void resetCursorPosition() => stdout.write(ansiCursorPosition(1, 1));
 
+  /// Returns the current cursor position as a coordinate.
+  ///
+  /// Warning: Linux and macOS terminals report their cursor position by
+  /// posting an escape sequence to stdin in response to a request. However,
+  /// if there is lots of other keyboard input at the same time, some
+  /// terminals may interleave that input in the response. There is no
+  /// easy way around this; the recommendation is therefore to use this call
+  /// before reading keyboard input, to get an original offset, and then
+  /// track the local cursor independently based on keyboard input.
+  ///
+  ///
   Coordinate get cursorPosition {
     rawMode = true;
     stdout.write(ansiDeviceStatusReportCursorPosition);
@@ -150,16 +161,23 @@ class Console {
     }
     rawMode = false;
 
-    if (result[0] != '\x1b') return null;
+    if (result[0] != '\x1b') {
+      print(' result: $result  result.length: ${result.length}');
+      return null;
+    }
 
     result = result.substring(2, result.length - 1);
     final coords = result.split(';');
 
-    if (coords.length != 2) return null;
+    if (coords.length != 2) {
+      print(' coords.length: ${coords.length}');
+      return null;
+    }
     if ((int.tryParse(coords[0]) != null) &&
         (int.tryParse(coords[1]) != null)) {
       return Coordinate(int.parse(coords[0]) - 1, int.parse(coords[1]) - 1);
     } else {
+      print(' coords[0]: ${coords[0]}   coords[1]: ${coords[1]}');
       return null;
     }
   }

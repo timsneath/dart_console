@@ -26,7 +26,6 @@ main() {
     } else {
       print(key.char);
     }
-    // print('Unknown key ${key.char} has control char ${key.controlChar}');
     key = console.readKey();
   }
 }
