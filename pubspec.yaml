@@ -1,14 +1,10 @@
 name: dart_console
 description: A starting point for Dart libraries or applications.
 version: 0.1.0
-# homepage: https://www.example.com
 author: Tim Sneath <timsneath@google.com>
 
 environment:
   sdk: '>=2.4.0 <3.0.0'
-
-#dependencies:
-#  path: ^1.6.0
 
 dev_dependencies:
   pedantic: ^1.8.0
