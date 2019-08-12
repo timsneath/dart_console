@@ -1,3 +1,4 @@
+/// The named ANSI colors.
 enum ConsoleColor {
   black,
   red,

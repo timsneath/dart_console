@@ -32,7 +32,7 @@ class Console {
 
   bool _isRawMode = false;
 
-  final termlib = TermLib();
+  final _termlib = TermLib();
 
   /// Enables or disables raw mode.
   ///
@@ -56,25 +56,43 @@ class Console {
   set rawMode(bool value) {
     this._isRawMode = value;
     if (value) {
-      termlib.enableRawMode();
+      _termlib.enableRawMode();
     } else {
-      termlib.disableRawMode();
+      _termlib.disableRawMode();
     }
   }
 
+  /// Returns whether the terminal is in raw mode.
+  ///
+  /// There are a series of flags applied to a UNIX-like terminal that together
+  /// constitute 'raw mode'. These flags turn off echoing of character input,
+  /// processing of input signals like Ctrl+C, and output processing, as well as
+  /// buffering of input until a full line is entered.
   bool get rawMode => _isRawMode;
 
+  /// Clears the entire screen
   void clearScreen() =>
       stdout.write(ansiEraseInDisplayAll + ansiResetCursorPosition);
 
+  /// Erases all the characters in the current line.
   void eraseLine() => stdout.write(ansiEraseInLineAll);
 
+  /// Erases the current line from the cursor to the end of the line.
   void eraseCursorToEnd() => stdout.write(ansiEraseCursorToEnd);
 
+  /// Returns the width of the current console window in characters.
+  ///
+  /// This command attempts to use the ioctl() system call to retrieve the
+  /// window width, and if that fails uses ANSI escape codes to identify its
+  /// location by walking off the edge of the screen and seeing what the
+  /// terminal clipped the cursor to.
+  ///
+  /// If unable to retrieve a valid width from either method, the method
+  /// throws an [Exception].
   int get windowWidth {
     if (_windowWidth == 0) {
       // try using ioctl() to give us the screen size
-      final width = termlib.getWindowWidth();
+      final width = _termlib.getWindowWidth();
       if (width != -1) {
         _windowWidth = width;
       } else {
@@ -97,10 +115,19 @@ class Console {
     return _windowWidth;
   }
 
+  /// Returns the height of the current console window in characters.
+  ///
+  /// This command attempts to use the ioctl() system call to retrieve the
+  /// window height, and if that fails uses ANSI escape codes to identify its
+  /// location by walking off the edge of the screen and seeing what the
+  /// terminal clipped the cursor to.
+  ///
+  /// If unable to retrieve a valid height from either method, the method
+  /// throws an [Exception].
   int get windowHeight {
     if (_windowHeight == 0) {
       // try using ioctl() to give us the screen size
-      final height = termlib.getWindowHeight();
+      final height = _termlib.getWindowHeight();
       if (height != -1) {
         _windowHeight = height;
       } else {
@@ -123,15 +150,29 @@ class Console {
     return _windowHeight;
   }
 
-  // Cursor settings
+  /// Hides the cursor.
+  ///
+  /// If you hide the cursor, you should take care to return the cursor to
+  /// a visible status at the end of the program, even if it throws an
+  /// exception, by calling the [showCursor] method.
   void hideCursor() => stdout.write(ansiHideCursor);
+
+  /// Shows the cursor.
   void showCursor() => stdout.write(ansiShowCursor);
 
+  /// Moves the cursor one position to the left.
   void cursorLeft() => stdout.write(ansiCursorLeft);
+
+  /// Moves the cursor one position to the right.
   void cursorRight() => stdout.write(ansiCursorRight);
+
+  /// Moves the cursor one position up.
   void cursorUp() => stdout.write(ansiCursorUp);
+
+  /// Moves the cursor one position down.
   void cursorDown() => stdout.write(ansiCursorDown);
 
+  /// Moves the cursor to the top left corner of the screen.
   void resetCursorPosition() => stdout.write(ansiCursorPosition(1, 1));
 
   /// Returns the current cursor position as a coordinate.
@@ -182,15 +223,37 @@ class Console {
     }
   }
 
+  /// Sets the cursor to a specific coordinate.
+  ///
+  /// Coordinates are measured from the top left of the screen, and are
+  /// zero-based.
   set cursorPosition(Coordinate cursor) {
     stdout.write(ansiCursorPosition(cursor.row + 1, cursor.col + 1));
   }
 
-  // Printing text to the console
+  /// Sets the console foreground color to a named ANSI color.
+  ///
+  /// There are 16 named ANSI colors, as defined in the [ConsoleColor]
+  /// enumeration. Depending on the console theme and background color,
+  /// some colors may not offer a legible contrast against the background.
   void setForegroundColor(ConsoleColor foreground) {
     stdout.write(ansiSetColor(ansiForegroundColors[foreground]));
   }
 
+  /// Sets the console background color to a named ANSI color.
+  ///
+  /// There are 16 named ANSI colors, as defined in the [ConsoleColor]
+  /// enumeration. Depending on the console theme and background color,
+  /// some colors may not offer a legible contrast against the background.
+  void setBackgroundColor(ConsoleColor background) {
+    stdout.write(ansiSetColor(ansiBackgroundColors[background]));
+  }
+
+  /// Sets the foreground to one of 256 extended ANSI colors.
+  ///
+  /// See https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit for
+  /// the full set of colors. You may also run `examples/demo.dart` for this
+  /// package, which provides a sample of each color in this list.
   void setForegroundExtendedColor(int colorValue) {
     assert(colorValue >= 0 && colorValue <= 0xFF,
         "Color must be a value between 0 and 255.");
@@ -198,6 +261,11 @@ class Console {
     stdout.write(ansiSetExtendedForegroundColor(colorValue));
   }
 
+  /// Sets the background to one of 256 extended ANSI colors.
+  ///
+  /// See https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit for
+  /// the full set of colors. You may also run `examples/demo.dart` for this
+  /// package, which provides a sample of each color in this list.
   void setBackgroundExtendedColor(int colorValue) {
     assert(colorValue >= 0 && colorValue <= 0xFF,
         "Color must be a value between 0 and 255.");
@@ -205,10 +273,9 @@ class Console {
     stdout.write(ansiSetExtendedBackgroundColor(colorValue));
   }
 
-  void setBackgroundColor(ConsoleColor background) {
-    stdout.write(ansiSetColor(ansiBackgroundColors[background]));
-  }
-
+  /// Sets the text style.
+  ///
+  /// Note that not all styles may be supported by all terminals.
   void setTextStyle(
       {bool bold = false,
       bool underscore = false,
@@ -218,12 +285,24 @@ class Console {
         bold: bold, underscore: underscore, blink: blink, inverted: inverted));
   }
 
+  /// Resets all color attributes and text styles to the default terminal
+  /// setting.
   void resetColorAttributes() => stdout.write(ansiResetColor);
 
+  /// Writes the text to the console.
   void write(String text) => stdout.write(text);
 
+  /// Returns the current newline string.
   String get newLine => _isRawMode ? '\r\n' : '\n';
 
+  /// Writes a line to the console, optionally with alignment provided by the
+  /// [TextAlignment] enumeration.
+  ///
+  /// If no parameters are supplied, the command simply writes a new line
+  /// to the console. By default, text is left aligned.
+  ///
+  /// Text alignment operates based off the current window width, and pads
+  /// the remaining characters with a space character.
   void writeLine([String text, TextAlignment alignment]) {
     if (text != null) {
       switch (alignment) {
@@ -242,8 +321,20 @@ class Console {
     stdout.write(newLine);
   }
 
-  // TODO: Ctrl+Q isn't working on Linux for some reason
-  // reading text from the keyboard
+  /// Reads a single key from the input, including a variety of control
+  /// characters.
+  ///
+  /// Keys are represented by the [Key] class. Keys may be printable (if so,
+  /// `Key.isControl` is `false`, and the `Key.char` property may be used to
+  /// identify the key pressed. Non-printable keys have `Key.isControl` set
+  /// to `true`, and if so the `Key.char` property is empty and instead the
+  /// `Key.controlChar` property will be set to a value from the
+  /// [ControlCharacter] enumeration that describes which key was pressed.
+  ///
+  /// Owing to the limitations of terminal key handling, certain keys may
+  /// be represented by multiple control key sequences. An example showing
+  /// basic key handling can be found in the `example/command_line.dart`
+  /// file in the package source code.
   Key readKey() {
     var key;
 
