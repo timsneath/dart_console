@@ -1,3 +1,4 @@
+/// Non-printable characters that can be entered from the keyboard.
 enum ControlCharacter {
   none,
 

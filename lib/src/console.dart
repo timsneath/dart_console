@@ -7,7 +7,7 @@ import 'ffi/termlib.dart';
 
 /// A screen position, measured in rows and columns from the top-left origin
 /// of the screen. Coordinates are zero-based, and converted as necessary
-/// for the underlying system representation (e.g. one-bsed for VT-style
+/// for the underlying system representation (e.g. one-based for VT-style
 /// displays).
 class Coordinate {
   final int row;
