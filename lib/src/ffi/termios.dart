@@ -68,9 +68,6 @@ const int TCSAFLUSH = 2; // drain output, flush input
 // 	speed_t         c_ospeed;       /* output speed */
 // };
 class TermIOS extends Struct<TermIOS> {
-  // TODO: On Linux, sizeof(tcflag_t) is 4, but on macOS, it is 8.
-  // This code only works on macOS -- need to figure out how to make it
-  // platform independent.
   @Int64()
   int c_iflag;
   @Int64()
