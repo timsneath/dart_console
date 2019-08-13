@@ -43,6 +43,7 @@ enum ControlCharacter {
   unknown
 }
 
+/// A representation of a keystroke.
 class Key {
   bool isControl;
   String char;
