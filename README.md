@@ -48,6 +48,16 @@ More comprehensive demos of the Console class are included in the
 
 `dart_console` uses the new [FFI][FFI] capabilities in Dart 2.5 and later. As of
 the time of writing (August 2019), this is not available in a stable release.
+However, the package declares a dependency of Dart 2.4 so that `dartdoc` still
+works. But don't be confused -- you need 2.5, which is currently available
+in the `master` channel of Flutter or as a standalone download from the
+[Dart SDK][dart] install page.
+
+## Acknowledgements
+
+Special thanks to [Matt Sullivan (@mjohnsullivan)][@mjohnsullivan] and 
+[Samir Jindel (@sjindel-google)][@sjindel-google] for their help understanding
+the vagaries of FFI in its early state.
 
 ## Features and bugs
 
@@ -57,3 +67,6 @@ Please file feature requests and bugs at the [issue tracker][tracker].
 [dart_kilo]: https://github.com/timsneath/dart_kilo
 [FFI]: https://dart.dev/server/c-interop
 [tracker]: https://github.com/timsneath/dart_console/issues
+[@mjohnsullivan]: https://github.com/mjohnsullivan
+[@sjindel-google]: https://github.com/sjindel-google
+[dart]: https://dart.dev/get-dart
