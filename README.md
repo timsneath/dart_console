@@ -1,6 +1,7 @@
 A Dart library for building console applications.
 
 [![pub package](https://img.shields.io/pub/v/dart_console.svg)](https://pub.dev/packages/dart_console)
+[![Language](https://img.shields.io/badge/language-Dart-blue.svg)](https://dart.dev)
 
 This library contains a variety of useful functions for console application
 development, including:
