@@ -49,9 +49,11 @@ More comprehensive demos of the Console class are included in the
 `dart_console` uses the new [FFI][FFI] capabilities in Dart 2.5 and later. As of
 the time of writing (August 2019), this is not available in a stable release.
 However, the package declares a dependency of Dart 2.4 so that `dartdoc` still
-works. But don't be confused -- you need 2.5, which is currently available
-in the `master` channel of Flutter or as a standalone download from the
-[Dart SDK][dart] install page.
+works. For this reason, `dart_console` currently has a low pub.dev analysis
+score. This should fix itself when pub.dev rolls forward to Dart 2.5.
+
+Dart 2.5 is currently available in the `master` channel of Flutter or as a
+standalone download from the [Dart SDK][dart] install page.
 
 ## Acknowledgements
 
