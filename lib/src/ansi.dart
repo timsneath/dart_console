@@ -1,3 +1,11 @@
+// ansi.dart
+//
+// Contains ANSI escape sequences used by dart_console. Other classes should
+// use these constants rather than embedding raw control codes.
+//
+// For more information on commonly-accepted ANSI mode control sequences, read
+// https://vt100.net/docs/vt100-ug/chapter3.html.
+
 import 'enums.dart';
 
 const ansiDeviceStatusReportCursorPosition = '\x1b[6n';

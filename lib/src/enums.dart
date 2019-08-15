@@ -1,3 +1,7 @@
+// enums.dart
+//
+// Externally exposed enumerations used by the `Console` class.
+
 /// The named ANSI colors.
 enum ConsoleColor {
   black,

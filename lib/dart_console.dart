@@ -1,6 +1,9 @@
+// dart_console.dart
+
 /// Console library
 ///
-/// Currently designed for VT100-compatible terminal emulators.
+/// Currently requires a UNIX-style terminal emulator (i.e. a terminal that
+/// is able to interpret ANSI escape sequences).
 library dart_console;
 
 export 'src/console.dart';

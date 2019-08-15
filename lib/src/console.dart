@@ -1,3 +1,8 @@
+// console.dart
+//
+// Contains the primary API for dart_console, exposed through the `Console`
+// class.
+
 import 'dart:io';
 
 import 'ansi.dart';

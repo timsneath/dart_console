@@ -1,3 +1,12 @@
+// termlib.dart
+//
+// stdlib/glibc-based library for interrogating and manipulating the console.
+//
+// This class provides raw wrappers for the underlying terminal system calls
+// that are not available through ANSI mode control sequences, and is not
+// designed to be called directly. Package consumers should normally use the
+// `Console` class to call these methods.
+
 import 'dart:ffi';
 import 'dart:io';
 

@@ -1,3 +1,7 @@
+// key.dart
+//
+// Representation of keyboard input and control characters.
+
 /// Non-printable characters that can be entered from the keyboard.
 enum ControlCharacter {
   none,
