@@ -101,7 +101,12 @@ void editorInsertNewline() {
 // file i/o
 void editorOpen(String filename) {
   final file = File(filename);
-  fileRows = file.readAsLinesSync(); // TODO: error handling
+  try {
+    fileRows = file.readAsLinesSync();
+  } on FileSystemException catch (e) {
+    editorSetStatusMessage('Error opening file: $e');
+    return;
+  }
 
   for (var row in fileRows) {
     row.replaceAll('\t', ' ' * kiloTabStopLength);
