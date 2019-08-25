@@ -6,13 +6,13 @@ A Dart library for building console applications.
 This library contains a variety of useful functions for console application
 development, including:
 
- - Reading the current window dimensions (height, width)
- - Reading and setting the cursor location
- - Setting foreground and background colors
- - Manipulating the console into "raw mode", which allows more advanced
-   keyboard input processing than the default `dart:io` library.
- - Reading keys and control sequences from the keyboard
- - Writing aligned text to the screen
+- Reading the current window dimensions (height, width)
+- Reading and setting the cursor location
+- Setting foreground and background colors
+- Manipulating the console into "raw mode", which allows more advanced
+  keyboard input processing than the default `dart:io` library.
+- Reading keys and control sequences from the keyboard
+- Writing aligned text to the screen
 
 The library is being used to implement a Dart version of the [Kilo][kilo] text
 editor, and is sufficient for a reasonably complete set of usage, including
@@ -24,6 +24,7 @@ package does not currently work on Windows.
 ## Usage
 
 A simple example for the `dart_console` package:
+
 ```dart
 import 'package:dart_console/dart_console.dart';
 
