@@ -432,6 +432,18 @@ class Console {
           case 'F':
             key.controlChar = ControlCharacter.end;
             break;
+          case 'P':
+            key.controlChar = ControlCharacter.F1;
+            break;
+          case 'Q':
+            key.controlChar = ControlCharacter.F2;
+            break;
+          case 'R':
+            key.controlChar = ControlCharacter.F3;
+            break;
+          case 'S':
+            key.controlChar = ControlCharacter.F4;
+            break;
           default:
         }
       } else if (escapeSequence[0] == 'b') {
