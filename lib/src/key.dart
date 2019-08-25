@@ -39,6 +39,8 @@ enum ControlCharacter {
   arrowDown,
   pageUp,
   pageDown,
+  wordLeft,
+  wordRight,
   home,
   end,
   delete,

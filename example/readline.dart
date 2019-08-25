@@ -1,17 +1,47 @@
+// readline.dart
+//
+// Demonstrates a simple command-line interface that does not require line
+// editing services from the shell.
+
+import 'dart:io';
+
 import 'package:dart_console/dart_console.dart';
 
 final console = Console();
 
-main() {
-  console.setForegroundColor(ConsoleColor.brightYellow);
-  console.write("console.readLine");
-  console.resetColorAttributes();
-  console.writeLine(
-      " provides a basic readline implementation that handles cursor navigation.");
-  console.writeLine();
-  console.write("Enter some text: ");
-  final response = console.readLine();
+const prompt = '>>> ';
 
+// Inspired by
+// http://www.lihaoyi.com/post/BuildyourownCommandLinewithANSIescapecodes.html#writing-a-command-line
+// as a test of the Console class capabilities
+
+main() {
+  console.write("The ");
+  console.setForegroundColor(ConsoleColor.brightYellow);
+  console.write("Console.readLine()");
+  console.resetColorAttributes();
+  console.writeLine(" method provides a basic readline implementation.");
+
+  console.write("Unlike the built-in ");
+  console.setForegroundColor(ConsoleColor.brightYellow);
+  console.write("stdin.readLineSync()");
+  console.resetColorAttributes();
+  console.writeLine(" method, you can use arrow keys as well as home/end.");
   console.writeLine();
-  console.writeLine("You wrote: $response");
+
+  console.writeLine("As a demo, this command-line reader 'shouts' all text "
+      "back in upper case.");
+  console.writeLine("Enter a blank line or press Ctrl+C to exit.");
+
+  while (true) {
+    console.write(prompt);
+    final response = console.readLine();
+    if (response.isEmpty) {
+      exit(0);
+    } else {
+      console.writeLine();
+      console.writeLine('YOU SAID: ${response.toUpperCase()}');
+      console.writeLine();
+    }
+  }
 }

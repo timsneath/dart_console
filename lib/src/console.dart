@@ -4,6 +4,7 @@
 // class.
 
 import 'dart:io';
+import 'dart:math';
 
 import 'ansi.dart';
 import 'enums.dart';
@@ -361,9 +362,10 @@ class Console {
       final escapeSequence = <String>[];
 
       escapeSequence.add(String.fromCharCode(stdin.readByteSync()));
-      escapeSequence.add(String.fromCharCode(stdin.readByteSync()));
 
       if (escapeSequence[0] == '[') {
+        escapeSequence.add(String.fromCharCode(stdin.readByteSync()));
+
         switch (escapeSequence[1]) {
           case 'A':
             key.controlChar = ControlCharacter.arrowUp;
@@ -421,6 +423,8 @@ class Console {
             }
         }
       } else if (escapeSequence[0] == 'O') {
+        escapeSequence.add(String.fromCharCode(stdin.readByteSync()));
+        assert(escapeSequence.length == 2);
         switch (escapeSequence[1]) {
           case 'H':
             key.controlChar = ControlCharacter.home;
@@ -430,6 +434,10 @@ class Console {
             break;
           default:
         }
+      } else if (escapeSequence[0] == 'b') {
+        key.controlChar = ControlCharacter.wordLeft;
+      } else if (escapeSequence[0] == 'f') {
+        key.controlChar = ControlCharacter.wordRight;
       } else {
         key.controlChar = ControlCharacter.unknown;
       }
@@ -465,9 +473,9 @@ class Console {
   /// The implementation does not currently allow for multi-line input. It
   /// is best suited for short text fields that are not longer than the width
   /// of the current screen.
-  String readLine() {
+  String readLine({bool cancelOnBreak = true}) {
     String buffer = '';
-    var column = 0; // cursor position relative to buffer, not screen
+    var index = 0; // cursor position relative to buffer, not screen
 
     final screenRow = cursorPosition.row;
     final screenColOffset = cursorPosition.col;
@@ -477,60 +485,83 @@ class Console {
     final bufferMaxLength = windowWidth - screenColOffset - 3;
 
     while (true) {
-      cursorPosition = Coordinate(screenRow, screenColOffset);
-      write(buffer + ' '); // allow for backspace condition
-      cursorPosition = Coordinate(screenRow, screenColOffset + column);
-
       var key = readKey();
 
       if (key.isControl) {
         switch (key.controlChar) {
           case ControlCharacter.enter:
             return buffer;
+          case ControlCharacter.ctrlC:
+            if (cancelOnBreak) return '';
+            break;
           case ControlCharacter.backspace:
           case ControlCharacter.ctrlH:
-            if (column > 0) {
-              buffer =
-                  buffer.substring(0, column - 1) + buffer.substring(column);
-              column--;
+            if (index > 0) {
+              buffer = buffer.substring(0, index - 1) + buffer.substring(index);
+              index--;
             }
             break;
           case ControlCharacter.delete:
-            if (column < buffer.length - 1) {
-              buffer =
-                  buffer.substring(0, column) + buffer.substring(column + 1);
+          case ControlCharacter.ctrlD:
+            if (index < buffer.length - 1) {
+              buffer = buffer.substring(0, index) + buffer.substring(index + 1);
             }
             break;
+          case ControlCharacter.ctrlK:
+            buffer = buffer.substring(0, index);
+            break;
           case ControlCharacter.arrowLeft:
-            column = column > 0 ? column - 1 : column;
+          case ControlCharacter.ctrlB:
+            index = index > 0 ? index - 1 : index;
             break;
           case ControlCharacter.arrowRight:
-            column = column < buffer.length ? column + 1 : column;
+          case ControlCharacter.ctrlF:
+            index = index < buffer.length ? index + 1 : index;
+            break;
+          case ControlCharacter.wordLeft:
+            if (index > 0) {
+              final bufferLeftOfCursor = buffer.substring(0, index - 1);
+              final lastSpace = bufferLeftOfCursor.lastIndexOf(' ');
+              index = lastSpace != -1 ? lastSpace + 1 : 0;
+            }
+            break;
+          case ControlCharacter.wordRight:
+            if (index < buffer.length) {
+              final bufferRightOfCursor = buffer.substring(index + 1);
+              final nextSpace = bufferRightOfCursor.indexOf(' ');
+              index = nextSpace != -1
+                  ? min(index + nextSpace + 2, buffer.length)
+                  : buffer.length;
+            }
             break;
           case ControlCharacter.home:
           case ControlCharacter.ctrlA:
-            column = 0;
+            index = 0;
             break;
           case ControlCharacter.end:
           case ControlCharacter.ctrlE:
-            column = buffer.length;
+            index = buffer.length;
             break;
           default:
             break;
         }
       } else {
         if (buffer.length < bufferMaxLength) {
-          if (column == buffer.length) {
+          if (index == buffer.length) {
             buffer += key.char;
-            column++;
+            index++;
           } else {
-            buffer = buffer.substring(0, column) +
-                key.char +
-                buffer.substring(column);
-            column++;
+            buffer =
+                buffer.substring(0, index) + key.char + buffer.substring(index);
+            index++;
           }
         }
       }
+
+      cursorPosition = Coordinate(screenRow, screenColOffset);
+      eraseCursorToEnd();
+      write(buffer); // allow for backspace condition
+      cursorPosition = Coordinate(screenRow, screenColOffset + index);
     }
   }
 }
