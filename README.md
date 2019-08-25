@@ -43,8 +43,15 @@ main() {
 }
 ```
 
-More comprehensive demos of the Console class are included in the 
-`example/demo.dart` and `example/command_line.dart` files.
+More comprehensive demos of the `Console` class are provided, as follows:
+
+| Example | Description |
+| ---- | ---- |
+| `demo.dart` | Suite of test demos that showcase various capabilities of the package |
+| `main.dart` | Basic demo of how to get started with the package |
+| `keys.dart` | Demonstrates how control characters are processed by `dart_console` |
+| `readline.dart` | Sample command-line interface |
+| `kilo.dart` | Rudimentary text editor |
 
 ## Other Notes
 
@@ -59,7 +66,7 @@ standalone download from the [Dart SDK][dart] install page.
 
 ## Acknowledgements
 
-Special thanks to [Matt Sullivan (@mjohnsullivan)][@mjohnsullivan] and 
+Special thanks to [Matt Sullivan (@mjohnsullivan)][@mjohnsullivan] and
 [Samir Jindel (@sjindel-google)][@sjindel-google] for their help understanding
 the vagaries of FFI in its early state.
 
