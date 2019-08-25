@@ -1,3 +1,7 @@
+## 0.2.0
+
+- Add `readline` function.
+
 ## 0.1.0+3
 
 - Tidy up documentation and comments.

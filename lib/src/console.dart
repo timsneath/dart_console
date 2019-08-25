@@ -453,4 +453,84 @@ class Console {
     rawMode = false;
     return key;
   }
+
+  /// Reads a line of input, handling basic keyboard navigation commands.
+  ///
+  /// The Dart [stdin.readLineSync()] function reads a line from the input,
+  /// however it does not handle cursor navigation (e.g. arrow keys, home and
+  /// end keys), and has side-effects that may be unhelpful for certain console
+  /// applications. For example, Ctrl+C is processed as the break character,
+  /// which causes the application to immediately exit.
+  ///
+  /// The implementation does not currently allow for multi-line input. It
+  /// is best suited for short text fields that are not longer than the width
+  /// of the current screen.
+  String readLine() {
+    String buffer = '';
+    var column = 0; // cursor position relative to buffer, not screen
+
+    final screenRow = cursorPosition.row;
+    final screenColOffset = cursorPosition.col;
+
+    // TODO: Add multi-line input. For now, limit the text length to what will
+    // fit on the remainder of the current row.
+    final bufferMaxLength = windowWidth - screenColOffset - 3;
+
+    while (true) {
+      cursorPosition = Coordinate(screenRow, screenColOffset);
+      write(buffer + ' '); // allow for backspace condition
+      cursorPosition = Coordinate(screenRow, screenColOffset + column);
+
+      var key = readKey();
+
+      if (key.isControl) {
+        switch (key.controlChar) {
+          case ControlCharacter.enter:
+            return buffer;
+          case ControlCharacter.backspace:
+          case ControlCharacter.ctrlH:
+            if (column > 0) {
+              buffer =
+                  buffer.substring(0, column - 1) + buffer.substring(column);
+              column--;
+            }
+            break;
+          case ControlCharacter.delete:
+            if (column < buffer.length - 1) {
+              buffer =
+                  buffer.substring(0, column) + buffer.substring(column + 1);
+            }
+            break;
+          case ControlCharacter.arrowLeft:
+            column = column > 0 ? column - 1 : column;
+            break;
+          case ControlCharacter.arrowRight:
+            column = column < buffer.length ? column + 1 : column;
+            break;
+          case ControlCharacter.home:
+          case ControlCharacter.ctrlA:
+            column = 0;
+            break;
+          case ControlCharacter.end:
+          case ControlCharacter.ctrlE:
+            column = buffer.length;
+            break;
+          default:
+            break;
+        }
+      } else {
+        if (buffer.length < bufferMaxLength) {
+          if (column == buffer.length) {
+            buffer += key.char;
+            column++;
+          } else {
+            buffer = buffer.substring(0, column) +
+                key.char +
+                buffer.substring(column);
+            column++;
+          }
+        }
+      }
+    }
+  }
 }
