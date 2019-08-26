@@ -35,7 +35,7 @@ main() {
 
   while (true) {
     console.write(prompt);
-    final response = console.readLine();
+    final response = console.readLine(cancelOnBreak: true);
     if (response.isEmpty) {
       exit(0);
     } else {
