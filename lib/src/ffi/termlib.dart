@@ -77,8 +77,8 @@ class TermLib {
     newTermIOS.c_cc13 = _origTermIOS.c_cc13;
     newTermIOS.c_cc14 = _origTermIOS.c_cc14;
     newTermIOS.c_cc15 = _origTermIOS.c_cc15;
-    newTermIOS.c_cc16 = _origTermIOS.c_cc16;
-    newTermIOS.c_cc17 = _origTermIOS.c_cc17;
+    newTermIOS.c_cc16 = 0; // VMIN -- return each byte, or 0 for timeout
+    newTermIOS.c_cc17 = 1; // VTIME -- 100ms timeout (unit is 1/10s)
     newTermIOS.c_cc18 = _origTermIOS.c_cc18;
     newTermIOS.c_cc19 = _origTermIOS.c_cc19;
     newTermIOS.c_ispeed = _origTermIOS.c_ispeed;

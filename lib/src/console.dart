@@ -343,9 +343,13 @@ class Console {
   /// file in the package source code.
   Key readKey() {
     var key, charCode;
+    var codeUnit = 0;
 
     rawMode = true;
-    final codeUnit = stdin.readByteSync();
+    while (codeUnit <= 0) {
+      codeUnit = stdin.readByteSync();
+    }
+
     if (codeUnit >= 0x01 && codeUnit <= 0x1a) {
       // Ctrl+A thru Ctrl+Z are mapped to the 1st-26th entries in the
       // enum, so it's easy to convert them across
