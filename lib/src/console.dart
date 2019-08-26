@@ -28,7 +28,7 @@ class Coordinate {
 /// and write to it.
 ///
 /// A comprehensive set of demos of using the Console class can be found in the
-/// `demo.dart` file in the `examples/` subdirectory.
+/// `examples/` subdirectory.
 class Console {
   // We cache these values so we don't have to keep retrieving them. The
   // downside is that the class isn't dynamically responsive to a resized
@@ -371,7 +371,9 @@ class Console {
       }
       escapeSequence.add(String.fromCharCode(charCode));
 
-      if (escapeSequence[0] == '[') {
+      if (charCode == 127) {
+        key = Key.control(ControlCharacter.wordBackspace);
+      } else if (escapeSequence[0] == '[') {
         charCode = stdin.readByteSync();
         if (charCode == -1) {
           rawMode = false;

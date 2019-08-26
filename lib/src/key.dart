@@ -47,6 +47,7 @@ enum ControlCharacter {
   escape,
   delete,
   backspace,
+  wordBackspace,
 
   F1,
   F2,
