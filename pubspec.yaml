@@ -2,7 +2,7 @@ name: dart_console
 description: 
   A helper library for command-line applications that need more control over input/output than the standard library provides.
 
-version: 0.2.0
+version: 0.2.0+1
 homepage: https://github.com/timsneath/dart_console
 author: Tim Sneath <timsneath@google.com>
 
