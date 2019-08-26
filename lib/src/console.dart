@@ -51,6 +51,10 @@ class Console {
   /// perform their own input and output processing, as well as for reading a
   /// single key from the input.
   ///
+  /// In general, you should not need to enable or disable raw mode explicitly;
+  /// you should call the [readKey] command, which takes care of handling raw
+  /// mode for you.
+  ///
   /// If you use raw mode, you should disable it before your program returns, to
   /// avoid the console being left in a state unsuitable for interactive input.
   ///

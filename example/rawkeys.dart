@@ -13,7 +13,10 @@ main() {
   console.rawMode = true;
 
   while (true) {
-    final codeUnit = stdin.readByteSync();
+    var codeUnit = 0;
+    while (codeUnit <= 0) {
+      codeUnit = stdin.readByteSync();
+    }
 
     if (codeUnit < 0x20 || codeUnit == 0x7F) {
       print('${codeUnit.toRadixString(16)}\r');
