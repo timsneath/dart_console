@@ -342,29 +342,34 @@ class Console {
   /// basic key handling can be found in the `example/command_line.dart`
   /// file in the package source code.
   Key readKey() {
-    var key;
+    var key, charCode;
 
     rawMode = true;
     final codeUnit = stdin.readByteSync();
     if (codeUnit >= 0x01 && codeUnit <= 0x1a) {
       // Ctrl+A thru Ctrl+Z are mapped to the 1st-26th entries in the
       // enum, so it's easy to convert them across
-      key = Key()
-        ..isControl = true
-        ..char = ''
-        ..controlChar = ControlCharacter.values[codeUnit];
+      key = Key.control(ControlCharacter.values[codeUnit]);
     } else if (codeUnit == 0x1b) {
       // escape sequence (e.g. \x1b[A for up arrow)
-      key = Key()
-        ..isControl = true
-        ..char = '';
+      key = Key.control(ControlCharacter.escape);
 
       final escapeSequence = <String>[];
 
-      escapeSequence.add(String.fromCharCode(stdin.readByteSync()));
+      charCode = stdin.readByteSync();
+      if (charCode == -1) {
+        rawMode = false;
+        return key;
+      }
+      escapeSequence.add(String.fromCharCode(charCode));
 
       if (escapeSequence[0] == '[') {
-        escapeSequence.add(String.fromCharCode(stdin.readByteSync()));
+        charCode = stdin.readByteSync();
+        if (charCode == -1) {
+          rawMode = false;
+          return key;
+        }
+        escapeSequence.add(String.fromCharCode(charCode));
 
         switch (escapeSequence[1]) {
           case 'A':
@@ -388,7 +393,12 @@ class Console {
           default:
             if (escapeSequence[1].codeUnits[0] > '0'.codeUnits[0] &&
                 escapeSequence[1].codeUnits[0] < '9'.codeUnits[0]) {
-              escapeSequence.add(String.fromCharCode(stdin.readByteSync()));
+              charCode = stdin.readByteSync();
+              if (charCode == -1) {
+                rawMode = false;
+                return key;
+              }
+              escapeSequence.add(String.fromCharCode(charCode));
               if (escapeSequence[2] != '~') {
                 key.controlChar = ControlCharacter.unknown;
               } else {
@@ -423,7 +433,12 @@ class Console {
             }
         }
       } else if (escapeSequence[0] == 'O') {
-        escapeSequence.add(String.fromCharCode(stdin.readByteSync()));
+        charCode = stdin.readByteSync();
+        if (charCode == -1) {
+          rawMode = false;
+          return key;
+        }
+        escapeSequence.add(String.fromCharCode(charCode));
         assert(escapeSequence.length == 2);
         switch (escapeSequence[1]) {
           case 'H':
@@ -454,21 +469,12 @@ class Console {
         key.controlChar = ControlCharacter.unknown;
       }
     } else if (codeUnit == 0x7f) {
-      key = Key()
-        ..isControl = true
-        ..char = ''
-        ..controlChar = ControlCharacter.backspace;
+      key = Key.control(ControlCharacter.backspace);
     } else if (codeUnit == 0x00 || (codeUnit >= 0x1c && codeUnit <= 0x1f)) {
-      key = Key()
-        ..isControl = true
-        ..char = ''
-        ..controlChar = ControlCharacter.unknown;
+      key = Key.control(ControlCharacter.unknown);
     } else {
       // assume other characters are printable
-      key = Key()
-        ..isControl = false
-        ..char = String.fromCharCode(codeUnit)
-        ..controlChar = ControlCharacter.none;
+      key = Key.printable(String.fromCharCode(codeUnit));
     }
     rawMode = false;
     return key;
