@@ -499,7 +499,7 @@ class Console {
   /// The implementation does not currently allow for multi-line input. It
   /// is best suited for short text fields that are not longer than the width
   /// of the current screen.
-  String readLine({bool cancelOnBreak = true}) {
+  String readLine({bool cancelOnBreak = false, bool cancelOnEscape = false}) {
     String buffer = '';
     var index = 0; // cursor position relative to buffer, not screen
 
@@ -519,6 +519,9 @@ class Console {
             return buffer;
           case ControlCharacter.ctrlC:
             if (cancelOnBreak) return '';
+            break;
+          case ControlCharacter.escape:
+            if (cancelOnEscape) return '';
             break;
           case ControlCharacter.backspace:
           case ControlCharacter.ctrlH:
