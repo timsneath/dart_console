@@ -501,7 +501,18 @@ class Console {
   /// The implementation does not currently allow for multi-line input. It
   /// is best suited for short text fields that are not longer than the width
   /// of the current screen.
-  String readLine({bool cancelOnBreak = false, bool cancelOnEscape = false}) {
+  ///
+  /// By default, readLine ignores break characters (e.g. Ctrl+C) and the Esc
+  /// key, but if enabled, the function will exit and return an empty string if
+  /// those keys are pressed.
+  ///
+  /// A callback function may be supplied, as a peek-ahead for what is being
+  /// entered. This is intended for scenarios like auto-complete, where the
+  /// text field is coupled with some other content.
+  String readLine(
+      {bool cancelOnBreak = false,
+      bool cancelOnEscape = false,
+      Function(String text, Key lastPressed) callback}) {
     String buffer = '';
     var index = 0; // cursor position relative to buffer, not screen
 
@@ -593,6 +604,8 @@ class Console {
       eraseCursorToEnd();
       write(buffer); // allow for backspace condition
       cursorPosition = Coordinate(screenRow, screenColOffset + index);
+
+      if (callback != null) callback(buffer, key);
     }
   }
 }
