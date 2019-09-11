@@ -63,8 +63,7 @@ class Key {
   String char;
   ControlCharacter controlChar;
 
-  Key.printable(String char)
-    : assert(char.length == 1) {
+  Key.printable(String char) : assert(char.length == 1) {
     this.char = char;
     isControl = false;
     controlChar = ControlCharacter.none;
