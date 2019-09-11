@@ -1,3 +1,7 @@
+## 0.2.0+2
+
+Bring back Dart 2.5 dependency, now that Dart 2.5 is released.
+
 ## 0.2.0+1
 
 - Add escape character support
