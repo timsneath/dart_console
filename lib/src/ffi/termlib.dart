@@ -1,11 +1,13 @@
 import 'dart:ffi';
 import 'dart:io';
 
+import 'package:dart_console/src/ffi/win/termlib-win.dart';
+
 import 'termios.dart';
 import 'unistd.dart';
 import 'ioctl.dart';
 
-class TermLib {
+class TermLibUnix implements TermLib {
   DynamicLibrary _stdlib;
 
   Pointer<TermIOS> _origTermIOSPointer;
@@ -85,7 +87,7 @@ class TermLib {
     tcsetattr(STDIN_FILENO, TCSAFLUSH, _origTermIOSPointer);
   }
 
-  TermLib() {
+  TermLibUnix() {
     _stdlib = Platform.isMacOS
         ? DynamicLibrary.open('libSystem.dylib')
         : DynamicLibrary.open("libc-2.28.so");
@@ -99,5 +101,20 @@ class TermLib {
     // store console mode settings so we can return them again as necessary
     _origTermIOSPointer = Pointer<TermIOS>.allocate();
     tcgetattr(STDIN_FILENO, _origTermIOSPointer);
+  }
+}
+
+abstract class TermLib {
+  int getWindowHeight();
+  int getWindowWidth();
+
+  void enableRawMode();
+  void disableRawMode();
+
+  factory TermLib() {
+    if (Platform.isWindows) {
+      return TermLibWindows();
+    } else {}
+    return TermLibUnix();
   }
 }

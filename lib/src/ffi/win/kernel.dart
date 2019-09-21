@@ -4,6 +4,24 @@ const STD_INPUT_HANDLE = -10;
 const STD_OUTPUT_HANDLE = -11;
 const STD_ERROR_HANDLE = -12;
 
+// input flags
+const ENABLE_ECHO_INPUT = 0x0004;
+const ENABLE_EXTENDED_FLAGS = 0x0080;
+const ENABLE_INSERT_MODE = 0x0020;
+const ENABLE_LINE_INPUT = 0x0002;
+const ENABLE_MOUSE_INPUT = 0x0010;
+const ENABLE_PROCESSED_INPUT = 0x0001;
+const ENABLE_QUICK_EDIT_MODE = 0x0040;
+const ENABLE_WINDOW_INPUT = 0x0008;
+const ENABLE_VIRTUAL_TERMINAL_INPUT = 0x0200;
+
+// output flags
+const ENABLE_PROCESSED_OUTPUT = 0x0001;
+const ENABLE_WRAP_AT_EOL_OUTPUT = 0x0002;
+const ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004;
+const DISABLE_NEWLINE_AUTO_RETURN = 0x0008;
+const ENABLE_LVB_GRID_WORLDWIDE = 0x0010;
+
 // HANDLE WINAPI GetStdHandle(
 //   _In_ DWORD nStdHandle
 // );
@@ -18,6 +36,14 @@ typedef getConsoleScreenBufferInfoNative = Int8 Function(Int32 hConsoleOutput,
     Pointer<CONSOLE_SCREEN_BUFFER_INFO> lpConsoleScreenBufferInfo);
 typedef getConsoleScreenBufferInfoDart = int Function(int hConsoleOutput,
     Pointer<CONSOLE_SCREEN_BUFFER_INFO> lpConsoleScreenBufferInfo);
+
+// BOOL WINAPI SetConsoleMode(
+//   _In_ HANDLE hConsoleHandle,
+//   _In_ DWORD  dwMode
+// );
+typedef setConsoleModeNative = Int8 Function(
+    Int32 hConsoleHandle, Int32 dwMode);
+typedef setConsoleModeDart = int Function(int hConsoleHandle, int dwMode);
 
 // Requires an unpacking of COORD and SMALL_RECT because of
 // missing support for nested structs
@@ -110,24 +136,4 @@ class SMALL_RECT extends Struct<SMALL_RECT> {
 
   @Int16()
   int Bottom;
-}
-
-main() {
-  final DynamicLibrary kernel = DynamicLibrary.open('Kernel32.dll');
-
-  final GetStdHandle = kernel
-      .lookupFunction<getStdHandleNative, getStdHandleDart>("GetStdHandle");
-  final GetConsoleScreenBufferInfo = kernel.lookupFunction<
-      getConsoleScreenBufferInfoNative,
-      getConsoleScreenBufferInfoDart>("GetConsoleScreenBufferInfo");
-
-  final outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-  print(outputHandle);
-
-  Pointer<CONSOLE_SCREEN_BUFFER_INFO> pBufferInfo =
-      Pointer<CONSOLE_SCREEN_BUFFER_INFO>.allocate();
-  CONSOLE_SCREEN_BUFFER_INFO bufferInfo = pBufferInfo.load();
-  GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
-  print(bufferInfo.dwMaximumWindowSizeX);
-  print(bufferInfo.dwMaximumWindowSizeY);
 }
