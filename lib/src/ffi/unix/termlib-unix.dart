@@ -98,7 +98,7 @@ class TermLibUnix implements TermLib {
   TermLibUnix() {
     _stdlib = Platform.isMacOS
         ? DynamicLibrary.open('libSystem.dylib')
-        : DynamicLibrary.open("libc-2.28.so");
+        : DynamicLibrary.open("libc.so.6");
 
     ioctl = _stdlib.lookupFunction<ioctlNative, ioctlDart>("ioctl");
     tcgetattr =
