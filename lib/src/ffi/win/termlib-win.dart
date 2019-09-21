@@ -28,7 +28,7 @@ class TermLibWindows implements TermLib {
         Pointer<CONSOLE_SCREEN_BUFFER_INFO>.allocate();
     CONSOLE_SCREEN_BUFFER_INFO bufferInfo = pBufferInfo.load();
     GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
-    final windowHeight = bufferInfo.dwMaximumWindowSizeY;
+    final windowHeight = bufferInfo.srWindowBottom - bufferInfo.srWindowTop + 1;
     pBufferInfo.free();
     return windowHeight;
   }
@@ -38,7 +38,7 @@ class TermLibWindows implements TermLib {
         Pointer<CONSOLE_SCREEN_BUFFER_INFO>.allocate();
     CONSOLE_SCREEN_BUFFER_INFO bufferInfo = pBufferInfo.load();
     GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
-    final windowWidth = bufferInfo.dwMaximumWindowSizeX;
+    final windowWidth = bufferInfo.srWindowRight - bufferInfo.srWindowLeft + 1;
     pBufferInfo.free();
     return windowWidth;
   }
