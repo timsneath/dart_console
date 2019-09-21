@@ -20,11 +20,11 @@ editor, and is sufficient for a reasonably complete set of usage, including
 
 The library assumes a terminal that recognizes and implements common ANSI escape
 sequences. The package has been tested on macOS, Linux and 
-[vt-win10][Windows 10 version 1903]. Windows support is preliminary - the
-library works well on the [winterm][Windows Terminal], but your mileage may vary
+[Windows 10 version 1903][vt-win10]. Windows support is preliminary - the
+library works well on the [Windows Terminal][winterm], but your mileage may vary
 on older consoles such as `cmd`.
 
-As an aside, this library demonstrates usage of the [FFI][`dart:ffi` library]
+As an aside, this library demonstrates usage of the [`dart:ffi` library][FFI]
 for calling system APIs and separating Win32 and UNIX-style implementations.
 
 ## Usage
