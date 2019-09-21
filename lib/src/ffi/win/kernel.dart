@@ -45,9 +45,34 @@ typedef setConsoleModeNative = Int8 Function(
     Int32 hConsoleHandle, Int32 dwMode);
 typedef setConsoleModeDart = int Function(int hConsoleHandle, int dwMode);
 
+// BOOL WINAPI SetConsoleCursorInfo(
+//   _In_       HANDLE              hConsoleOutput,
+//   _In_ const CONSOLE_CURSOR_INFO *lpConsoleCursorInfo
+// );
+typedef setConsoleCursorInfoNative = Int8 Function(
+    Int32 hConsoleOutput, Pointer<CONSOLE_CURSOR_INFO> lpConsoleCursorInfo);
+typedef setConsoleCursorInfoDart = int Function(
+    int hConsoleOutput, Pointer<CONSOLE_CURSOR_INFO> lpConsoleCursorInfo);
+
 // Requires an unpacking of COORD and SMALL_RECT because of
 // missing support for nested structs
 // (https://github.com/dart-lang/sdk/issues/37271)
+
+// typedef struct _CONSOLE_CURSOR_INFO {
+//   DWORD dwSize;
+//   BOOL  bVisible;
+// } CONSOLE_CURSOR_INFO, *PCONSOLE_CURSOR_INFO;
+class CONSOLE_CURSOR_INFO extends Struct<CONSOLE_CURSOR_INFO> {
+  @Int32()
+  int dwSize;
+  @Int32()
+  int bVisible;
+
+  factory CONSOLE_CURSOR_INFO.allocate(int dwSize, int bVisible) =>
+      Pointer<CONSOLE_CURSOR_INFO>.allocate().load<CONSOLE_CURSOR_INFO>()
+        ..dwSize = dwSize
+        ..bVisible = bVisible;
+}
 
 // typedef struct _CONSOLE_SCREEN_BUFFER_INFO {
 //   COORD      dwSize;
