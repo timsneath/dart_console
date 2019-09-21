@@ -1,3 +1,10 @@
+// kernel32.dart
+//
+// Dart representations of functions and constants used in kernel32.dll
+//
+// These functions are documented at:
+//   https://docs.microsoft.com/en-us/windows/console/console-reference
+
 import 'dart:ffi';
 
 const STD_INPUT_HANDLE = -10;
@@ -54,7 +61,7 @@ typedef setConsoleCursorInfoNative = Int8 Function(
 typedef setConsoleCursorInfoDart = int Function(
     int hConsoleOutput, Pointer<CONSOLE_CURSOR_INFO> lpConsoleCursorInfo);
 
-// Requires an unpacking of COORD and SMALL_RECT because of
+// Requires unpacking COORD and SMALL_RECT because of
 // missing support for nested structs
 // (https://github.com/dart-lang/sdk/issues/37271)
 

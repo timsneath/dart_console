@@ -1,3 +1,7 @@
+// ioctl.dart
+//
+// Dart representations of functions and constants used in ioctl.h
+
 import 'dart:ffi';
 import 'dart:io';
 

@@ -1,8 +1,17 @@
+// termlib-win.dart
+//
+// Win32-dependent library for interrogating and manipulating the console.
+//
+// This class provides raw wrappers for the underlying terminal system calls
+// that are not available through ANSI mode control sequences, and is not
+// designed to be called directly. Package consumers should normally use the
+// `Console` class to call these methods.
+
 import 'dart:ffi';
 
 import 'package:dart_console/src/ffi/termlib.dart';
 
-import 'kernel.dart';
+import 'kernel32.dart';
 
 class TermLibWindows implements TermLib {
   DynamicLibrary kernel;

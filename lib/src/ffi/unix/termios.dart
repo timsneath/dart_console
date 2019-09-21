@@ -1,3 +1,7 @@
+// termios.dart
+//
+// Dart representations of functions and constants used in termios.h
+
 import 'dart:ffi';
 
 // INPUT FLAGS
