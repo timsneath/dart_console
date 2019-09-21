@@ -38,6 +38,7 @@ class TermLibWindows implements TermLib {
     int dwMode = (~ENABLE_ECHO_INPUT) &
         (~ENABLE_ECHO_INPUT) &
         (~ENABLE_PROCESSED_INPUT) &
+        (~ENABLE_LINE_INPUT) &
         (~ENABLE_WINDOW_INPUT);
     SetConsoleMode(inputHandle, dwMode);
   }
