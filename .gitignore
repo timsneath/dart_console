@@ -13,3 +13,8 @@ doc/api/
 **/*.so
 **/*.dylib
 **/*.dll
+**/*.obj
+**/*.exe
+
+**/*.pdb
+**/*.ilk
