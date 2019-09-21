@@ -13,18 +13,13 @@ main() {
   var key = console.readKey();
 
   while (true) {
-    if (key.isControl) {
-      if (key.controlChar == ControlCharacter.ctrlQ) {
-        console.clearScreen();
-        console.resetCursorPosition();
-        console.rawMode = false;
-        exit(0);
-        break;
-      } else {
-        print(key.controlChar);
-      }
+    if (key.isControl && key.controlChar == ControlCharacter.ctrlQ) {
+      console.clearScreen();
+      console.resetCursorPosition();
+      console.rawMode = false;
+      exit(0);
     } else {
-      print(key.char);
+      print(key);
     }
     key = console.readKey();
   }

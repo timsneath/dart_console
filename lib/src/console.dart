@@ -1,4 +1,10 @@
+// console.dart
+//
+// Contains the primary API for dart_console, exposed through the `Console`
+// class.
+
 import 'dart:io';
+import 'dart:math';
 
 import 'ansi.dart';
 import 'enums.dart';
@@ -7,7 +13,7 @@ import 'ffi/termlib.dart';
 
 /// A screen position, measured in rows and columns from the top-left origin
 /// of the screen. Coordinates are zero-based, and converted as necessary
-/// for the underlying system representation (e.g. one-bsed for VT-style
+/// for the underlying system representation (e.g. one-based for VT-style
 /// displays).
 class Coordinate {
   final int row;
@@ -22,7 +28,7 @@ class Coordinate {
 /// and write to it.
 ///
 /// A comprehensive set of demos of using the Console class can be found in the
-/// `demo.dart` file in the `examples/` subdirectory.
+/// `examples/` subdirectory.
 class Console {
   // We cache these values so we don't have to keep retrieving them. The
   // downside is that the class isn't dynamically responsive to a resized
@@ -44,6 +50,10 @@ class Console {
   /// Raw mode is useful for console applications like text editors, which
   /// perform their own input and output processing, as well as for reading a
   /// single key from the input.
+  ///
+  /// In general, you should not need to enable or disable raw mode explicitly;
+  /// you should call the [readKey] command, which takes care of handling raw
+  /// mode for you.
   ///
   /// If you use raw mode, you should disable it before your program returns, to
   /// avoid the console being left in a state unsuitable for interactive input.
@@ -336,29 +346,41 @@ class Console {
   /// basic key handling can be found in the `example/command_line.dart`
   /// file in the package source code.
   Key readKey() {
-    var key;
+    var key, charCode;
+    var codeUnit = 0;
 
     rawMode = true;
-    final codeUnit = stdin.readByteSync();
+    while (codeUnit <= 0) {
+      codeUnit = stdin.readByteSync();
+    }
+
     if (codeUnit >= 0x01 && codeUnit <= 0x1a) {
       // Ctrl+A thru Ctrl+Z are mapped to the 1st-26th entries in the
       // enum, so it's easy to convert them across
-      key = Key()
-        ..isControl = true
-        ..char = ''
-        ..controlChar = ControlCharacter.values[codeUnit];
+      key = Key.control(ControlCharacter.values[codeUnit]);
     } else if (codeUnit == 0x1b) {
       // escape sequence (e.g. \x1b[A for up arrow)
-      key = Key()
-        ..isControl = true
-        ..char = '';
+      key = Key.control(ControlCharacter.escape);
 
       final escapeSequence = <String>[];
 
-      escapeSequence.add(String.fromCharCode(stdin.readByteSync()));
-      escapeSequence.add(String.fromCharCode(stdin.readByteSync()));
+      charCode = stdin.readByteSync();
+      if (charCode == -1) {
+        rawMode = false;
+        return key;
+      }
+      escapeSequence.add(String.fromCharCode(charCode));
 
-      if (escapeSequence[0] == '[') {
+      if (charCode == 127) {
+        key = Key.control(ControlCharacter.wordBackspace);
+      } else if (escapeSequence[0] == '[') {
+        charCode = stdin.readByteSync();
+        if (charCode == -1) {
+          rawMode = false;
+          return key;
+        }
+        escapeSequence.add(String.fromCharCode(charCode));
+
         switch (escapeSequence[1]) {
           case 'A':
             key.controlChar = ControlCharacter.arrowUp;
@@ -381,7 +403,12 @@ class Console {
           default:
             if (escapeSequence[1].codeUnits[0] > '0'.codeUnits[0] &&
                 escapeSequence[1].codeUnits[0] < '9'.codeUnits[0]) {
-              escapeSequence.add(String.fromCharCode(stdin.readByteSync()));
+              charCode = stdin.readByteSync();
+              if (charCode == -1) {
+                rawMode = false;
+                return key;
+              }
+              escapeSequence.add(String.fromCharCode(charCode));
               if (escapeSequence[2] != '~') {
                 key.controlChar = ControlCharacter.unknown;
               } else {
@@ -416,6 +443,13 @@ class Console {
             }
         }
       } else if (escapeSequence[0] == 'O') {
+        charCode = stdin.readByteSync();
+        if (charCode == -1) {
+          rawMode = false;
+          return key;
+        }
+        escapeSequence.add(String.fromCharCode(charCode));
+        assert(escapeSequence.length == 2);
         switch (escapeSequence[1]) {
           case 'H':
             key.controlChar = ControlCharacter.home;
@@ -423,29 +457,155 @@ class Console {
           case 'F':
             key.controlChar = ControlCharacter.end;
             break;
+          case 'P':
+            key.controlChar = ControlCharacter.F1;
+            break;
+          case 'Q':
+            key.controlChar = ControlCharacter.F2;
+            break;
+          case 'R':
+            key.controlChar = ControlCharacter.F3;
+            break;
+          case 'S':
+            key.controlChar = ControlCharacter.F4;
+            break;
           default:
         }
+      } else if (escapeSequence[0] == 'b') {
+        key.controlChar = ControlCharacter.wordLeft;
+      } else if (escapeSequence[0] == 'f') {
+        key.controlChar = ControlCharacter.wordRight;
       } else {
         key.controlChar = ControlCharacter.unknown;
       }
     } else if (codeUnit == 0x7f) {
-      key = Key()
-        ..isControl = true
-        ..char = ''
-        ..controlChar = ControlCharacter.backspace;
+      key = Key.control(ControlCharacter.backspace);
     } else if (codeUnit == 0x00 || (codeUnit >= 0x1c && codeUnit <= 0x1f)) {
-      key = Key()
-        ..isControl = true
-        ..char = ''
-        ..controlChar = ControlCharacter.unknown;
+      key = Key.control(ControlCharacter.unknown);
     } else {
       // assume other characters are printable
-      key = Key()
-        ..isControl = false
-        ..char = String.fromCharCode(codeUnit)
-        ..controlChar = ControlCharacter.none;
+      key = Key.printable(String.fromCharCode(codeUnit));
     }
     rawMode = false;
     return key;
+  }
+
+  /// Reads a line of input, handling basic keyboard navigation commands.
+  ///
+  /// The Dart [stdin.readLineSync()] function reads a line from the input,
+  /// however it does not handle cursor navigation (e.g. arrow keys, home and
+  /// end keys), and has side-effects that may be unhelpful for certain console
+  /// applications. For example, Ctrl+C is processed as the break character,
+  /// which causes the application to immediately exit.
+  ///
+  /// The implementation does not currently allow for multi-line input. It
+  /// is best suited for short text fields that are not longer than the width
+  /// of the current screen.
+  ///
+  /// By default, readLine ignores break characters (e.g. Ctrl+C) and the Esc
+  /// key, but if enabled, the function will exit and return an empty string if
+  /// those keys are pressed.
+  ///
+  /// A callback function may be supplied, as a peek-ahead for what is being
+  /// entered. This is intended for scenarios like auto-complete, where the
+  /// text field is coupled with some other content.
+  String readLine(
+      {bool cancelOnBreak = false,
+      bool cancelOnEscape = false,
+      Function(String text, Key lastPressed) callback}) {
+    String buffer = '';
+    var index = 0; // cursor position relative to buffer, not screen
+
+    final screenRow = cursorPosition.row;
+    final screenColOffset = cursorPosition.col;
+
+    // TODO: Add multi-line input. For now, limit the text length to what will
+    // fit on the remainder of the current row.
+    final bufferMaxLength = windowWidth - screenColOffset - 3;
+
+    while (true) {
+      var key = readKey();
+
+      if (key.isControl) {
+        switch (key.controlChar) {
+          case ControlCharacter.enter:
+            return buffer;
+          case ControlCharacter.ctrlC:
+            if (cancelOnBreak) return '';
+            break;
+          case ControlCharacter.escape:
+            if (cancelOnEscape) return '';
+            break;
+          case ControlCharacter.backspace:
+          case ControlCharacter.ctrlH:
+            if (index > 0) {
+              buffer = buffer.substring(0, index - 1) + buffer.substring(index);
+              index--;
+            }
+            break;
+          case ControlCharacter.delete:
+          case ControlCharacter.ctrlD:
+            if (index < buffer.length - 1) {
+              buffer = buffer.substring(0, index) + buffer.substring(index + 1);
+            }
+            break;
+          case ControlCharacter.ctrlK:
+            buffer = buffer.substring(0, index);
+            break;
+          case ControlCharacter.arrowLeft:
+          case ControlCharacter.ctrlB:
+            index = index > 0 ? index - 1 : index;
+            break;
+          case ControlCharacter.arrowRight:
+          case ControlCharacter.ctrlF:
+            index = index < buffer.length ? index + 1 : index;
+            break;
+          case ControlCharacter.wordLeft:
+            if (index > 0) {
+              final bufferLeftOfCursor = buffer.substring(0, index - 1);
+              final lastSpace = bufferLeftOfCursor.lastIndexOf(' ');
+              index = lastSpace != -1 ? lastSpace + 1 : 0;
+            }
+            break;
+          case ControlCharacter.wordRight:
+            if (index < buffer.length) {
+              final bufferRightOfCursor = buffer.substring(index + 1);
+              final nextSpace = bufferRightOfCursor.indexOf(' ');
+              index = nextSpace != -1
+                  ? min(index + nextSpace + 2, buffer.length)
+                  : buffer.length;
+            }
+            break;
+          case ControlCharacter.home:
+          case ControlCharacter.ctrlA:
+            index = 0;
+            break;
+          case ControlCharacter.end:
+          case ControlCharacter.ctrlE:
+            index = buffer.length;
+            break;
+          default:
+            break;
+        }
+      } else {
+        if (buffer.length < bufferMaxLength) {
+          if (index == buffer.length) {
+            buffer += key.char;
+            index++;
+          } else {
+            buffer =
+                buffer.substring(0, index) + key.char + buffer.substring(index);
+            index++;
+          }
+        }
+      }
+
+      cursorPosition = Coordinate(screenRow, screenColOffset);
+      eraseCursorToEnd();
+      write(buffer); // allow for backspace condition
+      cursorPosition = Coordinate(screenRow, screenColOffset + index);
+
+      if (callback != null) callback(buffer, key);
+    }
   }
 }

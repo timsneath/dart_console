@@ -53,6 +53,9 @@ const int TCSANOW = 0; // make change immediate
 const int TCSADRAIN = 1; // drain output, then change
 const int TCSAFLUSH = 2; // drain output, flush input
 
+const int VMIN = 16; // minimum number of characters to receive
+const int VTIME = 17; // time in 1/10s before returning
+
 // typedef unsigned long   tcflag_t;
 // typedef unsigned char   cc_t;
 // typedef unsigned long   speed_t;
@@ -77,6 +80,7 @@ class TermIOS extends Struct<TermIOS> {
   @Int64()
   int c_lflag;
 
+  // This replaces c_cc[20]
   @Int8()
   int c_cc0;
   @Int8()
@@ -110,9 +114,9 @@ class TermIOS extends Struct<TermIOS> {
   @Int8()
   int c_cc15;
   @Int8()
-  int c_cc16;
+  int c_cc16; // VMIN
   @Int8()
-  int c_cc17;
+  int c_cc17; // VTIME
   @Int8()
   int c_cc18;
   @Int8()

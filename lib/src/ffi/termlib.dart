@@ -1,3 +1,12 @@
+// termlib.dart
+//
+// stdlib/glibc-based library for interrogating and manipulating the console.
+//
+// This class provides raw wrappers for the underlying terminal system calls
+// that are not available through ANSI mode control sequences, and is not
+// designed to be called directly. Package consumers should normally use the
+// `Console` class to call these methods.
+
 import 'dart:ffi';
 import 'dart:io';
 
@@ -70,8 +79,8 @@ class TermLibUnix implements TermLib {
     newTermIOS.c_cc13 = _origTermIOS.c_cc13;
     newTermIOS.c_cc14 = _origTermIOS.c_cc14;
     newTermIOS.c_cc15 = _origTermIOS.c_cc15;
-    newTermIOS.c_cc16 = _origTermIOS.c_cc16;
-    newTermIOS.c_cc17 = _origTermIOS.c_cc17;
+    newTermIOS.c_cc16 = 0; // VMIN -- return each byte, or 0 for timeout
+    newTermIOS.c_cc17 = 1; // VTIME -- 100ms timeout (unit is 1/10s)
     newTermIOS.c_cc18 = _origTermIOS.c_cc18;
     newTermIOS.c_cc19 = _origTermIOS.c_cc19;
     newTermIOS.c_ispeed = _origTermIOS.c_ispeed;

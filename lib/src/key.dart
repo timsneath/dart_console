@@ -1,3 +1,8 @@
+// key.dart
+//
+// Representation of keyboard input and control characters.
+
+/// Non-printable characters that can be entered from the keyboard.
 enum ControlCharacter {
   none,
 
@@ -34,16 +39,42 @@ enum ControlCharacter {
   arrowDown,
   pageUp,
   pageDown,
+  wordLeft,
+  wordRight,
+
   home,
   end,
+  escape,
   delete,
   backspace,
+  wordBackspace,
+
+  F1,
+  F2,
+  F3,
+  F4,
 
   unknown
 }
 
+/// A representation of a keystroke.
 class Key {
   bool isControl;
   String char;
   ControlCharacter controlChar;
+
+  Key.printable(String char) : assert(char.length == 1) {
+    this.char = char;
+    isControl = false;
+    controlChar = ControlCharacter.none;
+  }
+
+  Key.control(ControlCharacter controlChar) {
+    char = '';
+    isControl = true;
+    this.controlChar = controlChar;
+  }
+
+  @override
+  String toString() => isControl ? controlChar.toString() : char.toString();
 }

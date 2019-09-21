@@ -69,6 +69,9 @@ const int TCSANOW = 0; // make change immediate
 const int TCSADRAIN = 1; // drain output, then change
 const int TCSAFLUSH = 2; // drain output, flush input
 
+const int VMIN = 16; // minimum number of characters to receive
+const int VTIME = 17; // time in 1/10s before returning
+
 // typedef unsigned long   tcflag_t;
 // typedef unsigned char   cc_t;
 // typedef unsigned long   speed_t;
@@ -126,9 +129,9 @@ class TermIOS extends Struct<TermIOS> {
   @Int8()
   int c_cc15;
   @Int8()
-  int c_cc16;
+  int c_cc16; // VMIN
   @Int8()
-  int c_cc17;
+  int c_cc17; // VTIME
   @Int8()
   int c_cc18;
   @Int8()
@@ -185,8 +188,8 @@ main() {
   newTermIOS.c_cc13 = origTermIOS.c_cc13;
   newTermIOS.c_cc14 = origTermIOS.c_cc14;
   newTermIOS.c_cc15 = origTermIOS.c_cc15;
-  newTermIOS.c_cc16 = origTermIOS.c_cc16;
-  newTermIOS.c_cc17 = origTermIOS.c_cc17;
+  newTermIOS.c_cc16 = 0;
+  newTermIOS.c_cc17 = 1;
   newTermIOS.c_cc18 = origTermIOS.c_cc18;
   newTermIOS.c_cc19 = origTermIOS.c_cc19;
 

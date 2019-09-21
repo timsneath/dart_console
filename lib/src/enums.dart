@@ -1,3 +1,7 @@
+// enums.dart
+//
+// Externally exposed enumerations used by the `Console` class.
+
 /// The named ANSI colors.
 enum ConsoleColor {
   black,
@@ -18,4 +22,5 @@ enum ConsoleColor {
   brightWhite
 }
 
+/// Text alignments for line output.
 enum TextAlignment { left, center, right }
