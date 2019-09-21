@@ -1,6 +1,10 @@
+## 0.3.0
+
+- Add support for Windows consoles that recognize ANSI escape sequences.
+
 ## 0.2.0+2
 
-Bring back Dart 2.5 dependency, now that Dart 2.5 is released.
+- Bring back Dart 2.5 dependency, now that Dart 2.5 is released.
 
 ## 0.2.0+1
 

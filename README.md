@@ -14,12 +14,18 @@ development, including:
 - Reading keys and control sequences from the keyboard
 - Writing aligned text to the screen
 
-The library is being used to implement a Dart version of the [Kilo][kilo] text
+The library has been used to implement a Dart version of the [Kilo][kilo] text
 editor, and is sufficient for a reasonably complete set of usage, including
 `readline`-style CLI and basic text games.
 
-The library assumes a VT-style terminal, as used by macOS and Linux. This
-package does not currently work on Windows.
+The library assumes a terminal that recognizes and implements common ANSI escape
+sequences. The package has been tested on macOS, Linux and 
+[vt-win10][Windows 10 version 1903]. Windows support is preliminary - the
+library works well on the [winterm][Windows Terminal], but your mileage may vary
+on older consoles such as `cmd`.
+
+As an aside, this library demonstrates usage of the [FFI][`dart:ffi` library]
+for calling system APIs and separating Win32 and UNIX-style implementations.
 
 ## Usage
 
@@ -65,6 +71,8 @@ Please file feature requests and bugs at the [issue tracker][tracker].
 
 [kilo]: https://github.com/antirez/kilo
 [dart_kilo]: https://github.com/timsneath/dart_kilo
+[vt-win10]: https://docs.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
+[winterm]: https://www.microsoft.com/en-us/p/windows-terminal-preview/9n0dx20hk701
 [FFI]: https://dart.dev/server/c-interop
 [tracker]: https://github.com/timsneath/dart_console/issues
 [@mjohnsullivan]: https://github.com/mjohnsullivan
