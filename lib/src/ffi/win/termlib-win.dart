@@ -84,13 +84,7 @@ class TermLibWindows implements TermLib {
   }
 
   void setCursorPosition(int x, int y) {
-    Pointer<CONSOLE_SCREEN_BUFFER_INFO> pBufferInfo =
-        Pointer<CONSOLE_SCREEN_BUFFER_INFO>.allocate();
-    CONSOLE_SCREEN_BUFFER_INFO bufferInfo = pBufferInfo.load();
-    GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
-    SetConsoleCursorPosition(
-        outputHandle, bufferInfo.srWindowLeft + x, bufferInfo.srWindowTop + y);
-    pBufferInfo.free();
+    SetConsoleCursorPosition(outputHandle, (y << 16) + x);
   }
 
   TermLibWindows() {

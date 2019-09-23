@@ -62,9 +62,9 @@ typedef setConsoleCursorInfoDart = int Function(
 //   _In_ COORD  dwCursorPosition
 // );
 typedef setConsoleCursorPositionNative = Int8 Function(
-    Int32 hConsoleOutput, Int16 dwCursorPositionX, Int16 dwCursorPositionY);
+    Int32 hConsoleOutput, Int32 dwCursorPosition);
 typedef setConsoleCursorPositionDart = int Function(
-    int hConsoleOutput, int dwCursorPositionX, int dwCursorPositionY);
+    int hConsoleOutput, int dwCursorPosition);
 
 // BOOL WINAPI SetConsoleMode(
 //   _In_ HANDLE hConsoleHandle,
