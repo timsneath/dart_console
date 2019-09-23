@@ -20,6 +20,7 @@ class TermLibWindows implements TermLib {
   getConsoleScreenBufferInfoDart GetConsoleScreenBufferInfo;
   setConsoleModeDart SetConsoleMode;
   setConsoleCursorInfoDart SetConsoleCursorInfo;
+  setConsoleCursorPositionDart SetConsoleCursorPosition;
 
   int inputHandle, outputHandle;
 
@@ -82,6 +83,16 @@ class TermLibWindows implements TermLib {
     lpConsoleCursorInfo.free();
   }
 
+  void setCursorPosition(int x, int y) {
+    Pointer<CONSOLE_SCREEN_BUFFER_INFO> pBufferInfo =
+        Pointer<CONSOLE_SCREEN_BUFFER_INFO>.allocate();
+    CONSOLE_SCREEN_BUFFER_INFO bufferInfo = pBufferInfo.load();
+    GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
+    SetConsoleCursorPosition(
+        outputHandle, bufferInfo.srWindowLeft + x, bufferInfo.srWindowTop + y);
+    pBufferInfo.free();
+  }
+
   TermLibWindows() {
     kernel = DynamicLibrary.open('Kernel32.dll');
 
@@ -95,7 +106,9 @@ class TermLibWindows implements TermLib {
             "SetConsoleMode");
     SetConsoleCursorInfo = kernel.lookupFunction<setConsoleCursorInfoNative,
         setConsoleCursorInfoDart>("SetConsoleCursorInfo");
-
+    SetConsoleCursorPosition = kernel.lookupFunction<
+        setConsoleCursorPositionNative,
+        setConsoleCursorPositionDart>("SetConsoleCursorPosition");
     outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     inputHandle = GetStdHandle(STD_INPUT_HANDLE);
   }

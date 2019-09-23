@@ -112,6 +112,15 @@ class SMALL_RECT extends Struct<SMALL_RECT> {
   int Bottom;
 }
 
+// BOOL WINAPI SetConsoleCursorPosition(
+//   _In_ HANDLE hConsoleOutput,
+//   _In_ COORD  dwCursorPosition
+// );
+typedef setConsoleCursorPositionNative = Int8 Function(
+    Int32 hConsoleOutput, Int16 dwCursorPositionX, Int16 dwCursorPositionY);
+typedef setConsoleCursorPositionDart = int Function(
+    int hConsoleOutput, int dwCursorPositionX, int dwCursorPositionY);
+
 main() {
   final DynamicLibrary kernel = DynamicLibrary.open('Kernel32.dll');
 
@@ -120,6 +129,9 @@ main() {
   final GetConsoleScreenBufferInfo = kernel.lookupFunction<
       getConsoleScreenBufferInfoNative,
       getConsoleScreenBufferInfoDart>("GetConsoleScreenBufferInfo");
+  final SetConsoleCursorPosition = kernel.lookupFunction<
+      setConsoleCursorPositionNative,
+      setConsoleCursorPositionDart>("SetConsoleCursorPosition");
 
   final outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
   print(outputHandle);
@@ -128,6 +140,9 @@ main() {
       Pointer<CONSOLE_SCREEN_BUFFER_INFO>.allocate();
   CONSOLE_SCREEN_BUFFER_INFO bufferInfo = pBufferInfo.load();
   GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
-  print(bufferInfo.dwMaximumWindowSizeX);
-  print(bufferInfo.dwMaximumWindowSizeY);
+  print(bufferInfo.srWindowTop);
+  print(bufferInfo.dwCursorPositionY);
+  SetConsoleCursorPosition(outputHandle, 5, 20);
+  print(bufferInfo.srWindowTop);
+  print(bufferInfo.dwCursorPositionY);
 }
