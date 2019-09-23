@@ -15,6 +15,7 @@ doc/api/
 **/*.dll
 **/*.obj
 **/*.exe
+**/*.aot
 
 **/*.pdb
 **/*.ilk
