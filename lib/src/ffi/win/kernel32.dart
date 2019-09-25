@@ -33,6 +33,46 @@ const ENABLE_LVB_GRID_WORLDWIDE = 0x0010;
 
 // *** FUNCTIONS ***
 
+// BOOL WINAPI FillConsoleOutputCharacter(
+//   _In_  HANDLE  hConsoleOutput,
+//   _In_  TCHAR   cCharacter,
+//   _In_  DWORD   nLength,
+//   _In_  COORD   dwWriteCoord,
+//   _Out_ LPDWORD lpNumberOfCharsWritten
+// );
+typedef fillConsoleOutputCharacterNative = Int8 Function(
+    Int32 hConsoleOutput,
+    Int8 cCharacter,
+    Int32 nLength,
+    Int32 dwWriteCoord,
+    Pointer<Int32> lpNumberOfCharsWritten);
+typedef fillConsoleOutputCharacterDart = int Function(
+    int hConsoleOutput,
+    int cCharacter,
+    int nLength,
+    int dwWriteCoord,
+    Pointer<Int32> lpNumberOfCharsWritten);
+
+// BOOL WINAPI FillConsoleOutputAttribute(
+//   _In_  HANDLE  hConsoleOutput,
+//   _In_  WORD    wAttribute,
+//   _In_  DWORD   nLength,
+//   _In_  COORD   dwWriteCoord,
+//   _Out_ LPDWORD lpNumberOfAttrsWritten
+// );
+typedef fillConsoleOutputAttributeNative = Int8 Function(
+    Int32 hConsoleOutput,
+    Int16 wAttribute,
+    Int32 nLength,
+    Int32 dwWriteCoord,
+    Pointer<Int32> lpNumberOfAttrsWritten);
+typedef fillConsoleOutputAttributeDart = int Function(
+    int hConsoleOutput,
+    int cCharacter,
+    int nLength,
+    int dwWriteCoord,
+    Pointer<Int32> lpNumberOfAttrsWritten);
+
 // BOOL WINAPI GetConsoleScreenBufferInfo(
 //   _In_  HANDLE                      hConsoleOutput,
 //   _Out_ PCONSOLE_SCREEN_BUFFER_INFO lpConsoleScreenBufferInfo

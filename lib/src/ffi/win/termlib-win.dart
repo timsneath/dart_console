@@ -21,6 +21,8 @@ class TermLibWindows implements TermLib {
   setConsoleModeDart SetConsoleMode;
   setConsoleCursorInfoDart SetConsoleCursorInfo;
   setConsoleCursorPositionDart SetConsoleCursorPosition;
+  fillConsoleOutputCharacterDart FillConsoleOutputCharacter;
+  fillConsoleOutputAttributeDart FillConsoleOutputAttribute;
 
   int inputHandle, outputHandle;
 
@@ -83,6 +85,27 @@ class TermLibWindows implements TermLib {
     lpConsoleCursorInfo.free();
   }
 
+  void clearScreen() {
+    Pointer<CONSOLE_SCREEN_BUFFER_INFO> pBufferInfo =
+        Pointer<CONSOLE_SCREEN_BUFFER_INFO>.allocate();
+    CONSOLE_SCREEN_BUFFER_INFO bufferInfo = pBufferInfo.load();
+    GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
+
+    final consoleSize = bufferInfo.dwSizeX * bufferInfo.dwSizeY;
+
+    final pCharsWritten = Pointer<Int32>.allocate();
+    FillConsoleOutputCharacter(
+        outputHandle, ' '.codeUnitAt(0), consoleSize, 0, pCharsWritten);
+
+    GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
+
+    FillConsoleOutputAttribute(
+        outputHandle, bufferInfo.wAttributes, consoleSize, 0, pCharsWritten);
+
+    SetConsoleCursorPosition(outputHandle, 0);
+    pCharsWritten.free();
+  }
+
   void setCursorPosition(int x, int y) {
     SetConsoleCursorPosition(outputHandle, (y << 16) + x);
   }
@@ -103,6 +126,12 @@ class TermLibWindows implements TermLib {
     SetConsoleCursorPosition = kernel.lookupFunction<
         setConsoleCursorPositionNative,
         setConsoleCursorPositionDart>("SetConsoleCursorPosition");
+    FillConsoleOutputCharacter = kernel.lookupFunction<
+        fillConsoleOutputCharacterNative,
+        fillConsoleOutputCharacterDart>("FillConsoleOutputCharacterA");
+    FillConsoleOutputAttribute = kernel.lookupFunction<
+        fillConsoleOutputAttributeNative,
+        fillConsoleOutputAttributeDart>("FillConsoleOutputAttribute");
     outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     inputHandle = GetStdHandle(STD_INPUT_HANDLE);
   }

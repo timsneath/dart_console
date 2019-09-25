@@ -82,8 +82,14 @@ class Console {
   bool get rawMode => _isRawMode;
 
   /// Clears the entire screen
-  void clearScreen() =>
+  void clearScreen() {
+    if (Platform.isWindows) {
+      final winTermlib = _termlib as TermLibWindows;
+      winTermlib.clearScreen();
+    } else {
       stdout.write(ansiEraseInDisplayAll + ansiResetCursorPosition);
+    }
+  }
 
   /// Erases all the characters in the current line.
   void eraseLine() => stdout.write(ansiEraseInLineAll);
