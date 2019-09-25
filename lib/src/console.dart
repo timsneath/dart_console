@@ -10,6 +10,7 @@ import 'ansi.dart';
 import 'enums.dart';
 import 'key.dart';
 import 'ffi/termlib.dart';
+import 'ffi/win/termlib-win.dart';
 
 /// A screen position, measured in rows and columns from the top-left origin
 /// of the screen. Coordinates are zero-based, and converted as necessary
@@ -81,8 +82,14 @@ class Console {
   bool get rawMode => _isRawMode;
 
   /// Clears the entire screen
-  void clearScreen() =>
+  void clearScreen() {
+    if (Platform.isWindows) {
+      final winTermlib = _termlib as TermLibWindows;
+      winTermlib.clearScreen();
+    } else {
       stdout.write(ansiEraseInDisplayAll + ansiResetCursorPosition);
+    }
+  }
 
   /// Erases all the characters in the current line.
   void eraseLine() => stdout.write(ansiEraseInLineAll);
@@ -238,7 +245,12 @@ class Console {
   /// Coordinates are measured from the top left of the screen, and are
   /// zero-based.
   set cursorPosition(Coordinate cursor) {
-    stdout.write(ansiCursorPosition(cursor.row + 1, cursor.col + 1));
+    if (Platform.isWindows) {
+      final winTermlib = _termlib as TermLibWindows;
+      winTermlib.setCursorPosition(cursor.col, cursor.row);
+    } else {
+      stdout.write(ansiCursorPosition(cursor.row + 1, cursor.col + 1));
+    }
   }
 
   /// Sets the console foreground color to a named ANSI color.
