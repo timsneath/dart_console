@@ -132,6 +132,7 @@ class TermLibWindows implements TermLib {
     FillConsoleOutputAttribute = kernel.lookupFunction<
         fillConsoleOutputAttributeNative,
         fillConsoleOutputAttributeDart>("FillConsoleOutputAttribute");
+
     outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     inputHandle = GetStdHandle(STD_INPUT_HANDLE);
   }
