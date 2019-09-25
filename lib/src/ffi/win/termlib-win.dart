@@ -104,6 +104,7 @@ class TermLibWindows implements TermLib {
 
     SetConsoleCursorPosition(outputHandle, 0);
     pCharsWritten.free();
+    pBufferInfo.free();
   }
 
   void setCursorPosition(int x, int y) {
