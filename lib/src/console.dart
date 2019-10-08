@@ -83,7 +83,7 @@ class Console {
 
   /// Clears the entire screen
   void clearScreen() {
-    if (Platform.isWindows) {
+    if (Platform.isWindows && !_termlib.virtualTerminalSupport) {
       final winTermlib = _termlib as TermLibWindows;
       winTermlib.clearScreen();
     } else {

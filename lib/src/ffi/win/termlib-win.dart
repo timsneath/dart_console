@@ -131,11 +131,12 @@ class TermLibWindows implements TermLib {
 
     final consoleSize = bufferInfo.dwSizeX * bufferInfo.dwSizeY;
 
+    final blank = ' '.codeUnitAt(0);
     final pCharsWritten = Pointer<Int32>.allocate();
     FillConsoleOutputCharacter(
-        outputHandle, ' '.codeUnitAt(0), consoleSize, 0, pCharsWritten);
+        outputHandle, blank, consoleSize, 0, pCharsWritten);
 
-    GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
+    // GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
 
     FillConsoleOutputAttribute(
         outputHandle, bufferInfo.wAttributes, consoleSize, 0, pCharsWritten);
