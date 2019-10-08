@@ -9,7 +9,7 @@ int main()
     printf("STD_OUTPUT_HANDLE is %d\n", STD_OUTPUT_HANDLE);
     printf("STD_ERROR_HANDLE is %d\n", STD_ERROR_HANDLE);
 
-    printf("STATUS_INVALID_PARAMETER is %X\n", STATUS_INVALID_PARAMETER);
+    printf("ERROR_INVALID_PARAMETER is %d\n", ERROR_INVALID_PARAMETER);
 
     printf("sizeof(COORD) is %lu\n", sizeof(COORD));
     printf("sizeof(SMALL_RECT) is %lu\n", sizeof(SMALL_RECT));

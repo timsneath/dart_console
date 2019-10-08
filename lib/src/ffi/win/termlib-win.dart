@@ -9,13 +9,16 @@
 
 import 'dart:ffi';
 
+import 'package:dart_console/src/console-exception.dart';
 import 'package:dart_console/src/ffi/termlib.dart';
 
 import 'kernel32.dart';
 
+/// Implementation of the TermLib interface for Windows consoles.
 class TermLibWindows implements TermLib {
   DynamicLibrary kernel;
 
+  getConsoleModeDart GetConsoleMode;
   getLastErrorDart GetLastError;
   getStdHandleDart GetStdHandle;
   getConsoleScreenBufferInfoDart GetConsoleScreenBufferInfo;
@@ -26,6 +29,38 @@ class TermLibWindows implements TermLib {
   fillConsoleOutputAttributeDart FillConsoleOutputAttribute;
 
   int inputHandle, outputHandle;
+  int dwOriginalInputMode, dwOriginalOutputMode;
+  bool virtualTerminalSupport;
+
+  /// Attempts to enable virtual terminal processing on Windows.
+  ///
+  /// VT terminal support is only available on modern consoles. Early versions
+  /// of Windows 10 and earlier had no support, and a "legacy console" mode
+  /// still exists on newer versions of Windows 10. If this is not available,
+  /// we set a status flag so that downstream dependencies can take appropriate
+  /// action.
+  void enableVirtualTerminal() {
+    final lpMode = Pointer<Int32>.allocate();
+    GetConsoleMode(outputHandle, lpMode);
+    dwOriginalOutputMode = lpMode.load();
+
+    final dwOutMode = dwOriginalOutputMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+
+    // Per Microsoft docs, checking whether SetConsoleMode returns 0 and
+    // GetLastError returns ERROR_INVALID_PARAMETER is the current mechanism
+    // to determine when running on a down-level system.
+    if (SetConsoleMode(outputHandle, dwOutMode) == 0) {
+      final lastError = GetLastError();
+      if (lastError == ERROR_INVALID_PARAMETER) {
+        virtualTerminalSupport = false;
+      } else {
+        throw ConsoleException('Unable to set Windows console mode.');
+      }
+    } else {
+      virtualTerminalSupport = true;
+    }
+    lpMode.free();
+  }
 
   int getWindowHeight() {
     Pointer<CONSOLE_SCREEN_BUFFER_INFO> pBufferInfo =
@@ -48,24 +83,26 @@ class TermLibWindows implements TermLib {
   }
 
   void enableRawMode() {
-    int dwMode = (~ENABLE_ECHO_INPUT) &
+    final lpMode = Pointer<Int32>.allocate();
+    GetConsoleMode(inputHandle, lpMode);
+    dwOriginalInputMode = lpMode.load();
+
+    int dwInputMode = dwOriginalInputMode &
         (~ENABLE_ECHO_INPUT) &
-        (~ENABLE_PROCESSED_INPUT) &
         (~ENABLE_LINE_INPUT) &
+        (~ENABLE_PROCESSED_INPUT) &
         (~ENABLE_WINDOW_INPUT);
-    SetConsoleMode(inputHandle, dwMode);
+
+    SetConsoleMode(inputHandle, dwInputMode);
+
+    lpMode.free();
   }
 
   void disableRawMode() {
-    int dwMode = ENABLE_ECHO_INPUT &
-        ENABLE_EXTENDED_FLAGS &
-        ENABLE_INSERT_MODE &
-        ENABLE_LINE_INPUT &
-        ENABLE_MOUSE_INPUT &
-        ENABLE_PROCESSED_INPUT &
-        ENABLE_QUICK_EDIT_MODE &
-        ENABLE_VIRTUAL_TERMINAL_INPUT;
-    SetConsoleMode(inputHandle, dwMode);
+    // If not null, then enable has never been called and we have nothing to do
+    if (dwOriginalInputMode != null) {
+      SetConsoleMode(inputHandle, dwOriginalInputMode);
+    }
   }
 
   void hideCursor() {
@@ -115,6 +152,9 @@ class TermLibWindows implements TermLib {
   TermLibWindows() {
     kernel = DynamicLibrary.open('Kernel32.dll');
 
+    GetConsoleMode =
+        kernel.lookupFunction<getConsoleModeNative, getConsoleModeDart>(
+            "GetConsoleMode");
     GetLastError = kernel
         .lookupFunction<getLastErrorNative, getLastErrorDart>("GetLastError");
     GetStdHandle = kernel
@@ -141,7 +181,9 @@ class TermLibWindows implements TermLib {
     inputHandle = GetStdHandle(STD_INPUT_HANDLE);
     if ((outputHandle == INVALID_HANDLE_VALUE) ||
         (inputHandle == INVALID_HANDLE_VALUE)) {
-      print('Error: Unable to get handle');
+      throw ConsoleException('Error: Unable to get handle');
     }
+
+    enableVirtualTerminal();
   }
 }

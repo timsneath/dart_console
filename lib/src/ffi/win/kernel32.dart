@@ -14,7 +14,7 @@ const STD_OUTPUT_HANDLE = -11;
 const STD_ERROR_HANDLE = -12;
 
 const INVALID_HANDLE_VALUE = -1;
-const STATUS_INVALID_PARAMETER = 0xC000000D;
+const ERROR_INVALID_PARAMETER = 87;
 
 // input flags
 const ENABLE_ECHO_INPUT = 0x0004;
@@ -75,6 +75,15 @@ typedef fillConsoleOutputAttributeDart = int Function(
     int nLength,
     int dwWriteCoord,
     Pointer<Int32> lpNumberOfAttrsWritten);
+
+// BOOL WINAPI GetConsoleMode(
+//   _In_  HANDLE  hConsoleHandle,
+//   _Out_ LPDWORD lpMode
+// );
+typedef getConsoleModeNative = Int8 Function(
+    Int32 hConsoleHandle, Pointer<Int32> lpMode);
+typedef getConsoleModeDart = int Function(
+    int hConsoleHandle, Pointer<Int32> lpMode);
 
 // BOOL WINAPI GetConsoleScreenBufferInfo(
 //   _In_  HANDLE                      hConsoleOutput,
