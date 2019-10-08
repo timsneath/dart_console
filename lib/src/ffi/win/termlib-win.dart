@@ -16,6 +16,7 @@ import 'kernel32.dart';
 class TermLibWindows implements TermLib {
   DynamicLibrary kernel;
 
+  getLastErrorDart GetLastError;
   getStdHandleDart GetStdHandle;
   getConsoleScreenBufferInfoDart GetConsoleScreenBufferInfo;
   setConsoleModeDart SetConsoleMode;
@@ -114,6 +115,8 @@ class TermLibWindows implements TermLib {
   TermLibWindows() {
     kernel = DynamicLibrary.open('Kernel32.dll');
 
+    GetLastError = kernel
+        .lookupFunction<getLastErrorNative, getLastErrorDart>("GetLastError");
     GetStdHandle = kernel
         .lookupFunction<getStdHandleNative, getStdHandleDart>("GetStdHandle");
     GetConsoleScreenBufferInfo = kernel.lookupFunction<

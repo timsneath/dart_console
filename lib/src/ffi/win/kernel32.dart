@@ -14,6 +14,7 @@ const STD_OUTPUT_HANDLE = -11;
 const STD_ERROR_HANDLE = -12;
 
 const INVALID_HANDLE_VALUE = -1;
+const STATUS_INVALID_PARAMETER = 0xC000000D;
 
 // input flags
 const ENABLE_ECHO_INPUT = 0x0004;
@@ -83,6 +84,10 @@ typedef getConsoleScreenBufferInfoNative = Int8 Function(Int32 hConsoleOutput,
     Pointer<CONSOLE_SCREEN_BUFFER_INFO> lpConsoleScreenBufferInfo);
 typedef getConsoleScreenBufferInfoDart = int Function(int hConsoleOutput,
     Pointer<CONSOLE_SCREEN_BUFFER_INFO> lpConsoleScreenBufferInfo);
+
+// _Post_equals_last_error_ DWORD GetLastError();
+typedef getLastErrorNative = Int32 Function();
+typedef getLastErrorDart = int Function();
 
 // HANDLE WINAPI GetStdHandle(
 //   _In_ DWORD nStdHandle
