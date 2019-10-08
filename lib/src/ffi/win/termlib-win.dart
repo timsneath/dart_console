@@ -39,16 +39,23 @@ class TermLibWindows implements TermLib {
   /// still exists on newer versions of Windows 10. If this is not available,
   /// we set a status flag so that downstream dependencies can take appropriate
   /// action.
-  void enableVirtualTerminal() {
-    final lpMode = Pointer<Int32>.allocate();
-    GetConsoleMode(outputHandle, lpMode);
-    dwOriginalOutputMode = lpMode.load();
+  void initializeTerminal() {
+    final lpInputMode = Pointer<Int32>.allocate();
+    GetConsoleMode(inputHandle, lpInputMode);
+    dwOriginalInputMode = lpInputMode.load();
+    lpInputMode.free();
 
-    final dwOutMode = dwOriginalOutputMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    final lpOutputMode = Pointer<Int32>.allocate();
+    GetConsoleMode(outputHandle, lpOutputMode);
+    dwOriginalOutputMode = lpOutputMode.load();
+    lpOutputMode.free();
 
     // Per Microsoft docs, checking whether SetConsoleMode returns 0 and
     // GetLastError returns ERROR_INVALID_PARAMETER is the current mechanism
-    // to determine when running on a down-level system.
+    // to determine when running on a down-level system that doesn't support
+    // VT-style escape sequences.
+    final dwOutMode = dwOriginalOutputMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+
     if (SetConsoleMode(outputHandle, dwOutMode) == 0) {
       final lastError = GetLastError();
       if (lastError == ERROR_INVALID_PARAMETER) {
@@ -59,7 +66,6 @@ class TermLibWindows implements TermLib {
     } else {
       virtualTerminalSupport = true;
     }
-    lpMode.free();
   }
 
   int getWindowHeight() {
@@ -83,19 +89,13 @@ class TermLibWindows implements TermLib {
   }
 
   void enableRawMode() {
-    final lpMode = Pointer<Int32>.allocate();
-    GetConsoleMode(inputHandle, lpMode);
-    dwOriginalInputMode = lpMode.load();
-
-    int dwInputMode = dwOriginalInputMode &
+    final dwInputMode = dwOriginalInputMode &
         (~ENABLE_ECHO_INPUT) &
         (~ENABLE_LINE_INPUT) &
         (~ENABLE_PROCESSED_INPUT) &
         (~ENABLE_WINDOW_INPUT);
 
     SetConsoleMode(inputHandle, dwInputMode);
-
-    lpMode.free();
   }
 
   void disableRawMode() {
@@ -184,6 +184,6 @@ class TermLibWindows implements TermLib {
       throw ConsoleException('Error: Unable to get handle');
     }
 
-    enableVirtualTerminal();
+    initializeTerminal();
   }
 }
