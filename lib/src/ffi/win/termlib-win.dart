@@ -136,5 +136,9 @@ class TermLibWindows implements TermLib {
 
     outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     inputHandle = GetStdHandle(STD_INPUT_HANDLE);
+    if ((outputHandle == INVALID_HANDLE_VALUE) ||
+        (inputHandle == INVALID_HANDLE_VALUE)) {
+      print('Error: Unable to get handle');
+    }
   }
 }
