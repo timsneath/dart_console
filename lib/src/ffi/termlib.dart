@@ -13,6 +13,8 @@ import 'win/termlib-win.dart';
 import 'unix/termlib-unix.dart';
 
 abstract class TermLib {
+  bool virtualTerminalSupport;
+
   int getWindowHeight();
   int getWindowWidth();
 
@@ -22,7 +24,8 @@ abstract class TermLib {
   factory TermLib() {
     if (Platform.isWindows) {
       return TermLibWindows();
-    } else {}
-    return TermLibUnix();
+    } else {
+      return TermLibUnix();
+    }
   }
 }
