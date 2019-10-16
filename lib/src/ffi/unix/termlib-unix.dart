@@ -8,6 +8,8 @@
 // `Console` class to call these methods.
 
 import 'dart:ffi';
+import 'package:ffi/ffi.dart' as ffi;
+
 import 'dart:io';
 
 import '../termlib.dart';
@@ -25,36 +27,40 @@ class TermLibUnix implements TermLib {
   tcsetattrDart tcsetattr;
 
   int getWindowHeight() {
-    Pointer<WinSize> winSizePointer = Pointer<WinSize>.allocate();
+    Pointer<WinSize> winSizePointer = ffi.allocate();
     final result = ioctl(STDOUT_FILENO, TIOCGWINSZ, winSizePointer.cast());
     if (result == -1) return -1;
 
-    final WinSize winSize = winSizePointer.load<WinSize>();
+    final WinSize winSize = winSizePointer.ref;
     if (winSize.ws_row == 0) {
       return -1;
     } else {
-      return winSize.ws_row;
+      final result = winSize.ws_row;
+      ffi.free(winSize.addressOf);
+      return result;
     }
   }
 
   int getWindowWidth() {
-    Pointer<WinSize> winSizePointer = Pointer<WinSize>.allocate();
+    Pointer<WinSize> winSizePointer = ffi.allocate();
     final result = ioctl(STDOUT_FILENO, TIOCGWINSZ, winSizePointer.cast());
     if (result == -1) return -1;
 
-    final WinSize winSize = winSizePointer.load<WinSize>();
+    final WinSize winSize = winSizePointer.ref;
     if (winSize.ws_col == 0) {
       return -1;
     } else {
-      return winSize.ws_col;
+      final result = winSize.ws_col;
+      ffi.free(winSize.addressOf);
+      return result;
     }
   }
 
   void enableRawMode() {
-    final _origTermIOS = _origTermIOSPointer.load();
+    final _origTermIOS = _origTermIOSPointer.ref;
 
-    Pointer<TermIOS> newTermIOSPointer = Pointer<TermIOS>.allocate();
-    TermIOS newTermIOS = newTermIOSPointer.load();
+    Pointer<TermIOS> newTermIOSPointer = ffi.allocate();
+    TermIOS newTermIOS = newTermIOSPointer.ref;
 
     newTermIOS.c_iflag =
         _origTermIOS.c_iflag & ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
@@ -87,7 +93,7 @@ class TermLibUnix implements TermLib {
 
     tcsetattr(STDIN_FILENO, TCSAFLUSH, newTermIOS.addressOf);
 
-    newTermIOSPointer.free();
+    ffi.free(newTermIOS.addressOf);
   }
 
   void disableRawMode() {
@@ -107,7 +113,7 @@ class TermLibUnix implements TermLib {
         _stdlib.lookupFunction<tcsetattrNative, tcsetattrDart>("tcsetattr");
 
     // store console mode settings so we can return them again as necessary
-    _origTermIOSPointer = Pointer<TermIOS>.allocate();
+    _origTermIOSPointer = ffi.allocate();
     tcgetattr(STDIN_FILENO, _origTermIOSPointer);
   }
 }

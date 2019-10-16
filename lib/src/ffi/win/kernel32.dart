@@ -69,16 +69,11 @@ typedef setConsoleCursorInfoDart = int Function(
 //   DWORD dwSize;
 //   BOOL  bVisible;
 // } CONSOLE_CURSOR_INFO, *PCONSOLE_CURSOR_INFO;
-class CONSOLE_CURSOR_INFO extends Struct<CONSOLE_CURSOR_INFO> {
+class CONSOLE_CURSOR_INFO extends Struct {
   @Int32()
   int dwSize;
   @Int32()
   int bVisible;
-
-  factory CONSOLE_CURSOR_INFO.allocate(int dwSize, int bVisible) =>
-      Pointer<CONSOLE_CURSOR_INFO>.allocate().load<CONSOLE_CURSOR_INFO>()
-        ..dwSize = dwSize
-        ..bVisible = bVisible;
 }
 
 // typedef struct _CONSOLE_SCREEN_BUFFER_INFO {
@@ -88,7 +83,7 @@ class CONSOLE_CURSOR_INFO extends Struct<CONSOLE_CURSOR_INFO> {
 //   SMALL_RECT srWindow;
 //   COORD      dwMaximumWindowSize;
 // } CONSOLE_SCREEN_BUFFER_INFO;
-class CONSOLE_SCREEN_BUFFER_INFO extends Struct<CONSOLE_SCREEN_BUFFER_INFO> {
+class CONSOLE_SCREEN_BUFFER_INFO extends Struct {
   @Int16()
   int dwSizeX;
 
@@ -116,33 +111,13 @@ class CONSOLE_SCREEN_BUFFER_INFO extends Struct<CONSOLE_SCREEN_BUFFER_INFO> {
   int dwMaximumWindowSizeX;
   @Int16()
   int dwMaximumWindowSizeY;
-
-  factory CONSOLE_SCREEN_BUFFER_INFO.allocate(
-          COORD dwSize,
-          COORD dwCursorPosition,
-          int wAttributes,
-          SMALL_RECT srWindow,
-          COORD dwMaximumWindowSize) =>
-      Pointer<CONSOLE_SCREEN_BUFFER_INFO>.allocate()
-          .load<CONSOLE_SCREEN_BUFFER_INFO>()
-            ..dwSizeX = dwSize.X
-            ..dwSizeY = dwSize.Y
-            ..dwCursorPositionX = dwCursorPosition.X
-            ..dwCursorPositionY = dwCursorPosition.Y
-            ..wAttributes = wAttributes
-            ..srWindowLeft = srWindow.Left
-            ..srWindowTop = srWindow.Top
-            ..srWindowRight = srWindow.Right
-            ..srWindowBottom = srWindow.Bottom
-            ..dwMaximumWindowSizeX = dwMaximumWindowSize.X
-            ..dwMaximumWindowSizeY = dwMaximumWindowSize.Y;
 }
 
 // typedef struct _COORD {
 //   SHORT X;
 //   SHORT Y;
 // } COORD, *PCOORD;
-class COORD extends Struct<COORD> {
+class COORD extends Struct {
   @Int16()
   int X;
 
@@ -156,7 +131,7 @@ class COORD extends Struct<COORD> {
 //   SHORT Right;
 //   SHORT Bottom;
 // } SMALL_RECT;
-class SMALL_RECT extends Struct<SMALL_RECT> {
+class SMALL_RECT extends Struct {
   @Int16()
   int Left;
 

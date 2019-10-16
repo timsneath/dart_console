@@ -9,6 +9,7 @@
 
 import 'dart:ffi';
 
+import 'package:ffi/ffi.dart' as ffi;
 import 'package:dart_console/src/ffi/termlib.dart';
 
 import 'kernel32.dart';
@@ -24,22 +25,20 @@ class TermLibWindows implements TermLib {
   int inputHandle, outputHandle;
 
   int getWindowHeight() {
-    Pointer<CONSOLE_SCREEN_BUFFER_INFO> pBufferInfo =
-        Pointer<CONSOLE_SCREEN_BUFFER_INFO>.allocate();
-    CONSOLE_SCREEN_BUFFER_INFO bufferInfo = pBufferInfo.load();
+    Pointer<CONSOLE_SCREEN_BUFFER_INFO> pBufferInfo = ffi.allocate();
+    CONSOLE_SCREEN_BUFFER_INFO bufferInfo = pBufferInfo.ref;
     GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
     final windowHeight = bufferInfo.srWindowBottom - bufferInfo.srWindowTop + 1;
-    pBufferInfo.free();
+    ffi.free(bufferInfo.addressOf);
     return windowHeight;
   }
 
   int getWindowWidth() {
-    Pointer<CONSOLE_SCREEN_BUFFER_INFO> pBufferInfo =
-        Pointer<CONSOLE_SCREEN_BUFFER_INFO>.allocate();
-    CONSOLE_SCREEN_BUFFER_INFO bufferInfo = pBufferInfo.load();
+    Pointer<CONSOLE_SCREEN_BUFFER_INFO> pBufferInfo = ffi.allocate();
+    CONSOLE_SCREEN_BUFFER_INFO bufferInfo = pBufferInfo.ref;
     GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
     final windowWidth = bufferInfo.srWindowRight - bufferInfo.srWindowLeft + 1;
-    pBufferInfo.free();
+    ffi.free(bufferInfo.addressOf);
     return windowWidth;
   }
 
@@ -65,21 +64,19 @@ class TermLibWindows implements TermLib {
   }
 
   void hideCursor() {
-    Pointer<CONSOLE_CURSOR_INFO> lpConsoleCursorInfo =
-        Pointer<CONSOLE_CURSOR_INFO>.allocate();
-    CONSOLE_CURSOR_INFO consoleCursorInfo = lpConsoleCursorInfo.load();
+    Pointer<CONSOLE_CURSOR_INFO> lpConsoleCursorInfo = ffi.allocate();
+    CONSOLE_CURSOR_INFO consoleCursorInfo = lpConsoleCursorInfo.ref;
     consoleCursorInfo.bVisible = 0;
     SetConsoleCursorInfo(outputHandle, lpConsoleCursorInfo);
-    lpConsoleCursorInfo.free();
+    ffi.free(consoleCursorInfo.addressOf);
   }
 
   void showCursor() {
-    Pointer<CONSOLE_CURSOR_INFO> lpConsoleCursorInfo =
-        Pointer<CONSOLE_CURSOR_INFO>.allocate();
-    CONSOLE_CURSOR_INFO consoleCursorInfo = lpConsoleCursorInfo.load();
+    Pointer<CONSOLE_CURSOR_INFO> lpConsoleCursorInfo = ffi.allocate();
+    CONSOLE_CURSOR_INFO consoleCursorInfo = lpConsoleCursorInfo.ref;
     consoleCursorInfo.bVisible = 1;
     SetConsoleCursorInfo(outputHandle, lpConsoleCursorInfo);
-    lpConsoleCursorInfo.free();
+    ffi.free(consoleCursorInfo.addressOf);
   }
 
   TermLibWindows() {
