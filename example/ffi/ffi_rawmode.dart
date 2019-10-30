@@ -1,5 +1,6 @@
 import 'dart:ffi';
 import 'dart:io';
+import 'package:ffi/ffi.dart' as ffi;
 
 // int tcgetattr(int, struct termios *);
 typedef tcgetattrNative = Int32 Function(
@@ -86,7 +87,7 @@ const int VTIME = 17; // time in 1/10s before returning
 // 	speed_t         c_ispeed;       /* input speed */
 // 	speed_t         c_ospeed;       /* output speed */
 // };
-class TermIOS extends Struct<TermIOS> {
+class TermIOS extends Struct {
   @Int64()
   int c_iflag;
   @Int64()
@@ -153,17 +154,17 @@ main() {
   final tcsetattr =
       libc.lookupFunction<tcsetattrNative, tcsetattrDart>("tcsetattr");
 
-  Pointer<TermIOS> origTermIOSPointer = Pointer<TermIOS>.allocate();
+  Pointer<TermIOS> origTermIOSPointer = ffi.allocate();
   var result = tcgetattr(STDIN_FILENO, origTermIOSPointer);
   print('result is $result');
 
-  TermIOS origTermIOS = origTermIOSPointer.load();
+  TermIOS origTermIOS = origTermIOSPointer.ref;
 
   print('origTermIOS.c_iflag: 0b${origTermIOS.c_iflag.toRadixString(2)}');
   print('Copying and modifying...');
 
-  Pointer<TermIOS> newTermIOSPointer = Pointer<TermIOS>.allocate();
-  TermIOS newTermIOS = newTermIOSPointer.load();
+  Pointer<TermIOS> newTermIOSPointer = ffi.allocate();
+  TermIOS newTermIOS = newTermIOSPointer.ref;
 
   newTermIOS.c_iflag =
       origTermIOS.c_iflag & ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
@@ -211,6 +212,6 @@ main() {
 
   print('\nORIGINAL MODE: Here is some text.\nHere is some more text.');
 
-  origTermIOSPointer.free();
-  newTermIOSPointer.free();
+  ffi.free(origTermIOSPointer);
+  ffi.free(newTermIOSPointer);
 }

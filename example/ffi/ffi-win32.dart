@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'package:ffi/ffi.dart' as ffi;
 
 const STD_INPUT_HANDLE = -10;
 const STD_OUTPUT_HANDLE = -11;
@@ -30,7 +31,7 @@ typedef getConsoleScreenBufferInfoDart = int Function(int hConsoleOutput,
 //   SMALL_RECT srWindow;
 //   COORD      dwMaximumWindowSize;
 // } CONSOLE_SCREEN_BUFFER_INFO;
-class CONSOLE_SCREEN_BUFFER_INFO extends Struct<CONSOLE_SCREEN_BUFFER_INFO> {
+class CONSOLE_SCREEN_BUFFER_INFO extends Struct {
   @Int16()
   int dwSizeX;
 
@@ -58,33 +59,13 @@ class CONSOLE_SCREEN_BUFFER_INFO extends Struct<CONSOLE_SCREEN_BUFFER_INFO> {
   int dwMaximumWindowSizeX;
   @Int16()
   int dwMaximumWindowSizeY;
-
-  factory CONSOLE_SCREEN_BUFFER_INFO.allocate(
-          COORD dwSize,
-          COORD dwCursorPosition,
-          int wAttributes,
-          SMALL_RECT srWindow,
-          COORD dwMaximumWindowSize) =>
-      Pointer<CONSOLE_SCREEN_BUFFER_INFO>.allocate()
-          .load<CONSOLE_SCREEN_BUFFER_INFO>()
-            ..dwSizeX = dwSize.X
-            ..dwSizeY = dwSize.Y
-            ..dwCursorPositionX = dwCursorPosition.X
-            ..dwCursorPositionY = dwCursorPosition.Y
-            ..wAttributes = wAttributes
-            ..srWindowLeft = srWindow.Left
-            ..srWindowTop = srWindow.Top
-            ..srWindowRight = srWindow.Right
-            ..srWindowBottom = srWindow.Bottom
-            ..dwMaximumWindowSizeX = dwMaximumWindowSize.X
-            ..dwMaximumWindowSizeY = dwMaximumWindowSize.Y;
 }
 
 // typedef struct _COORD {
 //   SHORT X;
 //   SHORT Y;
 // } COORD, *PCOORD;
-class COORD extends Struct<COORD> {
+class COORD extends Struct {
   @Int16()
   int X;
 
@@ -98,7 +79,7 @@ class COORD extends Struct<COORD> {
 //   SHORT Right;
 //   SHORT Bottom;
 // } SMALL_RECT;
-class SMALL_RECT extends Struct<SMALL_RECT> {
+class SMALL_RECT extends Struct {
   @Int16()
   int Left;
 
@@ -124,9 +105,8 @@ main() {
   final outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
   print(outputHandle);
 
-  Pointer<CONSOLE_SCREEN_BUFFER_INFO> pBufferInfo =
-      Pointer<CONSOLE_SCREEN_BUFFER_INFO>.allocate();
-  CONSOLE_SCREEN_BUFFER_INFO bufferInfo = pBufferInfo.load();
+  Pointer<CONSOLE_SCREEN_BUFFER_INFO> pBufferInfo = ffi.allocate();
+  CONSOLE_SCREEN_BUFFER_INFO bufferInfo = pBufferInfo.ref;
   GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
   print(bufferInfo.dwMaximumWindowSizeX);
   print(bufferInfo.dwMaximumWindowSizeY);
