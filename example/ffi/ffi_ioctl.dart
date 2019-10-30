@@ -33,7 +33,7 @@ class WinSize extends Struct {
 
 main() {
   final DynamicLibrary libc = Platform.isMacOS
-      ? DynamicLibrary.open('libSystem.dylib')
+      ? DynamicLibrary.open("/usr/lib/libSystem.dylib")
       : DynamicLibrary.open("libc-2.28.so");
 
   final ioctl = libc.lookupFunction<ioctlVoidNative, ioctlVoidDart>("ioctl");
