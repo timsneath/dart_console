@@ -23,9 +23,8 @@ games.
 The library assumes a terminal that recognizes and implements common ANSI escape
 sequences. The package has been tested on macOS, Linux and 
 [Windows 10 version 1903][vt-win10]. Windows support is preliminary - the
-library is tested on the [Windows Terminal][winterm] and `cmd`, but some
-functions will not work on older versions of Windows that do not support ANSI
-escape sequences.
+library works well on the [Windows Terminal][winterm], but your mileage may vary
+on older consoles such as `cmd`.
 
 As an aside, this library demonstrates usage of the [`dart:ffi` library][FFI]
 for calling system APIs and separating Win32 and UNIX-style implementations.

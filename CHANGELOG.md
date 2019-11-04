@@ -1,6 +1,6 @@
-## 0.3.1
+## 0.3.0+1
 
-- Increased compatibility on Win32 consoles
+- Fix broken links in README
 
 ## 0.3.0
 
