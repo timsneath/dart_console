@@ -1,6 +1,6 @@
 // termlib-unix.dart
 //
-// libc-dependent library for interrogating and manipulating the console.
+// glibc-dependent library for interrogating and manipulating the console.
 //
 // This class provides raw wrappers for the underlying terminal system calls
 // that are not available through ANSI mode control sequences, and is not
@@ -15,13 +15,7 @@ import 'termios.dart';
 import 'unistd.dart';
 import 'ioctl.dart';
 
-/// Implementation of the TermLib interface for UNIX-style terminals, including
-/// those on macOS and Linux.
 class TermLibUnix implements TermLib {
-  /// Does the device support VT escape sequences? This value is always true on
-  /// macOS, Linux and other UNIX-style systems (at least, since the 1970s)
-  bool virtualTerminalSupport = true;
-
   DynamicLibrary _stdlib;
 
   Pointer<TermIOS> _origTermIOSPointer;

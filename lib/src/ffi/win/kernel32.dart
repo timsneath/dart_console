@@ -13,9 +13,6 @@ const STD_INPUT_HANDLE = -10;
 const STD_OUTPUT_HANDLE = -11;
 const STD_ERROR_HANDLE = -12;
 
-const INVALID_HANDLE_VALUE = -1;
-const ERROR_INVALID_PARAMETER = 87;
-
 // input flags
 const ENABLE_ECHO_INPUT = 0x0004;
 const ENABLE_EXTENDED_FLAGS = 0x0080;
@@ -76,15 +73,6 @@ typedef fillConsoleOutputAttributeDart = int Function(
     int dwWriteCoord,
     Pointer<Int32> lpNumberOfAttrsWritten);
 
-// BOOL WINAPI GetConsoleMode(
-//   _In_  HANDLE  hConsoleHandle,
-//   _Out_ LPDWORD lpMode
-// );
-typedef getConsoleModeNative = Int8 Function(
-    Int32 hConsoleHandle, Pointer<Int32> lpMode);
-typedef getConsoleModeDart = int Function(
-    int hConsoleHandle, Pointer<Int32> lpMode);
-
 // BOOL WINAPI GetConsoleScreenBufferInfo(
 //   _In_  HANDLE                      hConsoleOutput,
 //   _Out_ PCONSOLE_SCREEN_BUFFER_INFO lpConsoleScreenBufferInfo
@@ -93,10 +81,6 @@ typedef getConsoleScreenBufferInfoNative = Int8 Function(Int32 hConsoleOutput,
     Pointer<CONSOLE_SCREEN_BUFFER_INFO> lpConsoleScreenBufferInfo);
 typedef getConsoleScreenBufferInfoDart = int Function(int hConsoleOutput,
     Pointer<CONSOLE_SCREEN_BUFFER_INFO> lpConsoleScreenBufferInfo);
-
-// _Post_equals_last_error_ DWORD GetLastError();
-typedef getLastErrorNative = Int32 Function();
-typedef getLastErrorDart = int Function();
 
 // HANDLE WINAPI GetStdHandle(
 //   _In_ DWORD nStdHandle

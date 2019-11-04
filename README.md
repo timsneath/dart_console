@@ -14,11 +14,9 @@ development, including:
 - Reading keys and control sequences from the keyboard
 - Writing aligned text to the screen
 
-The library has been used to implement a [Dart][dart] version of the
-[Kilo][kilo] text editor; when compiled with [dart2native][dart2native] that
-results in a self-contained `kilo` executable. The library is sufficient for a
-reasonably complete set of usage, including `readline`-style CLI and basic text
-games.
+The library has been used to implement a Dart version of the [Kilo][kilo] text
+editor, and is sufficient for a reasonably complete set of usage, including
+`readline`-style CLI and basic text games.
 
 The library assumes a terminal that recognizes and implements common ANSI escape
 sequences. The package has been tested on macOS, Linux and 
@@ -72,8 +70,6 @@ the vagaries of FFI in its early state.
 Please file feature requests and bugs at the [issue tracker][tracker].
 
 [kilo]: https://github.com/antirez/kilo
-[dart]: https://dart.dev/get-dart
-[dart2native]: https://dart.dev/tools/dart2native
 [dart_kilo]: https://github.com/timsneath/dart_kilo
 [vt-win10]: https://docs.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
 [winterm]: https://www.microsoft.com/en-us/p/windows-terminal-preview/9n0dx20hk701
@@ -81,3 +77,4 @@ Please file feature requests and bugs at the [issue tracker][tracker].
 [tracker]: https://github.com/timsneath/dart_console/issues
 [@mjohnsullivan]: https://github.com/mjohnsullivan
 [@sjindel-google]: https://github.com/sjindel-google
+[dart]: https://dart.dev/get-dart
