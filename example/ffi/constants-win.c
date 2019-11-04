@@ -14,6 +14,7 @@ int main()
     printf("sizeof(HANDLE) is %lu\n", sizeof(HANDLE));
     printf("sizeof(CONSOLE_CURSOR_INFO) is %lu\n", sizeof(CONSOLE_CURSOR_INFO));
 
+    printf("sizeof(TCHAR) is %lu\n", sizeof(TCHAR));
     printf("sizeof(DWORD) is %lu\n", sizeof(DWORD));
     printf("sizeof(WORD) is %lu\n", sizeof(WORD));
     printf("sizeof(SHORT) is %lu\n", sizeof(SHORT));

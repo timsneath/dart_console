@@ -7,6 +7,8 @@
 
 import 'dart:ffi';
 
+// *** CONSTANTS ***
+
 const STD_INPUT_HANDLE = -10;
 const STD_OUTPUT_HANDLE = -11;
 const STD_ERROR_HANDLE = -12;
@@ -29,11 +31,47 @@ const ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004;
 const DISABLE_NEWLINE_AUTO_RETURN = 0x0008;
 const ENABLE_LVB_GRID_WORLDWIDE = 0x0010;
 
-// HANDLE WINAPI GetStdHandle(
-//   _In_ DWORD nStdHandle
+// *** FUNCTIONS ***
+
+// BOOL WINAPI FillConsoleOutputCharacter(
+//   _In_  HANDLE  hConsoleOutput,
+//   _In_  TCHAR   cCharacter,
+//   _In_  DWORD   nLength,
+//   _In_  COORD   dwWriteCoord,
+//   _Out_ LPDWORD lpNumberOfCharsWritten
 // );
-typedef getStdHandleNative = Int32 Function(Int32 nStdHandle);
-typedef getStdHandleDart = int Function(int nStdHandle);
+typedef fillConsoleOutputCharacterNative = Int8 Function(
+    Int32 hConsoleOutput,
+    Int8 cCharacter,
+    Int32 nLength,
+    Int32 dwWriteCoord,
+    Pointer<Int32> lpNumberOfCharsWritten);
+typedef fillConsoleOutputCharacterDart = int Function(
+    int hConsoleOutput,
+    int cCharacter,
+    int nLength,
+    int dwWriteCoord,
+    Pointer<Int32> lpNumberOfCharsWritten);
+
+// BOOL WINAPI FillConsoleOutputAttribute(
+//   _In_  HANDLE  hConsoleOutput,
+//   _In_  WORD    wAttribute,
+//   _In_  DWORD   nLength,
+//   _In_  COORD   dwWriteCoord,
+//   _Out_ LPDWORD lpNumberOfAttrsWritten
+// );
+typedef fillConsoleOutputAttributeNative = Int8 Function(
+    Int32 hConsoleOutput,
+    Int16 wAttribute,
+    Int32 nLength,
+    Int32 dwWriteCoord,
+    Pointer<Int32> lpNumberOfAttrsWritten);
+typedef fillConsoleOutputAttributeDart = int Function(
+    int hConsoleOutput,
+    int cCharacter,
+    int nLength,
+    int dwWriteCoord,
+    Pointer<Int32> lpNumberOfAttrsWritten);
 
 // BOOL WINAPI GetConsoleScreenBufferInfo(
 //   _In_  HANDLE                      hConsoleOutput,
@@ -44,13 +82,11 @@ typedef getConsoleScreenBufferInfoNative = Int8 Function(Int32 hConsoleOutput,
 typedef getConsoleScreenBufferInfoDart = int Function(int hConsoleOutput,
     Pointer<CONSOLE_SCREEN_BUFFER_INFO> lpConsoleScreenBufferInfo);
 
-// BOOL WINAPI SetConsoleMode(
-//   _In_ HANDLE hConsoleHandle,
-//   _In_ DWORD  dwMode
+// HANDLE WINAPI GetStdHandle(
+//   _In_ DWORD nStdHandle
 // );
-typedef setConsoleModeNative = Int8 Function(
-    Int32 hConsoleHandle, Int32 dwMode);
-typedef setConsoleModeDart = int Function(int hConsoleHandle, int dwMode);
+typedef getStdHandleNative = Int32 Function(Int32 nStdHandle);
+typedef getStdHandleDart = int Function(int nStdHandle);
 
 // BOOL WINAPI SetConsoleCursorInfo(
 //   _In_       HANDLE              hConsoleOutput,
@@ -61,9 +97,28 @@ typedef setConsoleCursorInfoNative = Int8 Function(
 typedef setConsoleCursorInfoDart = int Function(
     int hConsoleOutput, Pointer<CONSOLE_CURSOR_INFO> lpConsoleCursorInfo);
 
-// Requires unpacking COORD and SMALL_RECT because of
-// missing support for nested structs
-// (https://github.com/dart-lang/sdk/issues/37271)
+// BOOL WINAPI SetConsoleCursorPosition(
+//   _In_ HANDLE hConsoleOutput,
+//   _In_ COORD  dwCursorPosition
+// );
+typedef setConsoleCursorPositionNative = Int8 Function(
+    Int32 hConsoleOutput, Int32 dwCursorPosition);
+typedef setConsoleCursorPositionDart = int Function(
+    int hConsoleOutput, int dwCursorPosition);
+
+// BOOL WINAPI SetConsoleMode(
+//   _In_ HANDLE hConsoleHandle,
+//   _In_ DWORD  dwMode
+// );
+typedef setConsoleModeNative = Int8 Function(
+    Int32 hConsoleHandle, Int32 dwMode);
+typedef setConsoleModeDart = int Function(int hConsoleHandle, int dwMode);
+
+// *** STRUCTS ***
+
+// Dart FFI does not yet have support for nested structs, so there's extra
+// work necessary to unpack parameters like COORD and SMALL_RECT. The Dart
+// issue for this work is https://github.com/dart-lang/sdk/issues/37271.
 
 // typedef struct _CONSOLE_CURSOR_INFO {
 //   DWORD dwSize;
@@ -123,6 +178,11 @@ class COORD extends Struct {
 
   @Int16()
   int Y;
+
+  factory COORD.allocate(int X, int Y) =>
+      Pointer<COORD>.allocate().load<COORD>()
+        ..X = X
+        ..Y = Y;
 }
 
 // typedef struct _SMALL_RECT {
