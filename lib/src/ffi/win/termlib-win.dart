@@ -83,14 +83,13 @@ class TermLibWindows implements TermLib {
   }
 
   void clearScreen() {
-    Pointer<CONSOLE_SCREEN_BUFFER_INFO> pBufferInfo =
-        Pointer<CONSOLE_SCREEN_BUFFER_INFO>.allocate();
-    CONSOLE_SCREEN_BUFFER_INFO bufferInfo = pBufferInfo.load();
+    Pointer<CONSOLE_SCREEN_BUFFER_INFO> pBufferInfo = ffi.allocate();
+    CONSOLE_SCREEN_BUFFER_INFO bufferInfo = pBufferInfo.ref;
     GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
 
     final consoleSize = bufferInfo.dwSizeX * bufferInfo.dwSizeY;
 
-    final pCharsWritten = Pointer<Int32>.allocate();
+    final pCharsWritten = ffi.allocate();
     FillConsoleOutputCharacter(
         outputHandle, ' '.codeUnitAt(0), consoleSize, 0, pCharsWritten);
 
@@ -100,7 +99,7 @@ class TermLibWindows implements TermLib {
         outputHandle, bufferInfo.wAttributes, consoleSize, 0, pCharsWritten);
 
     SetConsoleCursorPosition(outputHandle, 0);
-    pCharsWritten.free();
+    ffi.free(pCharsWritten);
   }
 
   void setCursorPosition(int x, int y) {

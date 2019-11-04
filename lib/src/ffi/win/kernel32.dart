@@ -178,11 +178,6 @@ class COORD extends Struct {
 
   @Int16()
   int Y;
-
-  factory COORD.allocate(int X, int Y) =>
-      Pointer<COORD>.allocate().load<COORD>()
-        ..X = X
-        ..Y = Y;
 }
 
 // typedef struct _SMALL_RECT {

@@ -8,9 +8,9 @@
 // `Console` class to call these methods.
 
 import 'dart:ffi';
-import 'package:ffi/ffi.dart' as ffi;
-
 import 'dart:io';
+
+import 'package:ffi/ffi.dart' as ffi;
 
 import '../termlib.dart';
 import 'termios.dart';

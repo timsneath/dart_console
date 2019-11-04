@@ -93,18 +93,6 @@ class SMALL_RECT extends Struct {
   int Bottom;
 }
 
-// typedef struct _COORD {
-//   SHORT X;
-//   SHORT Y;
-// } COORD, *PCOORD;
-class COORD extends Struct<COORD> {
-  @Int16()
-  int X;
-
-  @Int16()
-  int Y;
-}
-
 // BOOL WINAPI SetConsoleCursorPosition(
 //   _In_ HANDLE hConsoleOutput,
 //   _In_ COORD  dwCursorPosition
