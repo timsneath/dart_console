@@ -1,8 +1,4 @@
-## 0.4.0-dev.2
-
-- A few more updates to new FFI API
-
-## 0.4.0-dev.1
+## 0.4.0
 
 - Update to new FFI API
 
