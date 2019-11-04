@@ -1,0 +1,505 @@
+// console-win32.dart
+//
+// Contains the Win32 representation of the `Console` class.
+
+import 'dart:io';
+import 'dart:math';
+
+import 'package:dart_console/src/ffi/win/wincolors.dart';
+
+import 'enums.dart';
+import 'key.dart';
+import 'ffi/win/termlib-win.dart';
+import 'console.dart';
+
+// temporarily only
+// import 'ansi.dart';
+
+/// A representation of the current console window.
+///
+/// Use the [Console] to get information about the current window and to read
+/// and write to it.
+///
+/// A comprehensive set of demos of using the Console class can be found in the
+/// `examples/` subdirectory.
+class Win32Console implements Console {
+  // We cache these values so we don't have to keep retrieving them. The
+  // downside is that the class isn't dynamically responsive to a resized
+  // console, but that's not unusual for console applications anyway.
+  int _windowWidth = 0;
+  int _windowHeight = 0;
+
+  bool _isRawMode = false;
+  bool get extendedColorsSupported => false;
+
+  final winTermLib = TermLibWindows();
+
+  /// Enables or disables raw mode.
+  ///
+  /// There are a series of flags applied to a UNIX-like terminal that together
+  /// constitute 'raw mode'. These flags turn off echoing of character input,
+  /// processing of input signals like Ctrl+C, and output processing, as well as
+  /// buffering of input until a full line is entered.
+  ///
+  /// Raw mode is useful for console applications like text editors, which
+  /// perform their own input and output processing, as well as for reading a
+  /// single key from the input.
+  ///
+  /// In general, you should not need to enable or disable raw mode explicitly;
+  /// you should call the [readKey] command, which takes care of handling raw
+  /// mode for you.
+  ///
+  /// If you use raw mode, you should disable it before your program returns, to
+  /// avoid the console being left in a state unsuitable for interactive input.
+  ///
+  /// When raw mode is enabled, the newline command (`\n`) does not also perform
+  /// a carriage return (`\r`). You can use the [newLine] property or the
+  /// [writeLine] function instead of explicitly using `\n` to ensure the
+  /// correct results.
+  ///
+  set rawMode(bool value) {
+    this._isRawMode = value;
+    if (value) {
+      winTermLib.enableRawMode();
+    } else {
+      winTermLib.disableRawMode();
+    }
+  }
+
+  /// Returns whether the terminal is in raw mode.
+  ///
+  /// There are a series of flags applied to a UNIX-like terminal that together
+  /// constitute 'raw mode'. These flags turn off echoing of character input,
+  /// processing of input signals like Ctrl+C, and output processing, as well as
+  /// buffering of input until a full line is entered.
+  bool get rawMode => _isRawMode;
+
+  /// Clears the entire screen
+  void clearScreen() {
+    winTermLib.clearScreen();
+  }
+
+  /// Erases all the characters in the current line.
+  void eraseLine() => stdout.write(ansiEraseInLineAll);
+
+  /// Erases the current line from the cursor to the end of the line.
+  void eraseCursorToEnd() => stdout.write(ansiEraseCursorToEnd);
+
+  /// Returns the width of the current console window in characters.
+  ///
+  /// This command attempts to use the ioctl() system call to retrieve the
+  /// window width, and if that fails uses ANSI escape codes to identify its
+  /// location by walking off the edge of the screen and seeing what the
+  /// terminal clipped the cursor to.
+  ///
+  /// If unable to retrieve a valid width from either method, the method
+  /// throws an [Exception].
+  int get windowWidth => winTermLib.getWindowWidth();
+
+  /// Returns the height of the current console window in characters.
+  ///
+  /// This command attempts to use the ioctl() system call to retrieve the
+  /// window height, and if that fails uses ANSI escape codes to identify its
+  /// location by walking off the edge of the screen and seeing what the
+  /// terminal clipped the cursor to.
+  ///
+  /// If unable to retrieve a valid height from either method, the method
+  /// throws an [Exception].
+  int get windowHeight => winTermLib.getWindowHeight();
+
+  /// Hides the cursor.
+  ///
+  /// If you hide the cursor, you should take care to return the cursor to
+  /// a visible status at the end of the program, even if it throws an
+  /// exception, by calling the [showCursor] method.
+  void hideCursor() => winTermLib.hideCursor();
+
+  /// Shows the cursor.
+  void showCursor() => winTermLib.showCursor();
+
+  /// Moves the cursor one position to the left.
+  void cursorLeft() {
+    final currPos = cursorPosition;
+    cursorPosition = Coordinate(currPos.row, currPos.col - 1);
+  }
+
+  /// Moves the cursor one position to the right.
+  void cursorRight() {
+    final currPos = cursorPosition;
+    cursorPosition = Coordinate(currPos.row, currPos.col + 1);
+  }
+
+  /// Moves the cursor one position up.
+  void cursorUp() {
+    final currPos = cursorPosition;
+    cursorPosition = Coordinate(currPos.row - 1, currPos.col);
+  }
+
+  /// Moves the cursor one position down.
+  void cursorDown() {
+    final currPos = cursorPosition;
+    cursorPosition = Coordinate(currPos.row + 1, currPos.col);
+  }
+
+  /// Moves the cursor to the top left corner of the screen.
+  void resetCursorPosition() => winTermLib.setCursorPosition(0, 0);
+
+  /// Returns the current cursor position as a coordinate.
+  Coordinate get cursorPosition => winTermLib.getCursorPosition();
+
+  /// Sets the cursor to a specific coordinate.
+  ///
+  /// Coordinates are measured from the top left of the screen, and are
+  /// zero-based.
+  set cursorPosition(Coordinate cursor) {
+    winTermLib.setCursorPosition(cursor.col, cursor.row);
+  }
+
+  /// Sets the console foreground color to a named color.
+  ///
+  /// There are 16 named colors, as defined in the [ConsoleColor]
+  /// enumeration. Depending on the console theme and background color,
+  /// some colors may not offer a legible contrast against the background.
+  void setForegroundColor(ConsoleColor foreground) =>
+      winTermLib.setColorAttribute(winForegroundColors[foreground]);
+
+  /// Sets the console background color to a named color.
+  ///
+  /// There are 16 named colors, as defined in the [ConsoleColor]
+  /// enumeration. Depending on the console theme and background color,
+  /// some colors may not offer a legible contrast against the background.
+  void setBackgroundColor(ConsoleColor background) =>
+      winTermLib.setColorAttribute(winBackgroundColors[background]);
+
+  void setForegroundExtendedColor(int colorValue) {
+    // does nothing
+  }
+
+  void setBackgroundExtendedColor(int colorValue) {
+    // does nothing
+  }
+
+  /// Sets the text style.
+  ///
+  void setTextStyle(
+      {bool bold = false,
+      bool underscore = false,
+      bool blink = false,
+      bool inverted = false}) {
+    // not supported in legacy console
+  }
+
+  /// Resets all color attributes and text styles to the default terminal
+  /// setting.
+  void resetColorAttributes() => stdout.write(ansiResetColor);
+
+  /// Writes the text to the console.
+  void write(String text) => stdout.write(text);
+
+  /// Returns the current newline string.
+  String get newLine => _isRawMode ? '\r\n' : '\n';
+
+  /// Writes a line to the console, optionally with alignment provided by the
+  /// [TextAlignment] enumeration.
+  ///
+  /// If no parameters are supplied, the command simply writes a new line
+  /// to the console. By default, text is left aligned.
+  ///
+  /// Text alignment operates based off the current window width, and pads
+  /// the remaining characters with a space character.
+  void writeLine([String text, TextAlignment alignment]) {
+    if (text != null) {
+      switch (alignment) {
+        case TextAlignment.center:
+          final padding = ((windowWidth - text.length) / 2).round();
+          text = text.padLeft(text.length + padding);
+          text = text.padRight(windowWidth);
+          break;
+        case TextAlignment.right:
+          text = text.padLeft(windowWidth);
+          break;
+        default:
+      }
+      stdout.write(text);
+    }
+    stdout.write(newLine);
+  }
+
+  /// Reads a single key from the input, including a variety of control
+  /// characters.
+  ///
+  /// Keys are represented by the [Key] class. Keys may be printable (if so,
+  /// `Key.isControl` is `false`, and the `Key.char` property may be used to
+  /// identify the key pressed. Non-printable keys have `Key.isControl` set
+  /// to `true`, and if so the `Key.char` property is empty and instead the
+  /// `Key.controlChar` property will be set to a value from the
+  /// [ControlCharacter] enumeration that describes which key was pressed.
+  ///
+  /// Owing to the limitations of terminal key handling, certain keys may
+  /// be represented by multiple control key sequences. An example showing
+  /// basic key handling can be found in the `example/command_line.dart`
+  /// file in the package source code.
+  Key readKey() {
+    var key, charCode;
+    var codeUnit = 0;
+
+    rawMode = true;
+    while (codeUnit <= 0) {
+      codeUnit = stdin.readByteSync();
+    }
+
+    if (codeUnit >= 0x01 && codeUnit <= 0x1a) {
+      // Ctrl+A thru Ctrl+Z are mapped to the 1st-26th entries in the
+      // enum, so it's easy to convert them across
+      key = Key.control(ControlCharacter.values[codeUnit]);
+    } else if (codeUnit == 0x1b) {
+      // escape sequence (e.g. \x1b[A for up arrow)
+      key = Key.control(ControlCharacter.escape);
+
+      final escapeSequence = <String>[];
+
+      charCode = stdin.readByteSync();
+      if (charCode == -1) {
+        rawMode = false;
+        return key;
+      }
+      escapeSequence.add(String.fromCharCode(charCode));
+
+      if (charCode == 127) {
+        key = Key.control(ControlCharacter.wordBackspace);
+      } else if (escapeSequence[0] == '[') {
+        charCode = stdin.readByteSync();
+        if (charCode == -1) {
+          rawMode = false;
+          return key;
+        }
+        escapeSequence.add(String.fromCharCode(charCode));
+
+        switch (escapeSequence[1]) {
+          case 'A':
+            key.controlChar = ControlCharacter.arrowUp;
+            break;
+          case 'B':
+            key.controlChar = ControlCharacter.arrowDown;
+            break;
+          case 'C':
+            key.controlChar = ControlCharacter.arrowRight;
+            break;
+          case 'D':
+            key.controlChar = ControlCharacter.arrowLeft;
+            break;
+          case 'H':
+            key.controlChar = ControlCharacter.home;
+            break;
+          case 'F':
+            key.controlChar = ControlCharacter.end;
+            break;
+          default:
+            if (escapeSequence[1].codeUnits[0] > '0'.codeUnits[0] &&
+                escapeSequence[1].codeUnits[0] < '9'.codeUnits[0]) {
+              charCode = stdin.readByteSync();
+              if (charCode == -1) {
+                rawMode = false;
+                return key;
+              }
+              escapeSequence.add(String.fromCharCode(charCode));
+              if (escapeSequence[2] != '~') {
+                key.controlChar = ControlCharacter.unknown;
+              } else {
+                switch (escapeSequence[1]) {
+                  case '1':
+                    key.controlChar = ControlCharacter.home;
+                    break;
+                  case '3':
+                    key.controlChar = ControlCharacter.delete;
+                    break;
+                  case '4':
+                    key.controlChar = ControlCharacter.end;
+                    break;
+                  case '5':
+                    key.controlChar = ControlCharacter.pageUp;
+                    break;
+                  case '6':
+                    key.controlChar = ControlCharacter.pageDown;
+                    break;
+                  case '7':
+                    key.controlChar = ControlCharacter.home;
+                    break;
+                  case '8':
+                    key.controlChar = ControlCharacter.end;
+                    break;
+                  default:
+                    key.controlChar = ControlCharacter.unknown;
+                }
+              }
+            } else {
+              key.controlChar = ControlCharacter.unknown;
+            }
+        }
+      } else if (escapeSequence[0] == 'O') {
+        charCode = stdin.readByteSync();
+        if (charCode == -1) {
+          rawMode = false;
+          return key;
+        }
+        escapeSequence.add(String.fromCharCode(charCode));
+        assert(escapeSequence.length == 2);
+        switch (escapeSequence[1]) {
+          case 'H':
+            key.controlChar = ControlCharacter.home;
+            break;
+          case 'F':
+            key.controlChar = ControlCharacter.end;
+            break;
+          case 'P':
+            key.controlChar = ControlCharacter.F1;
+            break;
+          case 'Q':
+            key.controlChar = ControlCharacter.F2;
+            break;
+          case 'R':
+            key.controlChar = ControlCharacter.F3;
+            break;
+          case 'S':
+            key.controlChar = ControlCharacter.F4;
+            break;
+          default:
+        }
+      } else if (escapeSequence[0] == 'b') {
+        key.controlChar = ControlCharacter.wordLeft;
+      } else if (escapeSequence[0] == 'f') {
+        key.controlChar = ControlCharacter.wordRight;
+      } else {
+        key.controlChar = ControlCharacter.unknown;
+      }
+    } else if (codeUnit == 0x7f) {
+      key = Key.control(ControlCharacter.backspace);
+    } else if (codeUnit == 0x00 || (codeUnit >= 0x1c && codeUnit <= 0x1f)) {
+      key = Key.control(ControlCharacter.unknown);
+    } else {
+      // assume other characters are printable
+      key = Key.printable(String.fromCharCode(codeUnit));
+    }
+    rawMode = false;
+    return key;
+  }
+
+  /// Reads a line of input, handling basic keyboard navigation commands.
+  ///
+  /// The Dart [stdin.readLineSync()] function reads a line from the input,
+  /// however it does not handle cursor navigation (e.g. arrow keys, home and
+  /// end keys), and has side-effects that may be unhelpful for certain console
+  /// applications. For example, Ctrl+C is processed as the break character,
+  /// which causes the application to immediately exit.
+  ///
+  /// The implementation does not currently allow for multi-line input. It
+  /// is best suited for short text fields that are not longer than the width
+  /// of the current screen.
+  ///
+  /// By default, readLine ignores break characters (e.g. Ctrl+C) and the Esc
+  /// key, but if enabled, the function will exit and return an empty string if
+  /// those keys are pressed.
+  ///
+  /// A callback function may be supplied, as a peek-ahead for what is being
+  /// entered. This is intended for scenarios like auto-complete, where the
+  /// text field is coupled with some other content.
+  String readLine(
+      {bool cancelOnBreak = false,
+      bool cancelOnEscape = false,
+      Function(String text, Key lastPressed) callback}) {
+    String buffer = '';
+    var index = 0; // cursor position relative to buffer, not screen
+
+    final screenRow = cursorPosition.row;
+    final screenColOffset = cursorPosition.col;
+
+    // TODO: Add multi-line input. For now, limit the text length to what will
+    // fit on the remainder of the current row.
+    final bufferMaxLength = windowWidth - screenColOffset - 3;
+
+    while (true) {
+      var key = readKey();
+
+      if (key.isControl) {
+        switch (key.controlChar) {
+          case ControlCharacter.enter:
+            return buffer;
+          case ControlCharacter.ctrlC:
+            if (cancelOnBreak) return '';
+            break;
+          case ControlCharacter.escape:
+            if (cancelOnEscape) return '';
+            break;
+          case ControlCharacter.backspace:
+          case ControlCharacter.ctrlH:
+            if (index > 0) {
+              buffer = buffer.substring(0, index - 1) + buffer.substring(index);
+              index--;
+            }
+            break;
+          case ControlCharacter.delete:
+          case ControlCharacter.ctrlD:
+            if (index < buffer.length - 1) {
+              buffer = buffer.substring(0, index) + buffer.substring(index + 1);
+            }
+            break;
+          case ControlCharacter.ctrlK:
+            buffer = buffer.substring(0, index);
+            break;
+          case ControlCharacter.arrowLeft:
+          case ControlCharacter.ctrlB:
+            index = index > 0 ? index - 1 : index;
+            break;
+          case ControlCharacter.arrowRight:
+          case ControlCharacter.ctrlF:
+            index = index < buffer.length ? index + 1 : index;
+            break;
+          case ControlCharacter.wordLeft:
+            if (index > 0) {
+              final bufferLeftOfCursor = buffer.substring(0, index - 1);
+              final lastSpace = bufferLeftOfCursor.lastIndexOf(' ');
+              index = lastSpace != -1 ? lastSpace + 1 : 0;
+            }
+            break;
+          case ControlCharacter.wordRight:
+            if (index < buffer.length) {
+              final bufferRightOfCursor = buffer.substring(index + 1);
+              final nextSpace = bufferRightOfCursor.indexOf(' ');
+              index = nextSpace != -1
+                  ? min(index + nextSpace + 2, buffer.length)
+                  : buffer.length;
+            }
+            break;
+          case ControlCharacter.home:
+          case ControlCharacter.ctrlA:
+            index = 0;
+            break;
+          case ControlCharacter.end:
+          case ControlCharacter.ctrlE:
+            index = buffer.length;
+            break;
+          default:
+            break;
+        }
+      } else {
+        if (buffer.length < bufferMaxLength) {
+          if (index == buffer.length) {
+            buffer += key.char;
+            index++;
+          } else {
+            buffer =
+                buffer.substring(0, index) + key.char + buffer.substring(index);
+            index++;
+          }
+        }
+      }
+
+      cursorPosition = Coordinate(screenRow, screenColOffset);
+      eraseCursorToEnd();
+      write(buffer); // allow for backspace condition
+      cursorPosition = Coordinate(screenRow, screenColOffset + index);
+
+      if (callback != null) callback(buffer, key);
+    }
+  }
+}
