@@ -13,7 +13,7 @@ final TIOCGWINSZ = Platform.isMacOS ? 0x40087468 : 0x5413;
 // 	unsigned short  ws_xpixel;      /* horizontal size, pixels */
 // 	unsigned short  ws_ypixel;      /* vertical size, pixels */
 // };
-class WinSize extends Struct<WinSize> {
+class WinSize extends Struct {
   @Int16()
   int ws_row;
 
@@ -25,14 +25,6 @@ class WinSize extends Struct<WinSize> {
 
   @Int16()
   int ws_ypixel;
-
-  factory WinSize.allocate(
-          int ws_row, int ws_col, int ws_xpixel, int ws_ypixel) =>
-      Pointer<WinSize>.allocate().load<WinSize>()
-        ..ws_row = ws_row
-        ..ws_col = ws_col
-        ..ws_xpixel = ws_xpixel
-        ..ws_ypixel = ws_ypixel;
 }
 
 // int ioctl(int, unsigned long, ...);

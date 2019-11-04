@@ -74,7 +74,7 @@ const int VTIME = 17; // time in 1/10s before returning
 // 	speed_t         c_ispeed;       /* input speed */
 // 	speed_t         c_ospeed;       /* output speed */
 // };
-class TermIOS extends Struct<TermIOS> {
+class TermIOS extends Struct {
   @Int64()
   int c_iflag;
   @Int64()
