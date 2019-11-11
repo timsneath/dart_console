@@ -317,6 +317,16 @@ class Console {
   /// Returns the current newline string.
   String get newLine => _isRawMode ? '\r\n' : '\n';
 
+  /// Writes an error message to the console, with newline automatically
+  /// appended.
+  void writeErrorLine(String text) {
+    stderr.write(text);
+
+    // Even if we're in raw mode, we write '\n', since raw mode only applies
+    // to stdout
+    stderr.write('\n');
+  }
+
   /// Writes a line to the console, optionally with alignment provided by the
   /// [TextAlignment] enumeration.
   ///
@@ -515,7 +525,7 @@ class Console {
   /// of the current screen.
   ///
   /// By default, readLine ignores break characters (e.g. Ctrl+C) and the Esc
-  /// key, but if enabled, the function will exit and return an empty string if
+  /// key, but if enabled, the function will exit and return a null string if
   /// those keys are pressed.
   ///
   /// A callback function may be supplied, as a peek-ahead for what is being
@@ -541,12 +551,13 @@ class Console {
       if (key.isControl) {
         switch (key.controlChar) {
           case ControlCharacter.enter:
+            writeLine();
             return buffer;
           case ControlCharacter.ctrlC:
-            if (cancelOnBreak) return '';
+            if (cancelOnBreak) return null;
             break;
           case ControlCharacter.escape:
-            if (cancelOnEscape) return '';
+            if (cancelOnEscape) return null;
             break;
           case ControlCharacter.backspace:
           case ControlCharacter.ctrlH:
