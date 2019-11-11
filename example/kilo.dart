@@ -184,7 +184,7 @@ void editorFind() {
   final query = editorPrompt(
       'Search (ESC to cancel, use arrows for prev/next): ', editorFindCallback);
 
-  if (query.isEmpty) {
+  if (query == null) {
     // Escape pressed
     cursorCol = savedCursorCol;
     cursorRow = savedCursorRow;
@@ -218,7 +218,7 @@ void editorOpen(String filename) {
 void editorSave() async {
   if (editedFilename.isEmpty) {
     editedFilename = editorPrompt('Save as: ');
-    if (editedFilename.isEmpty) {
+    if (editedFilename == null) {
       editorSetStatusMessage('Save aborted.');
       return;
     }

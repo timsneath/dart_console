@@ -36,10 +36,9 @@ main() {
   while (true) {
     console.write(prompt);
     final response = console.readLine(cancelOnBreak: true);
-    if (response.isEmpty) {
+    if (response == null || response.isEmpty) {
       exit(0);
     } else {
-      console.writeLine();
       console.writeLine('YOU SAID: ${response.toUpperCase()}');
       console.writeLine();
     }
