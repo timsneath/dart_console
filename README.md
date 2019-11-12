@@ -56,17 +56,20 @@ More comprehensive demos of the `Console` class are provided, as follows:
 
 | Example | Description |
 | ---- | ---- |
-| `demo.dart` | Suite of test demos that showcase various capabilities of the package |
-| `main.dart` | Basic demo of how to get started with the package |
-| `keys.dart` | Demonstrates how control characters are processed by `dart_console` |
-| `readline.dart` | Sample command-line interface |
+| `demo.dart` | Suite of test demos that showcase various capabilities |
+| `main.dart` | Basic demo of how to get started with the `dart_console` |
+| `keys.dart` | Demonstrates how `dart_console` processes control characters |
+| `readline.dart` | Sample command-line interface / REPL |
 | `kilo.dart` | Rudimentary text editor |
+| `life.dart` | Game of Life |
 
 ## Acknowledgements
 
 Special thanks to [Matt Sullivan (@mjohnsullivan)][@mjohnsullivan] and
 [Samir Jindel (@sjindel-google)][@sjindel-google] for their help understanding
 the vagaries of FFI in its early state.
+
+Thanks to [@erf] for contributing the Game of Life example.
 
 ## Features and bugs
 
@@ -79,6 +82,7 @@ Please file feature requests and bugs at the [issue tracker][tracker].
 [vt-win10]: https://docs.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
 [winterm]: https://www.microsoft.com/en-us/p/windows-terminal-preview/9n0dx20hk701
 [FFI]: https://dart.dev/server/c-interop
-[tracker]: https://github.com/timsneath/dart_console/issues
 [@mjohnsullivan]: https://github.com/mjohnsullivan
 [@sjindel-google]: https://github.com/sjindel-google
+[@erf]: https://github.com/erf
+[tracker]: https://github.com/timsneath/dart_console/issues
