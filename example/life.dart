@@ -12,13 +12,14 @@ final int cols = console.windowWidth;
 final int size = rows * cols;
 
 final temp = List<bool>(size);
-final data = List<bool>.generate(size, (i) => random.nextBool(), growable: false);
+final data =
+    List<bool>.generate(size, (i) => random.nextBool(), growable: false);
 
 final buffer = StringBuffer();
 
 bool done = false;
 
-final neighbours = [
+final neighbors = [
   [-1, -1],
   [0, -1],
   [1, -1],
@@ -47,12 +48,12 @@ void draw() {
   console.write(buffer.toString());
 }
 
-int numLiveNeighbours(int row, int col) {
+int numLiveNeighbors(int row, int col) {
   int sum = 0;
   for (int i = 0; i < 8; i++) {
-    int x = col + neighbours[i][0];
+    int x = col + neighbors[i][0];
     if (x < 0 || x >= cols) continue;
-    int y = row + neighbours[i][1];
+    int y = row + neighbors[i][1];
     if (y < 0 || y >= rows) continue;
     sum += data[y * rows + x] ? 1 : 0;
   }
@@ -60,15 +61,19 @@ int numLiveNeighbours(int row, int col) {
 }
 
 /*
- * 1. Any live cell with fewer than two live neighbours dies, as if caused by underpopulation.
- * 2. Any live cell with two or three live neighbours lives on to the next generation.
- * 3. Any live cell with more than three live neighbours dies, as if by overpopulation.
- * 4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+ * 1. Any live cell with fewer than two live neighbors dies, as if caused
+ *    by underpopulation.
+ * 2. Any live cell with two or three live neighbors lives on to the next
+ *    generation.
+ * 3. Any live cell with more than three live neighbors dies, as if by
+ *    overpopulation.
+ * 4. Any dead cell with exactly three live neighbors becomes a live cell, as
+ *    if by reproduction.
  */
 void update() {
   for (int row = 0; row < rows; row++) {
     for (int col = 0; col < cols; col++) {
-      int n = numLiveNeighbours(row, col);
+      int n = numLiveNeighbors(row, col);
       int index = row * rows + col;
       bool v = data[index];
       temp[index] = (v == true && (n == 2 || n == 3)) || (v == false && n == 3);
@@ -115,7 +120,7 @@ main(List<String> arguments) {
     Timer.periodic(Duration(milliseconds: 200), (t) {
       draw();
       update();
-      //input(); // TODO need async input
+      //input(); // TODO: need async input
       if (done) quit();
     });
   } catch (exception) {
