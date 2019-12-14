@@ -1,6 +1,6 @@
 import 'package:dart_console/dart_console.dart';
 
-main() {
+void main() {
   final console = Console();
   console.setBackgroundColor(ConsoleColor.blue);
   console.setForegroundColor(ConsoleColor.white);
@@ -17,7 +17,7 @@ main() {
   console.writeLine('This text is center aligned.', TextAlignment.center);
   console.writeLine('This text is right aligned.', TextAlignment.right);
 
-  for (ConsoleColor color in ConsoleColor.values) {
+  for (var color in ConsoleColor.values) {
     console.setForegroundColor(color);
     console.writeLine(color.toString().split('.').last);
   }

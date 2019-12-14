@@ -10,11 +10,11 @@ void main() {
   });
 
   test('Coordinate positioning', () {
-    Coordinate coordinate = Coordinate(5, 8);
+    final coordinate = Coordinate(5, 8);
 
     console.cursorPosition = coordinate;
 
-    Coordinate returnedCoordinate = console.cursorPosition;
+    final returnedCoordinate = console.cursorPosition;
 
     expect(coordinate.row, equals(returnedCoordinate.row));
     expect(coordinate.col, equals(returnedCoordinate.col));

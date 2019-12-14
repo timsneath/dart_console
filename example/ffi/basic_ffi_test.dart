@@ -1,7 +1,7 @@
 import 'package:dart_console/dart_console.dart';
 import 'package:dart_console/src/ffi/termlib.dart';
 
-main() {
+void main() {
   final termlib = TermLib();
   print(
       'Per TermLib, this console window has ${termlib.getWindowWidth()} cols and '

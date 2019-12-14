@@ -65,7 +65,7 @@ class Console {
   /// correct results.
   ///
   set rawMode(bool value) {
-    this._isRawMode = value;
+    _isRawMode = value;
     if (value) {
       _termlib.enableRawMode();
     } else {
@@ -208,8 +208,8 @@ class Console {
     stdout.write(ansiDeviceStatusReportCursorPosition);
     // returns a Cursor Position Report result in the form <ESC>[24;80R
     // which we have to parse apart, unfortunately
-    String result = '';
-    int i = 0;
+    var result = '';
+    var i = 0;
 
     // avoid infinite loop if we're getting a bad result
     while (i < 16) {
@@ -278,7 +278,7 @@ class Console {
   /// package, which provides a sample of each color in this list.
   void setForegroundExtendedColor(int colorValue) {
     assert(colorValue >= 0 && colorValue <= 0xFF,
-        "Color must be a value between 0 and 255.");
+        'Color must be a value between 0 and 255.');
 
     stdout.write(ansiSetExtendedForegroundColor(colorValue));
   }
@@ -290,7 +290,7 @@ class Console {
   /// package, which provides a sample of each color in this list.
   void setBackgroundExtendedColor(int colorValue) {
     assert(colorValue >= 0 && colorValue <= 0xFF,
-        "Color must be a value between 0 and 255.");
+        'Color must be a value between 0 and 255.');
 
     stdout.write(ansiSetExtendedBackgroundColor(colorValue));
   }
@@ -535,7 +535,7 @@ class Console {
       {bool cancelOnBreak = false,
       bool cancelOnEscape = false,
       Function(String text, Key lastPressed) callback}) {
-    String buffer = '';
+    var buffer = '';
     var index = 0; // cursor position relative to buffer, not screen
 
     final screenRow = cursorPosition.row;

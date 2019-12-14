@@ -26,12 +26,13 @@ class TermLibUnix implements TermLib {
   tcgetattrDart tcgetattr;
   tcsetattrDart tcsetattr;
 
+  @override
   int getWindowHeight() {
     Pointer<WinSize> winSizePointer = ffi.allocate();
     final result = ioctl(STDOUT_FILENO, TIOCGWINSZ, winSizePointer.cast());
     if (result == -1) return -1;
 
-    final WinSize winSize = winSizePointer.ref;
+    final winSize = winSizePointer.ref;
     if (winSize.ws_row == 0) {
       return -1;
     } else {
@@ -41,12 +42,13 @@ class TermLibUnix implements TermLib {
     }
   }
 
+  @override
   int getWindowWidth() {
     Pointer<WinSize> winSizePointer = ffi.allocate();
     final result = ioctl(STDOUT_FILENO, TIOCGWINSZ, winSizePointer.cast());
     if (result == -1) return -1;
 
-    final WinSize winSize = winSizePointer.ref;
+    final winSize = winSizePointer.ref;
     if (winSize.ws_col == 0) {
       return -1;
     } else {
@@ -56,11 +58,12 @@ class TermLibUnix implements TermLib {
     }
   }
 
+  @override
   void enableRawMode() {
     final _origTermIOS = _origTermIOSPointer.ref;
 
     Pointer<TermIOS> newTermIOSPointer = ffi.allocate();
-    TermIOS newTermIOS = newTermIOSPointer.ref;
+    var newTermIOS = newTermIOSPointer.ref;
 
     newTermIOS.c_iflag =
         _origTermIOS.c_iflag & ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
@@ -96,6 +99,7 @@ class TermLibUnix implements TermLib {
     ffi.free(newTermIOS.addressOf);
   }
 
+  @override
   void disableRawMode() {
     if (nullptr == _origTermIOSPointer.cast()) return;
     tcsetattr(STDIN_FILENO, TCSAFLUSH, _origTermIOSPointer);
@@ -103,14 +107,14 @@ class TermLibUnix implements TermLib {
 
   TermLibUnix() {
     _stdlib = Platform.isMacOS
-        ? DynamicLibrary.open("/usr/lib/libSystem.dylib")
-        : DynamicLibrary.open("libc.so.6");
+        ? DynamicLibrary.open('/usr/lib/libSystem.dylib')
+        : DynamicLibrary.open('libc.so.6');
 
-    ioctl = _stdlib.lookupFunction<ioctlNative, ioctlDart>("ioctl");
+    ioctl = _stdlib.lookupFunction<ioctlNative, ioctlDart>('ioctl');
     tcgetattr =
-        _stdlib.lookupFunction<tcgetattrNative, tcgetattrDart>("tcgetattr");
+        _stdlib.lookupFunction<tcgetattrNative, tcgetattrDart>('tcgetattr');
     tcsetattr =
-        _stdlib.lookupFunction<tcsetattrNative, tcsetattrDart>("tcsetattr");
+        _stdlib.lookupFunction<tcsetattrNative, tcsetattrDart>('tcsetattr');
 
     // store console mode settings so we can return them again as necessary
     _origTermIOSPointer = ffi.allocate();

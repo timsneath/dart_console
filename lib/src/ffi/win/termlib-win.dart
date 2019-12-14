@@ -27,26 +27,29 @@ class TermLibWindows implements TermLib {
 
   int inputHandle, outputHandle;
 
+  @override
   int getWindowHeight() {
     Pointer<CONSOLE_SCREEN_BUFFER_INFO> pBufferInfo = ffi.allocate();
-    CONSOLE_SCREEN_BUFFER_INFO bufferInfo = pBufferInfo.ref;
+    var bufferInfo = pBufferInfo.ref;
     GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
     final windowHeight = bufferInfo.srWindowBottom - bufferInfo.srWindowTop + 1;
     ffi.free(bufferInfo.addressOf);
     return windowHeight;
   }
 
+  @override
   int getWindowWidth() {
     Pointer<CONSOLE_SCREEN_BUFFER_INFO> pBufferInfo = ffi.allocate();
-    CONSOLE_SCREEN_BUFFER_INFO bufferInfo = pBufferInfo.ref;
+    var bufferInfo = pBufferInfo.ref;
     GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
     final windowWidth = bufferInfo.srWindowRight - bufferInfo.srWindowLeft + 1;
     ffi.free(bufferInfo.addressOf);
     return windowWidth;
   }
 
+  @override
   void enableRawMode() {
-    int dwMode = (~ENABLE_ECHO_INPUT) &
+    final dwMode = (~ENABLE_ECHO_INPUT) &
         (~ENABLE_ECHO_INPUT) &
         (~ENABLE_PROCESSED_INPUT) &
         (~ENABLE_LINE_INPUT) &
@@ -54,8 +57,9 @@ class TermLibWindows implements TermLib {
     SetConsoleMode(inputHandle, dwMode);
   }
 
+  @override
   void disableRawMode() {
-    int dwMode = ENABLE_ECHO_INPUT &
+    final dwMode = ENABLE_ECHO_INPUT &
         ENABLE_EXTENDED_FLAGS &
         ENABLE_INSERT_MODE &
         ENABLE_LINE_INPUT &
@@ -68,7 +72,7 @@ class TermLibWindows implements TermLib {
 
   void hideCursor() {
     Pointer<CONSOLE_CURSOR_INFO> lpConsoleCursorInfo = ffi.allocate();
-    CONSOLE_CURSOR_INFO consoleCursorInfo = lpConsoleCursorInfo.ref;
+    var consoleCursorInfo = lpConsoleCursorInfo.ref;
     consoleCursorInfo.bVisible = 0;
     SetConsoleCursorInfo(outputHandle, lpConsoleCursorInfo);
     ffi.free(consoleCursorInfo.addressOf);
@@ -76,7 +80,7 @@ class TermLibWindows implements TermLib {
 
   void showCursor() {
     Pointer<CONSOLE_CURSOR_INFO> lpConsoleCursorInfo = ffi.allocate();
-    CONSOLE_CURSOR_INFO consoleCursorInfo = lpConsoleCursorInfo.ref;
+    var consoleCursorInfo = lpConsoleCursorInfo.ref;
     consoleCursorInfo.bVisible = 1;
     SetConsoleCursorInfo(outputHandle, lpConsoleCursorInfo);
     ffi.free(consoleCursorInfo.addressOf);
@@ -84,7 +88,7 @@ class TermLibWindows implements TermLib {
 
   void clearScreen() {
     Pointer<CONSOLE_SCREEN_BUFFER_INFO> pBufferInfo = ffi.allocate();
-    CONSOLE_SCREEN_BUFFER_INFO bufferInfo = pBufferInfo.ref;
+    var bufferInfo = pBufferInfo.ref;
     GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
 
     final consoleSize = bufferInfo.dwSizeX * bufferInfo.dwSizeY;
@@ -110,24 +114,24 @@ class TermLibWindows implements TermLib {
     kernel = DynamicLibrary.open('Kernel32.dll');
 
     GetStdHandle = kernel
-        .lookupFunction<getStdHandleNative, getStdHandleDart>("GetStdHandle");
+        .lookupFunction<getStdHandleNative, getStdHandleDart>('GetStdHandle');
     GetConsoleScreenBufferInfo = kernel.lookupFunction<
         getConsoleScreenBufferInfoNative,
-        getConsoleScreenBufferInfoDart>("GetConsoleScreenBufferInfo");
+        getConsoleScreenBufferInfoDart>('GetConsoleScreenBufferInfo');
     SetConsoleMode =
         kernel.lookupFunction<setConsoleModeNative, setConsoleModeDart>(
-            "SetConsoleMode");
+            'SetConsoleMode');
     SetConsoleCursorInfo = kernel.lookupFunction<setConsoleCursorInfoNative,
-        setConsoleCursorInfoDart>("SetConsoleCursorInfo");
+        setConsoleCursorInfoDart>('SetConsoleCursorInfo');
     SetConsoleCursorPosition = kernel.lookupFunction<
         setConsoleCursorPositionNative,
-        setConsoleCursorPositionDart>("SetConsoleCursorPosition");
+        setConsoleCursorPositionDart>('SetConsoleCursorPosition');
     FillConsoleOutputCharacter = kernel.lookupFunction<
         fillConsoleOutputCharacterNative,
-        fillConsoleOutputCharacterDart>("FillConsoleOutputCharacterA");
+        fillConsoleOutputCharacterDart>('FillConsoleOutputCharacterA');
     FillConsoleOutputAttribute = kernel.lookupFunction<
         fillConsoleOutputAttributeNative,
-        fillConsoleOutputAttributeDart>("FillConsoleOutputAttribute");
+        fillConsoleOutputAttributeDart>('FillConsoleOutputAttribute');
     outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     inputHandle = GetStdHandle(STD_INPUT_HANDLE);
   }

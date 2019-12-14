@@ -37,9 +37,9 @@ void draw() {
 
   buffer.clear();
 
-  for (int row = 0; row < rows; row++) {
-    for (int col = 0; col < cols; col++) {
-      int index = row * rows + col;
+  for (var row = 0; row < rows; row++) {
+    for (var col = 0; col < cols; col++) {
+      var index = row * rows + col;
       buffer.write(data[index] ? '#' : ' ');
     }
     buffer.write(console.newLine);
@@ -49,11 +49,11 @@ void draw() {
 }
 
 int numLiveNeighbors(int row, int col) {
-  int sum = 0;
-  for (int i = 0; i < 8; i++) {
-    int x = col + neighbors[i][0];
+  var sum = 0;
+  for (var i = 0; i < 8; i++) {
+    var x = col + neighbors[i][0];
     if (x < 0 || x >= cols) continue;
-    int y = row + neighbors[i][1];
+    var y = row + neighbors[i][1];
     if (y < 0 || y >= rows) continue;
     sum += data[y * rows + x] ? 1 : 0;
   }
@@ -71,11 +71,11 @@ int numLiveNeighbors(int row, int col) {
  *    if by reproduction.
  */
 void update() {
-  for (int row = 0; row < rows; row++) {
-    for (int col = 0; col < cols; col++) {
-      int n = numLiveNeighbors(row, col);
-      int index = row * rows + col;
-      bool v = data[index];
+  for (var row = 0; row < rows; row++) {
+    for (var col = 0; col < cols; col++) {
+      var n = numLiveNeighbors(row, col);
+      var index = row * rows + col;
+      var v = data[index];
       temp[index] = (v == true && (n == 2 || n == 3)) || (v == false && n == 3);
     }
   }
@@ -112,7 +112,7 @@ void quit() {
   exit(0);
 }
 
-main(List<String> arguments) {
+void main(List<String> arguments) {
   try {
     console.rawMode = false;
     console.hideCursor();

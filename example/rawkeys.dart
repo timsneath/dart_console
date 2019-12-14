@@ -9,7 +9,7 @@ import 'package:dart_console/dart_console.dart';
 
 final console = Console();
 
-main() {
+void main() {
   console.writeLine('Purely for testing purposes.');
   console.writeLine();
   console.writeLine(

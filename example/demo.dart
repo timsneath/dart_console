@@ -25,7 +25,7 @@ var demoScreens = <Function>[
 
     console.hideCursor();
 
-    for (int i = 0; i <= 50; i++) {
+    for (var i = 0; i <= 50; i++) {
       console.cursorPosition = Coordinate(row, 4);
       final progress = (i / 50 * progressBarWidth).ceil();
       final bar =
@@ -56,7 +56,7 @@ var demoScreens = <Function>[
     console.writeLine('This text is center aligned.', TextAlignment.center);
     console.writeLine('This text is right aligned.', TextAlignment.right);
 
-    for (ConsoleColor color in ConsoleColor.values) {
+    for (var color in ConsoleColor.values) {
       console.setForegroundColor(color);
       console.writeLine(color.toString().split('.').last);
     }
@@ -73,8 +73,8 @@ var demoScreens = <Function>[
 
     console.writeLine();
 
-    for (int i = 0; i < 16; i++) {
-      for (int j = 0; j < 16; j++) {
+    for (var i = 0; i < 16; i++) {
+      for (var j = 0; j < 16; j++) {
         final color = i * 16 + j;
         console.setForegroundExtendedColor(color);
         console.write(color.toString().padLeft(4));
@@ -95,8 +95,8 @@ var demoScreens = <Function>[
 
     console.writeLine();
 
-    for (int i = 0; i < 16; i++) {
-      for (int j = 0; j < 16; j++) {
+    for (var i = 0; i < 16; i++) {
+      for (var j = 0; j < 16; j++) {
         final color = i * 16 + j;
         console.setBackgroundExtendedColor(color);
         console.write(color.toString().padLeft(4));
@@ -137,7 +137,7 @@ var demoScreens = <Function>[
     console.hideCursor();
     console.setForegroundColor(ConsoleColor.brightYellow);
 
-    for (int i = 0; i < numStars; i++) {
+    for (var i = 0; i < numStars; i++) {
       if (i < numStars - maxStarsOnScreen) {
         addStar();
       }
@@ -156,7 +156,7 @@ var demoScreens = <Function>[
 //
 // main
 //
-main(List<String> arguments) {
+int main(List<String> arguments) {
   if (arguments.isNotEmpty) {
     final selectedDemo = int.tryParse(arguments.first);
     if (selectedDemo != null &&

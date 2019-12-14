@@ -205,7 +205,7 @@ void editorOpen(String filename) {
     return;
   }
 
-  for (int rowIndex = 0; rowIndex < fileRows.length; rowIndex++) {
+  for (var rowIndex = 0; rowIndex < fileRows.length; rowIndex++) {
     renderRows.add('');
     editorUpdateRenderRow(rowIndex);
   }
@@ -239,7 +239,7 @@ void editorQuit() {
   if (isFileDirty) {
     editorSetStatusMessage('File is unsaved. Quit anyway (y or n)?');
     editorRefreshScreen();
-    Key response = console.readKey();
+    final response = console.readKey();
     if (response.char != 'y' && response.char != 'Y') {
       {
         editorSetStatusMessage('');
@@ -262,11 +262,11 @@ void editorQuit() {
 // configured to display as eight spaces, the 'F' should display as rendered
 // column 16 even though it is only the third character in the file.
 int getRenderedCol(int fileRow, int fileCol) {
-  int col = 0;
+  var col = 0;
 
   if (fileRow >= fileRows.length) return 0;
 
-  String rowText = fileRows[fileRow];
+  var rowText = fileRows[fileRow];
   for (var i = 0; i < fileCol; i++) {
     if (rowText[i] == '\t') {
       col += (kiloTabStopLength - 1) - (col % kiloTabStopLength);
@@ -279,9 +279,9 @@ int getRenderedCol(int fileRow, int fileCol) {
 // Inversion of the getRenderedCol method. Converts a rendered column index
 // into its corresponding position in the file.
 int getFileCol(int row, int renderCol) {
-  int currentRenderCol = 0;
+  var currentRenderCol = 0;
   int fileCol;
-  String rowText = fileRows[row];
+  var rowText = fileRows[row];
   for (fileCol = 0; fileCol < rowText.length; fileCol++) {
     if (rowText[fileCol] == '\t') {
       currentRenderCol +=
@@ -297,10 +297,10 @@ int getFileCol(int row, int renderCol) {
 void editorUpdateRenderRow(int rowIndex) {
   assert(renderRows.length == fileRows.length);
 
-  String renderBuffer = '';
+  var renderBuffer = '';
   final fileRow = fileRows[rowIndex];
 
-  for (int fileCol = 0; fileCol < fileRow.length; fileCol++) {
+  for (var fileCol = 0; fileCol < fileRow.length; fileCol++) {
     if (fileRow[fileCol] == '\t') {
       // Add at least one space for the tab stop, plus as many more as needed to
       // get to the next tab stop
@@ -342,7 +342,7 @@ void editorScroll() {
 void editorDrawRows() {
   final screenBuffer = StringBuffer();
 
-  for (int screenRow = 0; screenRow < editorWindowHeight; screenRow++) {
+  for (var screenRow = 0; screenRow < editorWindowHeight; screenRow++) {
     // fileRow is the row of the file we want to print to screenRow
     final fileRow = screenRow + screenFileRowOffset;
 
@@ -353,7 +353,7 @@ void editorDrawRows() {
         // Print the welcome message centered a third of the way down the screen
         final welcomeMessage = truncateString(
             'Kilo editor -- version $kiloVersion', editorWindowWidth);
-        int padding = ((editorWindowWidth - welcomeMessage.length) / 2).round();
+        var padding = ((editorWindowWidth - welcomeMessage.length) / 2).round();
         if (padding > 0) {
           screenBuffer.write('~');
           padding--;
@@ -553,7 +553,7 @@ void editorProcessKeypress() {
 // ENTRY POINT
 //
 
-main(List<String> arguments) {
+void main(List<String> arguments) {
   try {
     console.rawMode = true;
     initEditor();

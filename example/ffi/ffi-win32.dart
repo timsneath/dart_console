@@ -102,38 +102,38 @@ typedef setConsoleCursorPositionNative = Int8 Function(
 typedef setConsoleCursorPositionDart = int Function(
     int hConsoleOutput, int dwCursorPosition);
 
-main() {
-  final DynamicLibrary kernel = DynamicLibrary.open('Kernel32.dll');
+void main() {
+  final kernel = DynamicLibrary.open('Kernel32.dll');
 
   final GetStdHandle = kernel
-      .lookupFunction<getStdHandleNative, getStdHandleDart>("GetStdHandle");
+      .lookupFunction<getStdHandleNative, getStdHandleDart>('GetStdHandle');
   final GetConsoleScreenBufferInfo = kernel.lookupFunction<
       getConsoleScreenBufferInfoNative,
-      getConsoleScreenBufferInfoDart>("GetConsoleScreenBufferInfo");
+      getConsoleScreenBufferInfoDart>('GetConsoleScreenBufferInfo');
   final SetConsoleCursorPosition = kernel.lookupFunction<
       setConsoleCursorPositionNative,
-      setConsoleCursorPositionDart>("SetConsoleCursorPosition");
+      setConsoleCursorPositionDart>('SetConsoleCursorPosition');
 
   // stdout.write('\x1b[2J\x1b[H'); // clear screen and reset cursor to origin
 
   final outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-  print("Output handle (DWORD): $outputHandle");
+  print('Output handle (DWORD): $outputHandle');
 
   Pointer<CONSOLE_SCREEN_BUFFER_INFO> pBufferInfo = ffi.allocate();
-  CONSOLE_SCREEN_BUFFER_INFO bufferInfo = pBufferInfo.ref;
+  var bufferInfo = pBufferInfo.ref;
   GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
-  print("Window dimensions LTRB: (${bufferInfo.srWindowLeft}, "
-      "${bufferInfo.srWindowTop}, ${bufferInfo.srWindowRight}, "
-      "${bufferInfo.srWindowBottom})");
-  print("Cursor position X/Y: (${bufferInfo.dwCursorPositionX}, "
-      "${bufferInfo.dwCursorPositionY})");
-  print("Window size X/Y: (${bufferInfo.dwSizeX}, ${bufferInfo.dwSizeY})");
-  print("Maximum window size X/Y: (${bufferInfo.dwMaximumWindowSizeX}, "
-      "${bufferInfo.dwMaximumWindowSizeY})");
-  int cursorPosition = (15 << 16) + 3;
+  print('Window dimensions LTRB: (${bufferInfo.srWindowLeft}, '
+      '${bufferInfo.srWindowTop}, ${bufferInfo.srWindowRight}, '
+      '${bufferInfo.srWindowBottom})');
+  print('Cursor position X/Y: (${bufferInfo.dwCursorPositionX}, '
+      '${bufferInfo.dwCursorPositionY})');
+  print('Window size X/Y: (${bufferInfo.dwSizeX}, ${bufferInfo.dwSizeY})');
+  print('Maximum window size X/Y: (${bufferInfo.dwMaximumWindowSizeX}, '
+      '${bufferInfo.dwMaximumWindowSizeY})');
+  var cursorPosition = (15 << 16) + 3;
 
   SetConsoleCursorPosition(outputHandle, cursorPosition);
   GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
-  print("Cursor position X/Y: (${bufferInfo.dwCursorPositionX}, "
-      "${bufferInfo.dwCursorPositionY})");
+  print('Cursor position X/Y: (${bufferInfo.dwCursorPositionX}, '
+      '${bufferInfo.dwCursorPositionY})');
 }
