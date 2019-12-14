@@ -1,4 +1,4 @@
-## 0.5.0-dev.2
+## 0.5.0
 
 - Add `writeErrorLine` function which writes to stderr
 - *BREAKING*: Automatically print a new line to the console after every 
