@@ -38,7 +38,7 @@ void main() {
 
   final ioctl = libc.lookupFunction<ioctlVoidNative, ioctlVoidDart>('ioctl');
 
-  Pointer<WinSize> winSizePointer = ffi.allocate();
+  final winSizePointer = ffi.allocate<WinSize>();
   final result = ioctl(STDOUT_FILENO, TIOCGWINSZ, winSizePointer.cast());
   print('result is $result');
 

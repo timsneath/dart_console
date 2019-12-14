@@ -119,7 +119,7 @@ void main() {
   final outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
   print('Output handle (DWORD): $outputHandle');
 
-  Pointer<CONSOLE_SCREEN_BUFFER_INFO> pBufferInfo = ffi.allocate();
+  final pBufferInfo = ffi.allocate<CONSOLE_SCREEN_BUFFER_INFO>();
   var bufferInfo = pBufferInfo.ref;
   GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
   print('Window dimensions LTRB: (${bufferInfo.srWindowLeft}, '

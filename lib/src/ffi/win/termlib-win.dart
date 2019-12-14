@@ -29,7 +29,7 @@ class TermLibWindows implements TermLib {
 
   @override
   int getWindowHeight() {
-    Pointer<CONSOLE_SCREEN_BUFFER_INFO> pBufferInfo = ffi.allocate();
+    final pBufferInfo = ffi.allocate<CONSOLE_SCREEN_BUFFER_INFO>();
     var bufferInfo = pBufferInfo.ref;
     GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
     final windowHeight = bufferInfo.srWindowBottom - bufferInfo.srWindowTop + 1;
@@ -39,7 +39,7 @@ class TermLibWindows implements TermLib {
 
   @override
   int getWindowWidth() {
-    Pointer<CONSOLE_SCREEN_BUFFER_INFO> pBufferInfo = ffi.allocate();
+    final pBufferInfo = ffi.allocate<CONSOLE_SCREEN_BUFFER_INFO>();
     var bufferInfo = pBufferInfo.ref;
     GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
     final windowWidth = bufferInfo.srWindowRight - bufferInfo.srWindowLeft + 1;
@@ -71,7 +71,7 @@ class TermLibWindows implements TermLib {
   }
 
   void hideCursor() {
-    Pointer<CONSOLE_CURSOR_INFO> lpConsoleCursorInfo = ffi.allocate();
+    final lpConsoleCursorInfo = ffi.allocate<CONSOLE_CURSOR_INFO>();
     var consoleCursorInfo = lpConsoleCursorInfo.ref;
     consoleCursorInfo.bVisible = 0;
     SetConsoleCursorInfo(outputHandle, lpConsoleCursorInfo);
@@ -79,7 +79,7 @@ class TermLibWindows implements TermLib {
   }
 
   void showCursor() {
-    Pointer<CONSOLE_CURSOR_INFO> lpConsoleCursorInfo = ffi.allocate();
+    final lpConsoleCursorInfo = ffi.allocate<CONSOLE_CURSOR_INFO>();
     var consoleCursorInfo = lpConsoleCursorInfo.ref;
     consoleCursorInfo.bVisible = 1;
     SetConsoleCursorInfo(outputHandle, lpConsoleCursorInfo);
@@ -87,13 +87,13 @@ class TermLibWindows implements TermLib {
   }
 
   void clearScreen() {
-    Pointer<CONSOLE_SCREEN_BUFFER_INFO> pBufferInfo = ffi.allocate();
+    final pBufferInfo = ffi.allocate<CONSOLE_SCREEN_BUFFER_INFO>();
     var bufferInfo = pBufferInfo.ref;
     GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
 
     final consoleSize = bufferInfo.dwSizeX * bufferInfo.dwSizeY;
 
-    Pointer<Int32> pCharsWritten = ffi.allocate();
+    final pCharsWritten = ffi.allocate<Int32>();
     FillConsoleOutputCharacter(
         outputHandle, ' '.codeUnitAt(0), consoleSize, 0, pCharsWritten);
 

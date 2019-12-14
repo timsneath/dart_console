@@ -28,7 +28,7 @@ class TermLibUnix implements TermLib {
 
   @override
   int getWindowHeight() {
-    Pointer<WinSize> winSizePointer = ffi.allocate();
+    final winSizePointer = ffi.allocate<WinSize>();
     final result = ioctl(STDOUT_FILENO, TIOCGWINSZ, winSizePointer.cast());
     if (result == -1) return -1;
 
@@ -44,7 +44,7 @@ class TermLibUnix implements TermLib {
 
   @override
   int getWindowWidth() {
-    Pointer<WinSize> winSizePointer = ffi.allocate();
+    final winSizePointer = ffi.allocate<WinSize>();
     final result = ioctl(STDOUT_FILENO, TIOCGWINSZ, winSizePointer.cast());
     if (result == -1) return -1;
 
@@ -62,7 +62,7 @@ class TermLibUnix implements TermLib {
   void enableRawMode() {
     final _origTermIOS = _origTermIOSPointer.ref;
 
-    Pointer<TermIOS> newTermIOSPointer = ffi.allocate();
+    final newTermIOSPointer = ffi.allocate<TermIOS>();
     var newTermIOS = newTermIOSPointer.ref;
 
     newTermIOS.c_iflag =

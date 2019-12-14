@@ -154,7 +154,7 @@ void main() {
   final tcsetattr =
       libc.lookupFunction<tcsetattrNative, tcsetattrDart>('tcsetattr');
 
-  Pointer<TermIOS> origTermIOSPointer = ffi.allocate();
+  final origTermIOSPointer = ffi.allocate<TermIOS>();
   var result = tcgetattr(STDIN_FILENO, origTermIOSPointer);
   print('result is $result');
 
@@ -163,7 +163,7 @@ void main() {
   print('origTermIOS.c_iflag: 0b${origTermIOS.c_iflag.toRadixString(2)}');
   print('Copying and modifying...');
 
-  Pointer<TermIOS> newTermIOSPointer = ffi.allocate();
+  final newTermIOSPointer = ffi.allocate<TermIOS>();
   var newTermIOS = newTermIOSPointer.ref;
 
   newTermIOS.c_iflag =
