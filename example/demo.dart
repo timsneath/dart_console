@@ -111,7 +111,7 @@ var demoScreens = <Function>[
   (() {
     final stars = Queue<Coordinate>();
     final rng = Random();
-    const numStars = 2000;
+    const numStars = 750;
     const maxStarsOnScreen = 250;
 
     void addStar() {

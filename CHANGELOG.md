@@ -1,3 +1,7 @@
+## 0.6.0
+ - Shift all FFI code to the new [win32](https://pub.dev/packages/win32)
+   package
+
 ## 0.5.0
 
 - Add `writeErrorLine` function which writes to stderr
