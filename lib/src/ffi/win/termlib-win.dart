@@ -12,18 +12,10 @@ import 'dart:ffi';
 import 'package:ffi/ffi.dart' as ffi;
 import 'package:dart_console/src/ffi/termlib.dart';
 
-import 'kernel32.dart';
+import 'package:win32/win32.dart';
 
 class TermLibWindows implements TermLib {
   DynamicLibrary kernel;
-
-  getStdHandleDart GetStdHandle;
-  getConsoleScreenBufferInfoDart GetConsoleScreenBufferInfo;
-  setConsoleModeDart SetConsoleMode;
-  setConsoleCursorInfoDart SetConsoleCursorInfo;
-  setConsoleCursorPositionDart SetConsoleCursorPosition;
-  fillConsoleOutputCharacterDart FillConsoleOutputCharacter;
-  fillConsoleOutputAttributeDart FillConsoleOutputAttribute;
 
   int inputHandle, outputHandle;
 
@@ -113,25 +105,6 @@ class TermLibWindows implements TermLib {
   TermLibWindows() {
     kernel = DynamicLibrary.open('Kernel32.dll');
 
-    GetStdHandle = kernel
-        .lookupFunction<getStdHandleNative, getStdHandleDart>('GetStdHandle');
-    GetConsoleScreenBufferInfo = kernel.lookupFunction<
-        getConsoleScreenBufferInfoNative,
-        getConsoleScreenBufferInfoDart>('GetConsoleScreenBufferInfo');
-    SetConsoleMode =
-        kernel.lookupFunction<setConsoleModeNative, setConsoleModeDart>(
-            'SetConsoleMode');
-    SetConsoleCursorInfo = kernel.lookupFunction<setConsoleCursorInfoNative,
-        setConsoleCursorInfoDart>('SetConsoleCursorInfo');
-    SetConsoleCursorPosition = kernel.lookupFunction<
-        setConsoleCursorPositionNative,
-        setConsoleCursorPositionDart>('SetConsoleCursorPosition');
-    FillConsoleOutputCharacter = kernel.lookupFunction<
-        fillConsoleOutputCharacterNative,
-        fillConsoleOutputCharacterDart>('FillConsoleOutputCharacterA');
-    FillConsoleOutputAttribute = kernel.lookupFunction<
-        fillConsoleOutputAttributeNative,
-        fillConsoleOutputAttributeDart>('FillConsoleOutputAttribute');
     outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     inputHandle = GetStdHandle(STD_INPUT_HANDLE);
   }
