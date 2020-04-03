@@ -102,7 +102,19 @@ class Console {
 
   final _termlib = TermLib();
 
-  final _scrollbackBuffer = ScrollbackBuffer();
+  // Declare the type explicitly: Initializing the _scrollbackBuffer
+  // in the constructor means that we can no longer infer the type
+  // here.
+  final ScrollbackBuffer _scrollbackBuffer;
+
+  // Declaring the named constructor means that dart no longer
+  // supplies the default constructor. Besides, we need to set
+  // _scrollbackBuffer to null for the regular console to work as
+  // before.
+  Console() : _scrollbackBuffer = null;
+
+  // Create a named constructor specifically for scrolling consoles
+  Console.scrolling() : _scrollbackBuffer = ScrollbackBuffer();
 
   /// Enables or disables raw mode.
   ///
@@ -614,7 +626,9 @@ class Console {
       if (key.isControl) {
         switch (key.controlChar) {
           case ControlCharacter.enter:
-            _scrollbackBuffer.add(buffer);
+            if (null != _scrollbackBuffer) {
+              _scrollbackBuffer.add(buffer);
+            }
             writeLine();
             return buffer;
           case ControlCharacter.ctrlC:
@@ -644,14 +658,18 @@ class Console {
             index = index > 0 ? index - 1 : index;
             break;
           case ControlCharacter.arrowUp:
-            buffer = _scrollbackBuffer.up(buffer);
-            index = buffer.length;
+            if (null != _scrollbackBuffer) {
+              buffer = _scrollbackBuffer.up(buffer);
+              index = buffer.length;
+            }
             break;
           case ControlCharacter.arrowDown:
-            String t = _scrollbackBuffer.down();
-            if (null != t) {
-              buffer = t;
-              index = buffer.length;
+            if (null != _scrollbackBuffer) {
+              String t = _scrollbackBuffer.down();
+              if (null != t) {
+                buffer = t;
+                index = buffer.length;
+              }
             }
             break;
           case ControlCharacter.arrowRight:
