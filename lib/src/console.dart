@@ -23,6 +23,65 @@ class Coordinate {
   const Coordinate(this.row, this.col);
 }
 
+/// The ScrollbackBuffer class is a utility for handling multi-line user
+/// input in readline(). It doesn't support history editing a la bash,
+/// but it should handle the most common use cases.
+class ScrollbackBuffer {
+  final lineList = [];
+  int lineIndex;
+  String currentLineBuffer;
+
+  /// Add a new line to the scrollback buffer. This would normally happen
+  /// when the user finishes typing/editing the line and taps the 'enter'
+  /// key.
+  void add(String buffer) {
+    lineList.add(buffer);
+    lineIndex = lineList.length;
+    currentLineBuffer = null;
+  }
+
+  /// Scroll 'up' -- Replace the user-input buffer with the contents of the
+  /// previous line. ScrollbackBuffer tracks which lines are the 'current'
+  /// and 'previous' lines. The up() method stores the current line buffer
+  /// so that the contents will not be lost in the event the user starts
+  /// typing/editing the line and then wants to review a previous line.
+  String up(String buffer) {
+    // Handle the case of the user tapping 'up' before there is a
+    // scrollback buffer to scroll through.
+    if (lineIndex == null) {
+      return buffer;
+    }
+    // Only store the current line buffer once while scrolling up
+    currentLineBuffer ??= buffer;
+    lineIndex--;
+    lineIndex = lineIndex < 0 ? 0 : lineIndex;
+    return lineList[lineIndex];
+  }
+
+  /// Scroll 'down' -- Replace the user-input buffer with the contents of
+  /// the next line. The final 'next line' is the original contents of the
+  /// line buffer.
+  String down() {
+    // Handle the case of the user tapping 'down' before there is a
+    // scrollback buffer to scroll through.
+    if (lineIndex == null) {
+      return null;
+    }
+    lineIndex++;
+    lineIndex = lineIndex > lineList.length ? lineList.length : lineIndex;
+    if (lineIndex == lineList.length) {
+      // Once the user scrolls to the bottom, reset the current line
+      // buffer so that up() can store it again: The user might have
+      // edited it between down() and up().
+      var temp = currentLineBuffer;
+      currentLineBuffer = null;
+      return temp;
+    } else {
+      return lineList[lineIndex];
+    }
+  }
+}
+
 /// A representation of the current console window.
 ///
 /// Use the [Console] to get information about the current window and to read
@@ -40,6 +99,20 @@ class Console {
   bool _isRawMode = false;
 
   final _termlib = TermLib();
+
+  // Declare the type explicitly: Initializing the _scrollbackBuffer
+  // in the constructor means that we can no longer infer the type
+  // here.
+  final ScrollbackBuffer _scrollbackBuffer;
+
+  // Declaring the named constructor means that dart no longer
+  // supplies the default constructor. Besides, we need to set
+  // _scrollbackBuffer to null for the regular console to work as
+  // before.
+  Console() : _scrollbackBuffer = null;
+
+  // Create a named constructor specifically for scrolling consoles
+  Console.scrolling() : _scrollbackBuffer = ScrollbackBuffer();
 
   /// Enables or disables raw mode.
   ///
@@ -541,8 +614,6 @@ class Console {
     final screenRow = cursorPosition.row;
     final screenColOffset = cursorPosition.col;
 
-    // TODO: Add multi-line input. For now, limit the text length to what will
-    // fit on the remainder of the current row.
     final bufferMaxLength = windowWidth - screenColOffset - 3;
 
     while (true) {
@@ -551,6 +622,9 @@ class Console {
       if (key.isControl) {
         switch (key.controlChar) {
           case ControlCharacter.enter:
+            if (_scrollbackBuffer != null) {
+              _scrollbackBuffer.add(buffer);
+            }
             writeLine();
             return buffer;
           case ControlCharacter.ctrlC:
@@ -578,6 +652,21 @@ class Console {
           case ControlCharacter.arrowLeft:
           case ControlCharacter.ctrlB:
             index = index > 0 ? index - 1 : index;
+            break;
+          case ControlCharacter.arrowUp:
+            if (_scrollbackBuffer != null) {
+              buffer = _scrollbackBuffer.up(buffer);
+              index = buffer.length;
+            }
+            break;
+          case ControlCharacter.arrowDown:
+            if (_scrollbackBuffer != null) {
+              final temp = _scrollbackBuffer.down();
+              if (temp != null) {
+                buffer = temp;
+                index = buffer.length;
+              }
+            }
             break;
           case ControlCharacter.arrowRight:
           case ControlCharacter.ctrlF:
