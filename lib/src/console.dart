@@ -28,8 +28,8 @@ class Coordinate {
 /// but it should handle the most common use cases.
 class ScrollbackBuffer {
   final lineList = [];
-  int lineIndex = null;
-  String currentLineBuffer = null;
+  int lineIndex;
+  String currentLineBuffer;
 
   /// Add a new line to the scrollback buffer. This would normally happen
   /// when the user finishes typing/editing the line and taps the 'enter'
@@ -48,13 +48,11 @@ class ScrollbackBuffer {
   String up(String buffer) {
     // Handle the case of the user tapping 'up' before there is a
     // scrollback buffer to scroll through.
-    if (null == lineIndex) {
+    if (lineIndex == null) {
       return buffer;
     }
     // Only store the current line buffer once while scrolling up
-    if (null == currentLineBuffer) {
-      currentLineBuffer = buffer;
-    }
+    currentLineBuffer ??= buffer;
     lineIndex--;
     lineIndex = lineIndex < 0 ? 0 : lineIndex;
     return lineList[lineIndex];
@@ -66,7 +64,7 @@ class ScrollbackBuffer {
   String down() {
     // Handle the case of the user tapping 'down' before there is a
     // scrollback buffer to scroll through.
-    if (null == lineIndex) {
+    if (lineIndex == null) {
       return null;
     }
     lineIndex++;
@@ -75,9 +73,9 @@ class ScrollbackBuffer {
       // Once the user scrolls to the bottom, reset the current line
       // buffer so that up() can store it again: The user might have
       // edited it between down() and up().
-      String t = currentLineBuffer;
+      var temp = currentLineBuffer;
       currentLineBuffer = null;
-      return t;
+      return temp;
     } else {
       return lineList[lineIndex];
     }
@@ -616,8 +614,6 @@ class Console {
     final screenRow = cursorPosition.row;
     final screenColOffset = cursorPosition.col;
 
-    // TODO: Add multi-line input. For now, limit the text length to what will
-    // fit on the remainder of the current row.
     final bufferMaxLength = windowWidth - screenColOffset - 3;
 
     while (true) {
@@ -626,7 +622,7 @@ class Console {
       if (key.isControl) {
         switch (key.controlChar) {
           case ControlCharacter.enter:
-            if (null != _scrollbackBuffer) {
+            if (_scrollbackBuffer != null) {
               _scrollbackBuffer.add(buffer);
             }
             writeLine();
@@ -658,16 +654,16 @@ class Console {
             index = index > 0 ? index - 1 : index;
             break;
           case ControlCharacter.arrowUp:
-            if (null != _scrollbackBuffer) {
+            if (_scrollbackBuffer != null) {
               buffer = _scrollbackBuffer.up(buffer);
               index = buffer.length;
             }
             break;
           case ControlCharacter.arrowDown:
-            if (null != _scrollbackBuffer) {
-              String t = _scrollbackBuffer.down();
-              if (null != t) {
-                buffer = t;
+            if (_scrollbackBuffer != null) {
+              final temp = _scrollbackBuffer.down();
+              if (temp != null) {
+                buffer = temp;
                 index = buffer.length;
               }
             }
