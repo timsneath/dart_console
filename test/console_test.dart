@@ -1,7 +1,7 @@
 import 'package:dart_console/dart_console.dart';
 
 import 'package:test/test.dart';
-import '../example/readme.dart' as readmeExample;
+import '../example/readme.dart' as readme_example;
 
 void main() {
   Console console;
@@ -22,6 +22,6 @@ void main() {
   });
 
   test('should run readme example', () {
-    expect(readmeExample.main(), 0);
+    expect(readme_example.main(), 0);
   });
 }
