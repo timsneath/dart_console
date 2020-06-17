@@ -30,11 +30,19 @@ class ScrollbackBuffer {
   final lineList = [];
   int lineIndex;
   String currentLineBuffer;
+  bool recordBlanks;
+
+  // called by Console.scolling()
+  ScrollbackBuffer(this.recordBlanks);
 
   /// Add a new line to the scrollback buffer. This would normally happen
   /// when the user finishes typing/editing the line and taps the 'enter'
   /// key.
   void add(String buffer) {
+    // don't add blank line to scrollback history if !recordBlanks
+    if (buffer == '' && !recordBlanks) {
+      return;
+    }
     lineList.add(buffer);
     lineIndex = lineList.length;
     currentLineBuffer = null;
@@ -112,7 +120,10 @@ class Console {
   Console() : _scrollbackBuffer = null;
 
   // Create a named constructor specifically for scrolling consoles
-  Console.scrolling() : _scrollbackBuffer = ScrollbackBuffer();
+  // Use Console.scrolling(recordBlanks: false) to omit blank lines
+  // from console history
+  Console.scrolling({recordBlanks: true})
+    : _scrollbackBuffer = ScrollbackBuffer(recordBlanks);
 
   /// Enables or disables raw mode.
   ///
