@@ -85,7 +85,7 @@ class TermLibWindows implements TermLib {
 
     final consoleSize = bufferInfo.dwSizeX * bufferInfo.dwSizeY;
 
-    final pCharsWritten = ffi.allocate<Int32>();
+    final pCharsWritten = ffi.allocate<Uint32>();
     FillConsoleOutputCharacter(
         outputHandle, ' '.codeUnitAt(0), consoleSize, 0, pCharsWritten);
 

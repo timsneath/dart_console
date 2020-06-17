@@ -1,3 +1,8 @@
+## 0.6.1
+ - Update to latest win32 package
+ - Add scrollback ignore option (thanks @averynortonsmith)
+ - Fix readme (thanks @md-weber)
+
 ## 0.6.0
  - Shift all FFI code to the new [win32](https://pub.dev/packages/win32)
    package
