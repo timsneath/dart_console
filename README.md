@@ -44,9 +44,11 @@ main() {
   console.clearScreen();
   console.resetCursorPosition();
 
-  console.writeAligned(
-      'Console size is ${console.windowWidth} cols and ${console.windowHeight} rows.',
-      TextAlignment.Center);
+  console.writeLine(
+    'Console size is ${console.windowWidth} cols and ${console.windowHeight} rows.',
+    TextAlignment.center,
+  );
+
   console.writeLine();
 
   return 0;
