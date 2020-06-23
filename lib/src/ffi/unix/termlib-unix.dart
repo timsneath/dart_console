@@ -13,9 +13,9 @@ import 'dart:io';
 import 'package:ffi/ffi.dart' as ffi;
 
 import '../termlib.dart';
+import 'ioctl.dart';
 import 'termios.dart';
 import 'unistd.dart';
-import 'ioctl.dart';
 
 class TermLibUnix implements TermLib {
   DynamicLibrary _stdlib;

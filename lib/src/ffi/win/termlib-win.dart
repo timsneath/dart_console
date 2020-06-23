@@ -10,9 +10,9 @@
 import 'dart:ffi';
 
 import 'package:ffi/ffi.dart' as ffi;
-import 'package:dart_console/src/ffi/termlib.dart';
-
 import 'package:win32/win32.dart';
+
+import '../termlib.dart';
 
 class TermLibWindows implements TermLib {
   DynamicLibrary kernel;

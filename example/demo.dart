@@ -1,5 +1,5 @@
-import 'dart:io';
 import 'dart:collection';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:dart_console/dart_console.dart';
@@ -28,8 +28,7 @@ var demoScreens = <Function>[
     for (var i = 0; i <= 50; i++) {
       console.cursorPosition = Coordinate(row, 4);
       final progress = (i / 50 * progressBarWidth).ceil();
-      final bar =
-          '[' + ('#' * progress) + (' ' * (progressBarWidth - progress)) + ']';
+      final bar = '[${'#' * progress}${' ' * (progressBarWidth - progress)}]';
       console.write(bar);
       sleep(Duration(milliseconds: 40));
     }

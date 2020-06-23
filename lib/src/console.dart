@@ -8,9 +8,9 @@ import 'dart:math';
 
 import 'ansi.dart';
 import 'enums.dart';
-import 'key.dart';
 import 'ffi/termlib.dart';
 import 'ffi/win/termlib-win.dart';
+import 'key.dart';
 
 /// A screen position, measured in rows and columns from the top-left origin
 /// of the screen. Coordinates are zero-based, and converted as necessary
@@ -27,7 +27,7 @@ class Coordinate {
 /// input in readline(). It doesn't support history editing a la bash,
 /// but it should handle the most common use cases.
 class ScrollbackBuffer {
-  final lineList = [];
+  final lineList = <String>[];
   int lineIndex;
   String currentLineBuffer;
   bool recordBlanks;
@@ -120,10 +120,10 @@ class Console {
   Console() : _scrollbackBuffer = null;
 
   // Create a named constructor specifically for scrolling consoles
-  // Use Console.scrolling(recordBlanks: false) to omit blank lines
+  // Use `Console.scrolling(recordBlanks: false)` to omit blank lines
   // from console history
-  Console.scrolling({recordBlanks: true})
-    : _scrollbackBuffer = ScrollbackBuffer(recordBlanks);
+  Console.scrolling({bool recordBlanks = true})
+      : _scrollbackBuffer = ScrollbackBuffer(recordBlanks);
 
   /// Enables or disables raw mode.
   ///
@@ -452,8 +452,9 @@ class Console {
   /// basic key handling can be found in the `example/command_line.dart`
   /// file in the package source code.
   Key readKey() {
-    var key, charCode;
-    var codeUnit = 0;
+    Key key;
+    int charCode;
+    int codeUnit = 0;
 
     rawMode = true;
     while (codeUnit <= 0) {

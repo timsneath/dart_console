@@ -167,7 +167,7 @@ void editorFindCallback(String query, Key key) {
             getFileCol(currentRow, renderRows[currentRow].indexOf(query));
         screenFileRowOffset = fileRows.length;
         editorSetStatusMessage(
-            'Search (ESC to cancel, use arrows for prev/next): ' + query);
+            'Search (ESC to cancel, use arrows for prev/next): $query');
         editorRefreshScreen();
         break;
       }
@@ -227,7 +227,7 @@ void editorSave() async {
   // TODO: This is hopelessly naive, as with kilo.c. We should write to a
   //    temporary file and rename to ensure that we have written successfully.
   final file = File(editedFilename);
-  final fileContents = fileRows.join('\n') + '\n';
+  final fileContents = '${fileRows.join('\n')}\n';
   file.writeAsStringSync(fileContents);
 
   isFileDirty = false;
