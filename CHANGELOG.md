@@ -1,3 +1,6 @@
+## 0.6.2
+ - Bumped minver of win32
+
 ## 0.6.1
  - Update to latest win32 package
  - Add scrollback ignore option (thanks @averynortonsmith)
