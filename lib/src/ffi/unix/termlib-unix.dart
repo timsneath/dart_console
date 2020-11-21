@@ -63,12 +63,12 @@ class TermLibUnix implements TermLib {
     final _origTermIOS = _origTermIOSPointer.ref;
 
     final newTermIOSPointer = ffi.allocate<TermIOS>();
-    var newTermIOS = newTermIOSPointer.ref;
+    final newTermIOS = newTermIOSPointer.ref;
 
     newTermIOS.c_iflag =
         _origTermIOS.c_iflag & ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
-    newTermIOS.c_oflag = _origTermIOS.c_oflag & ~(OPOST);
-    newTermIOS.c_cflag = _origTermIOS.c_cflag | (CS8);
+    newTermIOS.c_oflag = _origTermIOS.c_oflag & ~OPOST;
+    newTermIOS.c_cflag = _origTermIOS.c_cflag | CS8;
     newTermIOS.c_lflag =
         _origTermIOS.c_lflag & ~(ECHO | ICANON | IEXTEN | ISIG);
     newTermIOS.c_cc0 = _origTermIOS.c_cc0;

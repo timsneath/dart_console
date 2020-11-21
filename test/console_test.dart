@@ -11,7 +11,7 @@ void main() {
   });
 
   test('Coordinate positioning', () {
-    final coordinate = Coordinate(5, 8);
+    const coordinate = Coordinate(5, 8);
 
     console.cursorPosition = coordinate;
 

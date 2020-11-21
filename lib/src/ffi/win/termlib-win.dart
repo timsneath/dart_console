@@ -22,7 +22,7 @@ class TermLibWindows implements TermLib {
   @override
   int getWindowHeight() {
     final pBufferInfo = ffi.allocate<CONSOLE_SCREEN_BUFFER_INFO>();
-    var bufferInfo = pBufferInfo.ref;
+    final bufferInfo = pBufferInfo.ref;
     GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
     final windowHeight = bufferInfo.srWindowBottom - bufferInfo.srWindowTop + 1;
     ffi.free(bufferInfo.addressOf);
@@ -32,7 +32,7 @@ class TermLibWindows implements TermLib {
   @override
   int getWindowWidth() {
     final pBufferInfo = ffi.allocate<CONSOLE_SCREEN_BUFFER_INFO>();
-    var bufferInfo = pBufferInfo.ref;
+    final bufferInfo = pBufferInfo.ref;
     GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
     final windowWidth = bufferInfo.srWindowRight - bufferInfo.srWindowLeft + 1;
     ffi.free(bufferInfo.addressOf);
@@ -64,7 +64,7 @@ class TermLibWindows implements TermLib {
 
   void hideCursor() {
     final lpConsoleCursorInfo = ffi.allocate<CONSOLE_CURSOR_INFO>();
-    var consoleCursorInfo = lpConsoleCursorInfo.ref;
+    final consoleCursorInfo = lpConsoleCursorInfo.ref;
     consoleCursorInfo.bVisible = 0;
     SetConsoleCursorInfo(outputHandle, lpConsoleCursorInfo);
     ffi.free(consoleCursorInfo.addressOf);
@@ -72,7 +72,7 @@ class TermLibWindows implements TermLib {
 
   void showCursor() {
     final lpConsoleCursorInfo = ffi.allocate<CONSOLE_CURSOR_INFO>();
-    var consoleCursorInfo = lpConsoleCursorInfo.ref;
+    final consoleCursorInfo = lpConsoleCursorInfo.ref;
     consoleCursorInfo.bVisible = 1;
     SetConsoleCursorInfo(outputHandle, lpConsoleCursorInfo);
     ffi.free(consoleCursorInfo.addressOf);
@@ -80,7 +80,7 @@ class TermLibWindows implements TermLib {
 
   void clearScreen() {
     final pBufferInfo = ffi.allocate<CONSOLE_SCREEN_BUFFER_INFO>();
-    var bufferInfo = pBufferInfo.ref;
+    final bufferInfo = pBufferInfo.ref;
     GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
 
     final consoleSize = bufferInfo.dwSizeX * bufferInfo.dwSizeY;

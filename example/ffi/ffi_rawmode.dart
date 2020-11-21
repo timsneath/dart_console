@@ -158,18 +158,18 @@ void main() {
   var result = tcgetattr(STDIN_FILENO, origTermIOSPointer);
   print('result is $result');
 
-  var origTermIOS = origTermIOSPointer.ref;
+  final origTermIOS = origTermIOSPointer.ref;
 
   print('origTermIOS.c_iflag: 0b${origTermIOS.c_iflag.toRadixString(2)}');
   print('Copying and modifying...');
 
   final newTermIOSPointer = ffi.allocate<TermIOS>();
-  var newTermIOS = newTermIOSPointer.ref;
+  final newTermIOS = newTermIOSPointer.ref;
 
   newTermIOS.c_iflag =
       origTermIOS.c_iflag & ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
-  newTermIOS.c_oflag = origTermIOS.c_oflag & ~(OPOST);
-  newTermIOS.c_cflag = origTermIOS.c_cflag | (CS8);
+  newTermIOS.c_oflag = origTermIOS.c_oflag & ~OPOST;
+  newTermIOS.c_cflag = origTermIOS.c_cflag | CS8;
   newTermIOS.c_lflag = origTermIOS.c_lflag & ~(ECHO | ICANON | IEXTEN | ISIG);
   newTermIOS.c_ispeed = origTermIOS.c_ispeed;
   newTermIOS.c_oflag = origTermIOS.c_ospeed;

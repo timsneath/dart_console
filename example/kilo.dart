@@ -23,8 +23,8 @@ bool isFileDirty = false;
 // the actual contents of the file. For example, tabs are rendered as a series
 // of spaces even though they are only one character; control characters may
 // be shown in some form in the future.
-var fileRows = <String>[];
-var renderRows = <String>[];
+List<String> fileRows = [];
+List<String> renderRows = [];
 
 // Cursor location relative to file (not the screen)
 int cursorCol = 0, cursorRow = 0;
@@ -46,7 +46,7 @@ int findLastMatchRow = -1;
 
 // Current search direction
 enum FindDirection { forwards, backwards }
-var findDirection = FindDirection.forwards;
+FindDirection findDirection = FindDirection.forwards;
 
 String messageText = '';
 DateTime messageTimestamp;
@@ -176,10 +176,10 @@ void editorFindCallback(String query, Key key) {
 }
 
 void editorFind() {
-  var savedCursorCol = cursorCol;
-  var savedCursorRow = cursorRow;
-  var savedScreenFileRowOffset = screenFileRowOffset;
-  var savedScreenRowColOffset = screenRowColOffset;
+  final savedCursorCol = cursorCol;
+  final savedCursorRow = cursorRow;
+  final savedScreenFileRowOffset = screenFileRowOffset;
+  final savedScreenRowColOffset = screenRowColOffset;
 
   final query = editorPrompt(
       'Search (ESC to cancel, use arrows for prev/next): ', editorFindCallback);
@@ -215,7 +215,7 @@ void editorOpen(String filename) {
   isFileDirty = false;
 }
 
-void editorSave() async {
+void editorSave() {
   if (editedFilename.isEmpty) {
     editedFilename = editorPrompt('Save as: ');
     if (editedFilename == null) {
@@ -266,7 +266,7 @@ int getRenderedCol(int fileRow, int fileCol) {
 
   if (fileRow >= fileRows.length) return 0;
 
-  var rowText = fileRows[fileRow];
+  final rowText = fileRows[fileRow];
   for (var i = 0; i < fileCol; i++) {
     if (rowText[i] == '\t') {
       col += (kiloTabStopLength - 1) - (col % kiloTabStopLength);
@@ -281,7 +281,7 @@ int getRenderedCol(int fileRow, int fileCol) {
 int getFileCol(int row, int renderCol) {
   var currentRenderCol = 0;
   int fileCol;
-  var rowText = fileRows[row];
+  final rowText = fileRows[row];
   for (fileCol = 0; fileCol < rowText.length; fileCol++) {
     if (rowText[fileCol] == '\t') {
       currentRenderCol +=
@@ -402,7 +402,8 @@ void editorDrawStatusBar() {
 }
 
 void editorDrawMessageBar() {
-  if (DateTime.now().difference(messageTimestamp) < Duration(seconds: 5)) {
+  if (DateTime.now().difference(messageTimestamp) <
+      const Duration(seconds: 5)) {
     console.write(truncateString(messageText, editorWindowWidth)
         .padRight(editorWindowWidth));
   }

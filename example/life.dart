@@ -39,7 +39,7 @@ void draw() {
 
   for (var row = 0; row < rows; row++) {
     for (var col = 0; col < cols; col++) {
-      var index = row * rows + col;
+      final index = row * rows + col;
       buffer.write(data[index] ? '#' : ' ');
     }
     buffer.write(console.newLine);
@@ -51,9 +51,9 @@ void draw() {
 int numLiveNeighbors(int row, int col) {
   var sum = 0;
   for (var i = 0; i < 8; i++) {
-    var x = col + neighbors[i][0];
+    final x = col + neighbors[i][0];
     if (x < 0 || x >= cols) continue;
-    var y = row + neighbors[i][1];
+    final y = row + neighbors[i][1];
     if (y < 0 || y >= rows) continue;
     sum += data[y * rows + x] ? 1 : 0;
   }
@@ -73,9 +73,9 @@ int numLiveNeighbors(int row, int col) {
 void update() {
   for (var row = 0; row < rows; row++) {
     for (var col = 0; col < cols; col++) {
-      var n = numLiveNeighbors(row, col);
-      var index = row * rows + col;
-      var v = data[index];
+      final n = numLiveNeighbors(row, col);
+      final index = row * rows + col;
+      final v = data[index];
       temp[index] = (v == true && (n == 2 || n == 3)) || (v == false && n == 3);
     }
   }
@@ -117,7 +117,7 @@ void main(List<String> arguments) {
     console.rawMode = false;
     console.hideCursor();
 
-    Timer.periodic(Duration(milliseconds: 200), (t) {
+    Timer.periodic(const Duration(milliseconds: 200), (t) {
       draw();
       update();
       //input(); // TODO: need async input

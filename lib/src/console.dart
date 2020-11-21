@@ -33,7 +33,7 @@ class ScrollbackBuffer {
   bool recordBlanks;
 
   // called by Console.scolling()
-  ScrollbackBuffer(this.recordBlanks);
+  ScrollbackBuffer({this.recordBlanks});
 
   /// Add a new line to the scrollback buffer. This would normally happen
   /// when the user finishes typing/editing the line and taps the 'enter'
@@ -81,7 +81,7 @@ class ScrollbackBuffer {
       // Once the user scrolls to the bottom, reset the current line
       // buffer so that up() can store it again: The user might have
       // edited it between down() and up().
-      var temp = currentLineBuffer;
+      final temp = currentLineBuffer;
       currentLineBuffer = null;
       return temp;
     } else {
@@ -123,7 +123,7 @@ class Console {
   // Use `Console.scrolling(recordBlanks: false)` to omit blank lines
   // from console history
   Console.scrolling({bool recordBlanks = true})
-      : _scrollbackBuffer = ScrollbackBuffer(recordBlanks);
+      : _scrollbackBuffer = ScrollbackBuffer(recordBlanks: recordBlanks);
 
   /// Enables or disables raw mode.
   ///
@@ -420,19 +420,21 @@ class Console {
   /// Text alignment operates based off the current window width, and pads
   /// the remaining characters with a space character.
   void writeLine([String text, TextAlignment alignment]) {
+    String alignedText;
+
     if (text != null) {
       switch (alignment) {
         case TextAlignment.center:
           final padding = ((windowWidth - text.length) / 2).round();
-          text = text.padLeft(text.length + padding);
-          text = text.padRight(windowWidth);
+          alignedText = text.padLeft(text.length + padding)
+            ..padRight(windowWidth);
           break;
         case TextAlignment.right:
-          text = text.padLeft(windowWidth);
+          alignedText = text.padLeft(windowWidth);
           break;
         default:
       }
-      stdout.write(text);
+      stdout.write(alignedText);
     }
     stdout.write(newLine);
   }
@@ -454,7 +456,7 @@ class Console {
   Key readKey() {
     Key key;
     int charCode;
-    int codeUnit = 0;
+    var codeUnit = 0;
 
     rawMode = true;
     while (codeUnit <= 0) {
@@ -629,7 +631,7 @@ class Console {
     final bufferMaxLength = windowWidth - screenColOffset - 3;
 
     while (true) {
-      var key = readKey();
+      final key = readKey();
 
       if (key.isControl) {
         switch (key.controlChar) {

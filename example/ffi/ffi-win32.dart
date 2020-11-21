@@ -120,7 +120,7 @@ void main() {
   print('Output handle (DWORD): $outputHandle');
 
   final pBufferInfo = ffi.allocate<CONSOLE_SCREEN_BUFFER_INFO>();
-  var bufferInfo = pBufferInfo.ref;
+  final bufferInfo = pBufferInfo.ref;
   GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
   print('Window dimensions LTRB: (${bufferInfo.srWindowLeft}, '
       '${bufferInfo.srWindowTop}, ${bufferInfo.srWindowRight}, '
@@ -130,7 +130,7 @@ void main() {
   print('Window size X/Y: (${bufferInfo.dwSizeX}, ${bufferInfo.dwSizeY})');
   print('Maximum window size X/Y: (${bufferInfo.dwMaximumWindowSizeX}, '
       '${bufferInfo.dwMaximumWindowSizeY})');
-  var cursorPosition = (15 << 16) + 3;
+  const cursorPosition = (15 << 16) + 3;
 
   SetConsoleCursorPosition(outputHandle, cursorPosition);
   GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
