@@ -11,7 +11,7 @@ final int rows = console.windowHeight;
 final int cols = console.windowWidth;
 final int size = rows * cols;
 
-final temp = List<bool>(size);
+final temp = List<bool>.filled(size, false, growable: false);
 final data =
     List<bool>.generate(size, (i) => random.nextBool(), growable: false);
 

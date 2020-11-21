@@ -28,12 +28,12 @@ class Coordinate {
 /// but it should handle the most common use cases.
 class ScrollbackBuffer {
   final lineList = <String>[];
-  int lineIndex;
-  String currentLineBuffer;
+  int? lineIndex;
+  String? currentLineBuffer;
   bool recordBlanks;
 
   // called by Console.scolling()
-  ScrollbackBuffer({this.recordBlanks});
+  ScrollbackBuffer({required this.recordBlanks});
 
   /// Add a new line to the scrollback buffer. This would normally happen
   /// when the user finishes typing/editing the line and taps the 'enter'
@@ -58,34 +58,36 @@ class ScrollbackBuffer {
     // scrollback buffer to scroll through.
     if (lineIndex == null) {
       return buffer;
+    } else {
+      // Only store the current line buffer once while scrolling up
+      currentLineBuffer ??= buffer;
+      lineIndex = lineIndex! - 1;
+      lineIndex = lineIndex! < 0 ? 0 : lineIndex;
+      return lineList[lineIndex!];
     }
-    // Only store the current line buffer once while scrolling up
-    currentLineBuffer ??= buffer;
-    lineIndex--;
-    lineIndex = lineIndex < 0 ? 0 : lineIndex;
-    return lineList[lineIndex];
   }
 
   /// Scroll 'down' -- Replace the user-input buffer with the contents of
   /// the next line. The final 'next line' is the original contents of the
   /// line buffer.
-  String down() {
+  String? down() {
     // Handle the case of the user tapping 'down' before there is a
     // scrollback buffer to scroll through.
     if (lineIndex == null) {
       return null;
-    }
-    lineIndex++;
-    lineIndex = lineIndex > lineList.length ? lineList.length : lineIndex;
-    if (lineIndex == lineList.length) {
-      // Once the user scrolls to the bottom, reset the current line
-      // buffer so that up() can store it again: The user might have
-      // edited it between down() and up().
-      final temp = currentLineBuffer;
-      currentLineBuffer = null;
-      return temp;
     } else {
-      return lineList[lineIndex];
+      lineIndex = lineIndex! + 1;
+      lineIndex = lineIndex! > lineList.length ? lineList.length : lineIndex;
+      if (lineIndex == lineList.length) {
+        // Once the user scrolls to the bottom, reset the current line
+        // buffer so that up() can store it again: The user might have
+        // edited it between down() and up().
+        final temp = currentLineBuffer;
+        currentLineBuffer = null;
+        return temp;
+      } else {
+        return lineList[lineIndex!];
+      }
     }
   }
 }
@@ -111,9 +113,9 @@ class Console {
   // Declare the type explicitly: Initializing the _scrollbackBuffer
   // in the constructor means that we can no longer infer the type
   // here.
-  final ScrollbackBuffer _scrollbackBuffer;
+  final ScrollbackBuffer? _scrollbackBuffer;
 
-  // Declaring the named constructor means that dart no longer
+  // Declaring the named constructor means that Dart no longer
   // supplies the default constructor. Besides, we need to set
   // _scrollbackBuffer to null for the regular console to work as
   // before.
@@ -287,7 +289,7 @@ class Console {
   /// track the local cursor independently based on keyboard input.
   ///
   ///
-  Coordinate get cursorPosition {
+  Coordinate? get cursorPosition {
     rawMode = true;
     stdout.write(ansiDeviceStatusReportCursorPosition);
     // returns a Cursor Position Report result in the form <ESC>[24;80R
@@ -297,6 +299,7 @@ class Console {
 
     // avoid infinite loop if we're getting a bad result
     while (i < 16) {
+      // ignore: use_string_buffers
       result += String.fromCharCode(stdin.readByteSync());
       if (result.endsWith('R')) break;
       i++;
@@ -328,12 +331,14 @@ class Console {
   ///
   /// Coordinates are measured from the top left of the screen, and are
   /// zero-based.
-  set cursorPosition(Coordinate cursor) {
-    if (Platform.isWindows) {
-      final winTermlib = _termlib as TermLibWindows;
-      winTermlib.setCursorPosition(cursor.col, cursor.row);
-    } else {
-      stdout.write(ansiCursorPosition(cursor.row + 1, cursor.col + 1));
+  set cursorPosition(Coordinate? cursor) {
+    if (cursor != null) {
+      if (Platform.isWindows) {
+        final winTermlib = _termlib as TermLibWindows;
+        winTermlib.setCursorPosition(cursor.col, cursor.row);
+      } else {
+        stdout.write(ansiCursorPosition(cursor.row + 1, cursor.col + 1));
+      }
     }
   }
 
@@ -343,7 +348,7 @@ class Console {
   /// enumeration. Depending on the console theme and background color,
   /// some colors may not offer a legible contrast against the background.
   void setForegroundColor(ConsoleColor foreground) {
-    stdout.write(ansiSetColor(ansiForegroundColors[foreground]));
+    stdout.write(ansiSetColor(ansiForegroundColors[foreground]!));
   }
 
   /// Sets the console background color to a named ANSI color.
@@ -352,7 +357,7 @@ class Console {
   /// enumeration. Depending on the console theme and background color,
   /// some colors may not offer a legible contrast against the background.
   void setBackgroundColor(ConsoleColor background) {
-    stdout.write(ansiSetColor(ansiBackgroundColors[background]));
+    stdout.write(ansiSetColor(ansiBackgroundColors[background]!));
   }
 
   /// Sets the foreground to one of 256 extended ANSI colors.
@@ -419,8 +424,8 @@ class Console {
   ///
   /// Text alignment operates based off the current window width, and pads
   /// the remaining characters with a space character.
-  void writeLine([String text, TextAlignment alignment]) {
-    String alignedText;
+  void writeLine([String? text, TextAlignment alignment = TextAlignment.left]) {
+    var alignedText = text;
 
     if (text != null) {
       switch (alignment) {
@@ -618,15 +623,15 @@ class Console {
   /// A callback function may be supplied, as a peek-ahead for what is being
   /// entered. This is intended for scenarios like auto-complete, where the
   /// text field is coupled with some other content.
-  String readLine(
+  String? readLine(
       {bool cancelOnBreak = false,
       bool cancelOnEscape = false,
-      Function(String text, Key lastPressed) callback}) {
+      Function(String text, Key lastPressed)? callback}) {
     var buffer = '';
     var index = 0; // cursor position relative to buffer, not screen
 
-    final screenRow = cursorPosition.row;
-    final screenColOffset = cursorPosition.col;
+    final screenRow = cursorPosition!.row;
+    final screenColOffset = cursorPosition!.col;
 
     final bufferMaxLength = windowWidth - screenColOffset - 3;
 
@@ -637,7 +642,7 @@ class Console {
         switch (key.controlChar) {
           case ControlCharacter.enter:
             if (_scrollbackBuffer != null) {
-              _scrollbackBuffer.add(buffer);
+              _scrollbackBuffer!.add(buffer);
             }
             writeLine();
             return buffer;
@@ -669,13 +674,13 @@ class Console {
             break;
           case ControlCharacter.arrowUp:
             if (_scrollbackBuffer != null) {
-              buffer = _scrollbackBuffer.up(buffer);
+              buffer = _scrollbackBuffer!.up(buffer);
               index = buffer.length;
             }
             break;
           case ControlCharacter.arrowDown:
             if (_scrollbackBuffer != null) {
-              final temp = _scrollbackBuffer.down();
+              final temp = _scrollbackBuffer!.down();
               if (temp != null) {
                 buffer = temp;
                 index = buffer.length;

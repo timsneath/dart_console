@@ -18,13 +18,13 @@ import 'termios.dart';
 import 'unistd.dart';
 
 class TermLibUnix implements TermLib {
-  DynamicLibrary _stdlib;
+  late final DynamicLibrary _stdlib;
 
-  Pointer<TermIOS> _origTermIOSPointer;
+  late final Pointer<TermIOS> _origTermIOSPointer;
 
-  ioctlDart ioctl;
-  tcgetattrDart tcgetattr;
-  tcsetattrDart tcsetattr;
+  late final ioctlDart ioctl;
+  late final tcgetattrDart tcgetattr;
+  late final tcsetattrDart tcsetattr;
 
   @override
   int getWindowHeight() {

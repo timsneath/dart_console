@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 import '../example/readme.dart' as readme_example;
 
 void main() {
-  Console console;
+  late Console console;
 
   setUp(() {
     console = Console();
@@ -15,7 +15,7 @@ void main() {
 
     console.cursorPosition = coordinate;
 
-    final returnedCoordinate = console.cursorPosition;
+    final returnedCoordinate = console.cursorPosition!;
 
     expect(coordinate.row, equals(returnedCoordinate.row));
     expect(coordinate.col, equals(returnedCoordinate.col));

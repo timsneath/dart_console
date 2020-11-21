@@ -15,9 +15,9 @@ import 'package:win32/win32.dart';
 import '../termlib.dart';
 
 class TermLibWindows implements TermLib {
-  DynamicLibrary kernel;
+  late final DynamicLibrary kernel;
 
-  int inputHandle, outputHandle;
+  late final int inputHandle, outputHandle;
 
   @override
   int getWindowHeight() {

@@ -49,7 +49,7 @@ enum FindDirection { forwards, backwards }
 FindDirection findDirection = FindDirection.forwards;
 
 String messageText = '';
-DateTime messageTimestamp;
+late DateTime messageTimestamp;
 
 void initEditor() {
   isFileDirty = false;
@@ -217,10 +217,12 @@ void editorOpen(String filename) {
 
 void editorSave() {
   if (editedFilename.isEmpty) {
-    editedFilename = editorPrompt('Save as: ');
-    if (editedFilename == null) {
+    final saveFilename = editorPrompt('Save as: ');
+    if (saveFilename == null) {
       editorSetStatusMessage('Save aborted.');
       return;
+    } else {
+      editedFilename = saveFilename;
     }
   }
 
@@ -306,6 +308,7 @@ void editorUpdateRenderRow(int rowIndex) {
       // get to the next tab stop
       renderBuffer += ' ';
       while (renderBuffer.length % kiloTabStopLength != 0) {
+        // ignore: use_string_buffers
         renderBuffer += ' ';
       }
     } else {
@@ -429,8 +432,8 @@ void editorSetStatusMessage(String message) {
   messageTimestamp = DateTime.now();
 }
 
-String editorPrompt(String message,
-    [Function(String text, Key lastPressed) callback]) {
+String? editorPrompt(String message,
+    [Function(String text, Key lastPressed)? callback]) {
   final originalCursorRow = cursorRow;
 
   editorSetStatusMessage(message);
