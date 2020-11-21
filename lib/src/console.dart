@@ -431,8 +431,8 @@ class Console {
       switch (alignment) {
         case TextAlignment.center:
           final padding = ((windowWidth - text.length) / 2).round();
-          alignedText = text.padLeft(text.length + padding)
-            ..padRight(windowWidth);
+          alignedText =
+              text.padLeft(text.length + padding).padRight(windowWidth);
           break;
         case TextAlignment.right:
           alignedText = text.padLeft(windowWidth);
