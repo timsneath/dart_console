@@ -26,11 +26,20 @@ class TermLibUnix implements TermLib {
   tcgetattrDart tcgetattr;
   tcsetattrDart tcsetattr;
 
-  @override
-  int getWindowHeight() {
+  Pointer<WinSize> _getWinSizeUnmanaged() {
     final winSizePointer = ffi.allocate<WinSize>();
     final result = ioctl(STDOUT_FILENO, TIOCGWINSZ, winSizePointer.cast());
-    if (result == -1) return -1;
+    if (result == -1) {
+      ffi.free(winSizePointer);
+      return nullptr;
+    }
+    return winSizePointer;
+  }
+
+  @override
+  int getWindowHeight() {
+    final winSizePointer = _getWinSizeUnmanaged();
+    if (winSizePointer == nullptr) return -1;
 
     final winSize = winSizePointer.ref;
     if (winSize.ws_row == 0) {
@@ -43,16 +52,49 @@ class TermLibUnix implements TermLib {
   }
 
   @override
+  int setWindowHeight(int width) {
+    final winSizePointer = _getWinSizeUnmanaged();
+    if (winSizePointer == nullptr) return -1;
+
+    final winSize = winSizePointer.ref;
+    if (winSize.ws_row == 0) {
+      return -1;
+    } else {
+      winSize.ws_row = width;
+      final setResult = ioctl(STDOUT_FILENO, TIOCSWINSZ, winSizePointer.cast());
+      final result = (setResult == -1) ? setResult : winSize.ws_row;
+      ffi.free(winSize.addressOf);
+      return result;
+    }
+  }
+
+  @override
   int getWindowWidth() {
-    final winSizePointer = ffi.allocate<WinSize>();
-    final result = ioctl(STDOUT_FILENO, TIOCGWINSZ, winSizePointer.cast());
-    if (result == -1) return -1;
+    final winSizePointer = _getWinSizeUnmanaged();
+    if (winSizePointer == nullptr) return -1;
 
     final winSize = winSizePointer.ref;
     if (winSize.ws_col == 0) {
       return -1;
     } else {
       final result = winSize.ws_col;
+      ffi.free(winSize.addressOf);
+      return result;
+    }
+  }
+
+  @override
+  int setWindowWidth(int height) {
+    final winSizePointer = _getWinSizeUnmanaged();
+    if (winSizePointer == nullptr) return -1;
+
+    final winSize = winSizePointer.ref;
+    if (winSize.ws_col == 0) {
+      return -1;
+    } else {
+      winSize.ws_col = height;
+      final setResult = ioctl(STDOUT_FILENO, TIOCSWINSZ, winSizePointer.cast());
+      final result = (setResult == -1) ? setResult : winSize.ws_col;
       ffi.free(winSize.addressOf);
       return result;
     }

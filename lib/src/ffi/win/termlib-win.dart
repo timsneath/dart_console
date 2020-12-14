@@ -22,7 +22,7 @@ class TermLibWindows implements TermLib {
   @override
   int getWindowHeight() {
     final pBufferInfo = ffi.allocate<CONSOLE_SCREEN_BUFFER_INFO>();
-    var bufferInfo = pBufferInfo.ref;
+    final bufferInfo = pBufferInfo.ref;
     GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
     final windowHeight = bufferInfo.srWindowBottom - bufferInfo.srWindowTop + 1;
     ffi.free(bufferInfo.addressOf);
@@ -32,11 +32,49 @@ class TermLibWindows implements TermLib {
   @override
   int getWindowWidth() {
     final pBufferInfo = ffi.allocate<CONSOLE_SCREEN_BUFFER_INFO>();
-    var bufferInfo = pBufferInfo.ref;
+    final bufferInfo = pBufferInfo.ref;
     GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
     final windowWidth = bufferInfo.srWindowRight - bufferInfo.srWindowLeft + 1;
     ffi.free(bufferInfo.addressOf);
     return windowWidth;
+  }
+
+  @override
+  int setWindowHeight(int height) {
+    final pBufferInfo = ffi.allocate<CONSOLE_SCREEN_BUFFER_INFO>();
+    final bufferInfo = pBufferInfo.ref;
+    final originalwindowHeight =
+        bufferInfo.srWindowBottom - bufferInfo.srWindowTop + 1;
+    var result = originalwindowHeight;
+    if (GetConsoleScreenBufferInfo(outputHandle, pBufferInfo) != 0) {
+      final pWindowRect = ffi.allocate<SMALL_RECT>();
+      pWindowRect.ref.Bottom = height - originalwindowHeight;
+      if (SetConsoleWindowInfo(outputHandle, 0, pWindowRect) != 0) {
+        result = height;
+      }
+      ffi.free(pWindowRect);
+    }
+    ffi.free(pBufferInfo);
+    return result;
+  }
+
+  @override
+  int setWindowWidth(int width) {
+    final pBufferInfo = ffi.allocate<CONSOLE_SCREEN_BUFFER_INFO>();
+    final bufferInfo = pBufferInfo.ref;
+    final originalWindowWidth =
+        bufferInfo.srWindowRight - bufferInfo.srWindowLeft + 1;
+    var result = originalWindowWidth;
+    if (GetConsoleScreenBufferInfo(outputHandle, pBufferInfo) != 0) {
+      final pWindowRect = ffi.allocate<SMALL_RECT>();
+      pWindowRect.ref.Right = width - originalWindowWidth;
+      if (SetConsoleWindowInfo(outputHandle, 0, pWindowRect) != 0) {
+        result = width;
+      }
+      ffi.free(pWindowRect);
+    }
+    ffi.free(pBufferInfo);
+    return result;
   }
 
   @override
