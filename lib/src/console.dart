@@ -627,6 +627,7 @@ class Console {
   String? readLine(
       {bool cancelOnBreak = false,
       bool cancelOnEscape = false,
+      bool cancelOnEOF = false,
       Function(String text, Key lastPressed)? callback}) {
     var buffer = '';
     var index = 0; // cursor position relative to buffer, not screen
@@ -660,10 +661,16 @@ class Console {
               index--;
             }
             break;
+          case ControlCharacter.ctrlU:
+            buffer = buffer.substring(index, buffer.length);
+            index = 0;
+            break;
           case ControlCharacter.delete:
           case ControlCharacter.ctrlD:
             if (index < buffer.length - 1) {
               buffer = buffer.substring(0, index) + buffer.substring(index + 1);
+            } else if (cancelOnEOF) {
+              return null;
             }
             break;
           case ControlCharacter.ctrlK:
