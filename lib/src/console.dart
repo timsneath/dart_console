@@ -8,6 +8,7 @@ import 'dart:math';
 
 import 'ansi.dart';
 import 'enums.dart';
+
 import 'ffi/termlib.dart';
 import 'ffi/win/termlib-win.dart';
 import 'key.dart';

@@ -10,7 +10,7 @@
 import 'dart:ffi';
 import 'dart:io';
 
-import 'package:ffi/ffi.dart' as ffi;
+import 'package:ffi/ffi.dart';
 
 import '../termlib.dart';
 import 'ioctl.dart';
@@ -28,7 +28,7 @@ class TermLibUnix implements TermLib {
 
   @override
   int getWindowHeight() {
-    final winSizePointer = ffi.allocate<WinSize>();
+    final winSizePointer = calloc<WinSize>();
     final result = ioctl(STDOUT_FILENO, TIOCGWINSZ, winSizePointer.cast());
     if (result == -1) return -1;
 
@@ -37,14 +37,14 @@ class TermLibUnix implements TermLib {
       return -1;
     } else {
       final result = winSize.ws_row;
-      ffi.free(winSize.addressOf);
+      calloc.free(winSizePointer);
       return result;
     }
   }
 
   @override
   int getWindowWidth() {
-    final winSizePointer = ffi.allocate<WinSize>();
+    final winSizePointer = calloc<WinSize>();
     final result = ioctl(STDOUT_FILENO, TIOCGWINSZ, winSizePointer.cast());
     if (result == -1) return -1;
 
@@ -53,7 +53,7 @@ class TermLibUnix implements TermLib {
       return -1;
     } else {
       final result = winSize.ws_col;
-      ffi.free(winSize.addressOf);
+      calloc.free(winSizePointer);
       return result;
     }
   }
@@ -62,7 +62,7 @@ class TermLibUnix implements TermLib {
   void enableRawMode() {
     final _origTermIOS = _origTermIOSPointer.ref;
 
-    final newTermIOSPointer = ffi.allocate<TermIOS>();
+    final newTermIOSPointer = calloc<TermIOS>();
     final newTermIOS = newTermIOSPointer.ref;
 
     newTermIOS.c_iflag =
@@ -94,9 +94,9 @@ class TermLibUnix implements TermLib {
     newTermIOS.c_ispeed = _origTermIOS.c_ispeed;
     newTermIOS.c_oflag = _origTermIOS.c_ospeed;
 
-    tcsetattr(STDIN_FILENO, TCSAFLUSH, newTermIOS.addressOf);
+    tcsetattr(STDIN_FILENO, TCSAFLUSH, newTermIOSPointer);
 
-    ffi.free(newTermIOS.addressOf);
+    calloc.free(newTermIOSPointer);
   }
 
   @override
@@ -117,7 +117,7 @@ class TermLibUnix implements TermLib {
         _stdlib.lookupFunction<tcsetattrNative, tcsetattrDart>('tcsetattr');
 
     // store console mode settings so we can return them again as necessary
-    _origTermIOSPointer = ffi.allocate();
+    _origTermIOSPointer = calloc<TermIOS>();
     tcgetattr(STDIN_FILENO, _origTermIOSPointer);
   }
 }
