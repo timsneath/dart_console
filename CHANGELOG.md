@@ -1,6 +1,6 @@
-## 1.0.0-nullsafety.0
+## 1.0.0
 
-- Initial release version with support for sound null safety
+- Support sound null safety and latest win32 and ffi dependencies.
 
 ## 0.6.2
 
