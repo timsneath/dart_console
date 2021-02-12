@@ -1,6 +1,7 @@
 import 'dart:ffi';
 import 'dart:io';
-import 'package:ffi/ffi.dart' as ffi;
+
+import 'package:ffi/ffi.dart';
 
 // int tcgetattr(int, struct termios *);
 typedef tcgetattrNative = Int32 Function(
@@ -154,64 +155,60 @@ void main() {
   final tcsetattr =
       libc.lookupFunction<tcsetattrNative, tcsetattrDart>('tcsetattr');
 
-  final origTermIOSPointer = ffi.allocate<TermIOS>();
-  var result = tcgetattr(STDIN_FILENO, origTermIOSPointer);
+  final origTermIOS = calloc<TermIOS>();
+  var result = tcgetattr(STDIN_FILENO, origTermIOS);
   print('result is $result');
 
-  var origTermIOS = origTermIOSPointer.ref;
-
-  print('origTermIOS.c_iflag: 0b${origTermIOS.c_iflag.toRadixString(2)}');
+  print('origTermIOS.c_iflag: 0b${origTermIOS.ref.c_iflag.toRadixString(2)}');
   print('Copying and modifying...');
 
-  final newTermIOSPointer = ffi.allocate<TermIOS>();
-  var newTermIOS = newTermIOSPointer.ref;
+  final newTermIOS = calloc<TermIOS>()
+    ..ref.c_iflag =
+        origTermIOS.ref.c_iflag & ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON)
+    ..ref.c_oflag = origTermIOS.ref.c_oflag & ~OPOST
+    ..ref.c_cflag = origTermIOS.ref.c_cflag | CS8
+    ..ref.c_lflag = origTermIOS.ref.c_lflag & ~(ECHO | ICANON | IEXTEN | ISIG)
+    ..ref.c_ispeed = origTermIOS.ref.c_ispeed
+    ..ref.c_oflag = origTermIOS.ref.c_ospeed
+    ..ref.c_cc0 = origTermIOS.ref.c_cc0
+    ..ref.c_cc1 = origTermIOS.ref.c_cc1
+    ..ref.c_cc2 = origTermIOS.ref.c_cc2
+    ..ref.c_cc3 = origTermIOS.ref.c_cc3
+    ..ref.c_cc4 = origTermIOS.ref.c_cc4
+    ..ref.c_cc5 = origTermIOS.ref.c_cc5
+    ..ref.c_cc6 = origTermIOS.ref.c_cc6
+    ..ref.c_cc7 = origTermIOS.ref.c_cc7
+    ..ref.c_cc8 = origTermIOS.ref.c_cc8
+    ..ref.c_cc9 = origTermIOS.ref.c_cc9
+    ..ref.c_cc10 = origTermIOS.ref.c_cc10
+    ..ref.c_cc11 = origTermIOS.ref.c_cc11
+    ..ref.c_cc12 = origTermIOS.ref.c_cc12
+    ..ref.c_cc13 = origTermIOS.ref.c_cc13
+    ..ref.c_cc14 = origTermIOS.ref.c_cc14
+    ..ref.c_cc15 = origTermIOS.ref.c_cc15
+    ..ref.c_cc16 = 0
+    ..ref.c_cc17 = 1
+    ..ref.c_cc18 = origTermIOS.ref.c_cc18
+    ..ref.c_cc19 = origTermIOS.ref.c_cc19;
 
-  newTermIOS.c_iflag =
-      origTermIOS.c_iflag & ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
-  newTermIOS.c_oflag = origTermIOS.c_oflag & ~(OPOST);
-  newTermIOS.c_cflag = origTermIOS.c_cflag | (CS8);
-  newTermIOS.c_lflag = origTermIOS.c_lflag & ~(ECHO | ICANON | IEXTEN | ISIG);
-  newTermIOS.c_ispeed = origTermIOS.c_ispeed;
-  newTermIOS.c_oflag = origTermIOS.c_ospeed;
-  newTermIOS.c_cc0 = origTermIOS.c_cc0;
-  newTermIOS.c_cc1 = origTermIOS.c_cc1;
-  newTermIOS.c_cc2 = origTermIOS.c_cc2;
-  newTermIOS.c_cc3 = origTermIOS.c_cc3;
-  newTermIOS.c_cc4 = origTermIOS.c_cc4;
-  newTermIOS.c_cc5 = origTermIOS.c_cc5;
-  newTermIOS.c_cc6 = origTermIOS.c_cc6;
-  newTermIOS.c_cc7 = origTermIOS.c_cc7;
-  newTermIOS.c_cc8 = origTermIOS.c_cc8;
-  newTermIOS.c_cc9 = origTermIOS.c_cc9;
-  newTermIOS.c_cc10 = origTermIOS.c_cc10;
-  newTermIOS.c_cc11 = origTermIOS.c_cc11;
-  newTermIOS.c_cc12 = origTermIOS.c_cc12;
-  newTermIOS.c_cc13 = origTermIOS.c_cc13;
-  newTermIOS.c_cc14 = origTermIOS.c_cc14;
-  newTermIOS.c_cc15 = origTermIOS.c_cc15;
-  newTermIOS.c_cc16 = 0;
-  newTermIOS.c_cc17 = 1;
-  newTermIOS.c_cc18 = origTermIOS.c_cc18;
-  newTermIOS.c_cc19 = origTermIOS.c_cc19;
+  print('origTermIOS.c_iflag: 0b${origTermIOS.ref.c_iflag.toRadixString(2)}');
+  print('newTermIOS.c_iflag:  0b${newTermIOS.ref.c_iflag.toRadixString(2)}');
+  print('origTermIOS.c_oflag: 0b${origTermIOS.ref.c_oflag.toRadixString(2)}');
+  print('newTermIOS.c_oflag:  0b${newTermIOS.ref.c_oflag.toRadixString(2)}');
+  print('origTermIOS.c_cflag: 0b${origTermIOS.ref.c_cflag.toRadixString(2)}');
+  print('newTermIOS.c_cflag:  0b${newTermIOS.ref.c_cflag.toRadixString(2)}');
+  print('origTermIOS.c_lflag: 0b${origTermIOS.ref.c_lflag.toRadixString(2)}');
+  print('newTermIOS.c_lflag:  0b${newTermIOS.ref.c_lflag.toRadixString(2)}');
 
-  print('origTermIOS.c_iflag: 0b${origTermIOS.c_iflag.toRadixString(2)}');
-  print('newTermIOS.c_iflag:  0b${newTermIOS.c_iflag.toRadixString(2)}');
-  print('origTermIOS.c_oflag: 0b${origTermIOS.c_oflag.toRadixString(2)}');
-  print('newTermIOS.c_oflag:  0b${newTermIOS.c_oflag.toRadixString(2)}');
-  print('origTermIOS.c_cflag: 0b${origTermIOS.c_cflag.toRadixString(2)}');
-  print('newTermIOS.c_cflag:  0b${newTermIOS.c_cflag.toRadixString(2)}');
-  print('origTermIOS.c_lflag: 0b${origTermIOS.c_lflag.toRadixString(2)}');
-  print('newTermIOS.c_lflag:  0b${newTermIOS.c_lflag.toRadixString(2)}');
-
-  result = tcsetattr(STDIN_FILENO, TCSAFLUSH, newTermIOS.addressOf);
+  result = tcsetattr(STDIN_FILENO, TCSAFLUSH, newTermIOS);
   print('result is $result\n');
 
   print('RAW MODE: Here is some text.\nHere is some more text.');
-  result = tcsetattr(STDIN_FILENO, TCSAFLUSH, origTermIOS.addressOf);
+  result = tcsetattr(STDIN_FILENO, TCSAFLUSH, origTermIOS);
   print('result is $result\n');
 
   print('\nORIGINAL MODE: Here is some text.\nHere is some more text.');
 
-  ffi.free(origTermIOSPointer);
-  ffi.free(newTermIOSPointer);
+  calloc.free(origTermIOS);
+  calloc.free(newTermIOS);
 }

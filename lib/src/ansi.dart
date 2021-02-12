@@ -23,7 +23,7 @@ const ansiCursorDown = '\x1b[B';
 
 const ansiResetCursorPosition = '\x1b[H';
 const ansiMoveCursorToScreenEdge = '\x1b[999C\x1b[999B';
-String ansiCursorPosition(int row, int col) => '\x1b[${row};${col}H';
+String ansiCursorPosition(int row, int col) => '\x1b[$row;${col}H';
 
 const ansiResetColor = '\x1b[m';
 String ansiSetColor(int color) => '\x1b[${color}m';
@@ -34,7 +34,7 @@ String ansiSetTextStyles(
     bool underscore = false,
     bool blink = false,
     bool inverted = false}) {
-  var styles = <int>[];
+  final styles = <int>[];
   if (bold) styles.add(1);
   if (underscore) styles.add(4);
   if (blink) styles.add(5);

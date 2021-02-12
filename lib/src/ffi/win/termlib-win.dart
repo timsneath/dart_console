@@ -9,34 +9,41 @@
 
 import 'dart:ffi';
 
-import 'package:ffi/ffi.dart' as ffi;
-import 'package:dart_console/src/ffi/termlib.dart';
-
+import 'package:ffi/ffi.dart';
 import 'package:win32/win32.dart';
 
-class TermLibWindows implements TermLib {
-  DynamicLibrary kernel;
+import '../termlib.dart';
 
-  int inputHandle, outputHandle;
+class TermLibWindows implements TermLib {
+  late final int inputHandle;
+  late final int outputHandle;
 
   @override
   int getWindowHeight() {
-    final pBufferInfo = ffi.allocate<CONSOLE_SCREEN_BUFFER_INFO>();
-    var bufferInfo = pBufferInfo.ref;
-    GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
-    final windowHeight = bufferInfo.srWindowBottom - bufferInfo.srWindowTop + 1;
-    ffi.free(bufferInfo.addressOf);
-    return windowHeight;
+    final pBufferInfo = calloc<CONSOLE_SCREEN_BUFFER_INFO>();
+    try {
+      final bufferInfo = pBufferInfo.ref;
+      GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
+      final windowHeight =
+          bufferInfo.srWindow.Bottom - bufferInfo.srWindow.Top + 1;
+      return windowHeight;
+    } finally {
+      calloc.free(pBufferInfo);
+    }
   }
 
   @override
   int getWindowWidth() {
-    final pBufferInfo = ffi.allocate<CONSOLE_SCREEN_BUFFER_INFO>();
-    var bufferInfo = pBufferInfo.ref;
-    GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
-    final windowWidth = bufferInfo.srWindowRight - bufferInfo.srWindowLeft + 1;
-    ffi.free(bufferInfo.addressOf);
-    return windowWidth;
+    final pBufferInfo = calloc<CONSOLE_SCREEN_BUFFER_INFO>();
+    try {
+      final bufferInfo = pBufferInfo.ref;
+      GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
+      final windowWidth =
+          bufferInfo.srWindow.Right - bufferInfo.srWindow.Left + 1;
+      return windowWidth;
+    } finally {
+      calloc.free(pBufferInfo);
+    }
   }
 
   @override
@@ -63,48 +70,52 @@ class TermLibWindows implements TermLib {
   }
 
   void hideCursor() {
-    final lpConsoleCursorInfo = ffi.allocate<CONSOLE_CURSOR_INFO>();
-    var consoleCursorInfo = lpConsoleCursorInfo.ref;
-    consoleCursorInfo.bVisible = 0;
+    final lpConsoleCursorInfo = calloc<CONSOLE_CURSOR_INFO>()..ref.bVisible = 0;
     SetConsoleCursorInfo(outputHandle, lpConsoleCursorInfo);
-    ffi.free(consoleCursorInfo.addressOf);
+    calloc.free(lpConsoleCursorInfo);
   }
 
   void showCursor() {
-    final lpConsoleCursorInfo = ffi.allocate<CONSOLE_CURSOR_INFO>();
-    var consoleCursorInfo = lpConsoleCursorInfo.ref;
-    consoleCursorInfo.bVisible = 1;
+    final lpConsoleCursorInfo = calloc<CONSOLE_CURSOR_INFO>()..ref.bVisible = 1;
     SetConsoleCursorInfo(outputHandle, lpConsoleCursorInfo);
-    ffi.free(consoleCursorInfo.addressOf);
+    calloc.free(lpConsoleCursorInfo);
   }
 
   void clearScreen() {
-    final pBufferInfo = ffi.allocate<CONSOLE_SCREEN_BUFFER_INFO>();
-    var bufferInfo = pBufferInfo.ref;
-    GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
+    final pBufferInfo = calloc<CONSOLE_SCREEN_BUFFER_INFO>();
+    final pCharsWritten = calloc<Uint32>();
+    final origin = calloc<COORD>();
+    try {
+      final bufferInfo = pBufferInfo.ref;
+      GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
 
-    final consoleSize = bufferInfo.dwSizeX * bufferInfo.dwSizeY;
+      final consoleSize = bufferInfo.dwSize.X * bufferInfo.dwSize.Y;
 
-    final pCharsWritten = ffi.allocate<Int32>();
-    FillConsoleOutputCharacter(
-        outputHandle, ' '.codeUnitAt(0), consoleSize, 0, pCharsWritten);
+      FillConsoleOutputCharacter(outputHandle, ' '.codeUnitAt(0), consoleSize,
+          origin.ref, pCharsWritten);
 
-    GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
+      GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
 
-    FillConsoleOutputAttribute(
-        outputHandle, bufferInfo.wAttributes, consoleSize, 0, pCharsWritten);
+      FillConsoleOutputAttribute(outputHandle, bufferInfo.wAttributes,
+          consoleSize, origin.ref, pCharsWritten);
 
-    SetConsoleCursorPosition(outputHandle, 0);
-    ffi.free(pCharsWritten);
+      SetConsoleCursorPosition(outputHandle, origin.ref);
+    } finally {
+      calloc.free(origin);
+      calloc.free(pCharsWritten);
+      calloc.free(pBufferInfo);
+    }
   }
 
   void setCursorPosition(int x, int y) {
-    SetConsoleCursorPosition(outputHandle, (y << 16) + x);
+    final coord = calloc<COORD>()
+      ..ref.X = x
+      ..ref.Y = y;
+    SetConsoleCursorPosition(outputHandle, coord.ref);
+    calloc.free(coord);
   }
 
   TermLibWindows() {
-    kernel = DynamicLibrary.open('Kernel32.dll');
-
     outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     inputHandle = GetStdHandle(STD_INPUT_HANDLE);
   }

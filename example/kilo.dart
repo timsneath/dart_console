@@ -23,8 +23,8 @@ bool isFileDirty = false;
 // the actual contents of the file. For example, tabs are rendered as a series
 // of spaces even though they are only one character; control characters may
 // be shown in some form in the future.
-var fileRows = <String>[];
-var renderRows = <String>[];
+List<String> fileRows = [];
+List<String> renderRows = [];
 
 // Cursor location relative to file (not the screen)
 int cursorCol = 0, cursorRow = 0;
@@ -46,10 +46,10 @@ int findLastMatchRow = -1;
 
 // Current search direction
 enum FindDirection { forwards, backwards }
-var findDirection = FindDirection.forwards;
+FindDirection findDirection = FindDirection.forwards;
 
 String messageText = '';
-DateTime messageTimestamp;
+late DateTime messageTimestamp;
 
 void initEditor() {
   isFileDirty = false;
@@ -167,7 +167,7 @@ void editorFindCallback(String query, Key key) {
             getFileCol(currentRow, renderRows[currentRow].indexOf(query));
         screenFileRowOffset = fileRows.length;
         editorSetStatusMessage(
-            'Search (ESC to cancel, use arrows for prev/next): ' + query);
+            'Search (ESC to cancel, use arrows for prev/next): $query');
         editorRefreshScreen();
         break;
       }
@@ -176,10 +176,10 @@ void editorFindCallback(String query, Key key) {
 }
 
 void editorFind() {
-  var savedCursorCol = cursorCol;
-  var savedCursorRow = cursorRow;
-  var savedScreenFileRowOffset = screenFileRowOffset;
-  var savedScreenRowColOffset = screenRowColOffset;
+  final savedCursorCol = cursorCol;
+  final savedCursorRow = cursorRow;
+  final savedScreenFileRowOffset = screenFileRowOffset;
+  final savedScreenRowColOffset = screenRowColOffset;
 
   final query = editorPrompt(
       'Search (ESC to cancel, use arrows for prev/next): ', editorFindCallback);
@@ -215,19 +215,21 @@ void editorOpen(String filename) {
   isFileDirty = false;
 }
 
-void editorSave() async {
+void editorSave() {
   if (editedFilename.isEmpty) {
-    editedFilename = editorPrompt('Save as: ');
-    if (editedFilename == null) {
+    final saveFilename = editorPrompt('Save as: ');
+    if (saveFilename == null) {
       editorSetStatusMessage('Save aborted.');
       return;
+    } else {
+      editedFilename = saveFilename;
     }
   }
 
   // TODO: This is hopelessly naive, as with kilo.c. We should write to a
   //    temporary file and rename to ensure that we have written successfully.
   final file = File(editedFilename);
-  final fileContents = fileRows.join('\n') + '\n';
+  final fileContents = '${fileRows.join('\n')}\n';
   file.writeAsStringSync(fileContents);
 
   isFileDirty = false;
@@ -266,7 +268,7 @@ int getRenderedCol(int fileRow, int fileCol) {
 
   if (fileRow >= fileRows.length) return 0;
 
-  var rowText = fileRows[fileRow];
+  final rowText = fileRows[fileRow];
   for (var i = 0; i < fileCol; i++) {
     if (rowText[i] == '\t') {
       col += (kiloTabStopLength - 1) - (col % kiloTabStopLength);
@@ -281,7 +283,7 @@ int getRenderedCol(int fileRow, int fileCol) {
 int getFileCol(int row, int renderCol) {
   var currentRenderCol = 0;
   int fileCol;
-  var rowText = fileRows[row];
+  final rowText = fileRows[row];
   for (fileCol = 0; fileCol < rowText.length; fileCol++) {
     if (rowText[fileCol] == '\t') {
       currentRenderCol +=
@@ -306,6 +308,7 @@ void editorUpdateRenderRow(int rowIndex) {
       // get to the next tab stop
       renderBuffer += ' ';
       while (renderBuffer.length % kiloTabStopLength != 0) {
+        // ignore: use_string_buffers
         renderBuffer += ' ';
       }
     } else {
@@ -402,7 +405,8 @@ void editorDrawStatusBar() {
 }
 
 void editorDrawMessageBar() {
-  if (DateTime.now().difference(messageTimestamp) < Duration(seconds: 5)) {
+  if (DateTime.now().difference(messageTimestamp) <
+      const Duration(seconds: 5)) {
     console.write(truncateString(messageText, editorWindowWidth)
         .padRight(editorWindowWidth));
   }
@@ -428,8 +432,8 @@ void editorSetStatusMessage(String message) {
   messageTimestamp = DateTime.now();
 }
 
-String editorPrompt(String message,
-    [Function(String text, Key lastPressed) callback]) {
+String? editorPrompt(String message,
+    [Function(String text, Key lastPressed)? callback]) {
   final originalCursorRow = cursorRow;
 
   editorSetStatusMessage(message);
