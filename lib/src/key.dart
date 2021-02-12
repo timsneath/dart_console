@@ -59,12 +59,11 @@ enum ControlCharacter {
 
 /// A representation of a keystroke.
 class Key {
-  bool isControl;
-  String char;
-  ControlCharacter controlChar;
+  bool isControl = false;
+  String char = '';
+  ControlCharacter controlChar = ControlCharacter.unknown;
 
   Key.printable(this.char) : assert(char.length == 1) {
-    isControl = false;
     controlChar = ControlCharacter.none;
   }
 

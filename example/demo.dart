@@ -6,7 +6,7 @@ import 'package:dart_console/dart_console.dart';
 
 final console = Console();
 
-var demoScreens = <Function>[
+List<Function> demoScreens = <Function>[
   // SCREEN 1: Whimsical loading screen :)
   (() {
     console.setBackgroundColor(ConsoleColor.blue);
@@ -30,7 +30,7 @@ var demoScreens = <Function>[
       final progress = (i / 50 * progressBarWidth).ceil();
       final bar = '[${'#' * progress}${' ' * (progressBarWidth - progress)}]';
       console.write(bar);
-      sleep(Duration(milliseconds: 40));
+      sleep(const Duration(milliseconds: 40));
     }
 
     console.showCursor();
@@ -55,7 +55,7 @@ var demoScreens = <Function>[
     console.writeLine('This text is center aligned.', TextAlignment.center);
     console.writeLine('This text is right aligned.', TextAlignment.right);
 
-    for (var color in ConsoleColor.values) {
+    for (final color in ConsoleColor.values) {
       console.setForegroundColor(color);
       console.writeLine(color.toString().split('.').last);
     }
@@ -143,7 +143,7 @@ var demoScreens = <Function>[
       if (i >= maxStarsOnScreen) {
         removeStar();
       }
-      sleep(Duration(milliseconds: 1));
+      sleep(const Duration(milliseconds: 1));
     }
 
     console.resetColorAttributes();

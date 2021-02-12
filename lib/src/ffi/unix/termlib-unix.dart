@@ -10,7 +10,7 @@
 import 'dart:ffi';
 import 'dart:io';
 
-import 'package:ffi/ffi.dart' as ffi;
+import 'package:ffi/ffi.dart';
 
 import '../termlib.dart';
 import 'ioctl.dart';
@@ -18,17 +18,17 @@ import 'termios.dart';
 import 'unistd.dart';
 
 class TermLibUnix implements TermLib {
-  DynamicLibrary _stdlib;
+  late final DynamicLibrary _stdlib;
 
-  Pointer<TermIOS> _origTermIOSPointer;
+  late final Pointer<TermIOS> _origTermIOSPointer;
 
-  ioctlDart ioctl;
-  tcgetattrDart tcgetattr;
-  tcsetattrDart tcsetattr;
+  late final ioctlDart ioctl;
+  late final tcgetattrDart tcgetattr;
+  late final tcsetattrDart tcsetattr;
 
   @override
   int getWindowHeight() {
-    final winSizePointer = ffi.allocate<WinSize>();
+    final winSizePointer = calloc<WinSize>();
     final result = ioctl(STDOUT_FILENO, TIOCGWINSZ, winSizePointer.cast());
     if (result == -1) return -1;
 
@@ -37,14 +37,14 @@ class TermLibUnix implements TermLib {
       return -1;
     } else {
       final result = winSize.ws_row;
-      ffi.free(winSize.addressOf);
+      calloc.free(winSizePointer);
       return result;
     }
   }
 
   @override
   int getWindowWidth() {
-    final winSizePointer = ffi.allocate<WinSize>();
+    final winSizePointer = calloc<WinSize>();
     final result = ioctl(STDOUT_FILENO, TIOCGWINSZ, winSizePointer.cast());
     if (result == -1) return -1;
 
@@ -53,7 +53,7 @@ class TermLibUnix implements TermLib {
       return -1;
     } else {
       final result = winSize.ws_col;
-      ffi.free(winSize.addressOf);
+      calloc.free(winSizePointer);
       return result;
     }
   }
@@ -62,13 +62,13 @@ class TermLibUnix implements TermLib {
   void enableRawMode() {
     final _origTermIOS = _origTermIOSPointer.ref;
 
-    final newTermIOSPointer = ffi.allocate<TermIOS>();
-    var newTermIOS = newTermIOSPointer.ref;
+    final newTermIOSPointer = calloc<TermIOS>();
+    final newTermIOS = newTermIOSPointer.ref;
 
     newTermIOS.c_iflag =
         _origTermIOS.c_iflag & ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
-    newTermIOS.c_oflag = _origTermIOS.c_oflag & ~(OPOST);
-    newTermIOS.c_cflag = _origTermIOS.c_cflag | (CS8);
+    newTermIOS.c_oflag = _origTermIOS.c_oflag & ~OPOST;
+    newTermIOS.c_cflag = _origTermIOS.c_cflag | CS8;
     newTermIOS.c_lflag =
         _origTermIOS.c_lflag & ~(ECHO | ICANON | IEXTEN | ISIG);
     newTermIOS.c_cc0 = _origTermIOS.c_cc0;
@@ -94,9 +94,9 @@ class TermLibUnix implements TermLib {
     newTermIOS.c_ispeed = _origTermIOS.c_ispeed;
     newTermIOS.c_oflag = _origTermIOS.c_ospeed;
 
-    tcsetattr(STDIN_FILENO, TCSAFLUSH, newTermIOS.addressOf);
+    tcsetattr(STDIN_FILENO, TCSAFLUSH, newTermIOSPointer);
 
-    ffi.free(newTermIOS.addressOf);
+    calloc.free(newTermIOSPointer);
   }
 
   @override
@@ -117,7 +117,7 @@ class TermLibUnix implements TermLib {
         _stdlib.lookupFunction<tcsetattrNative, tcsetattrDart>('tcsetattr');
 
     // store console mode settings so we can return them again as necessary
-    _origTermIOSPointer = ffi.allocate();
+    _origTermIOSPointer = calloc<TermIOS>();
     tcgetattr(STDIN_FILENO, _origTermIOSPointer);
   }
 }

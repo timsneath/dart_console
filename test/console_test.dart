@@ -4,18 +4,18 @@ import 'package:test/test.dart';
 import '../example/readme.dart' as readme_example;
 
 void main() {
-  Console console;
+  late Console console;
 
   setUp(() {
     console = Console();
   });
 
   test('Coordinate positioning', () {
-    final coordinate = Coordinate(5, 8);
+    const coordinate = Coordinate(5, 8);
 
     console.cursorPosition = coordinate;
 
-    final returnedCoordinate = console.cursorPosition;
+    final returnedCoordinate = console.cursorPosition!;
 
     expect(coordinate.row, equals(returnedCoordinate.row));
     expect(coordinate.col, equals(returnedCoordinate.col));
