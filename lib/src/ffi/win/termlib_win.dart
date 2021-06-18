@@ -28,7 +28,7 @@ class TermLibWindows implements TermLib {
           pBufferInfo.ref.srWindow.Bottom - pBufferInfo.ref.srWindow.Top + 1;
       return windowHeight;
     } finally {
-      free(pBufferInfo);
+      calloc.free(pBufferInfo);
     }
   }
 
@@ -42,7 +42,7 @@ class TermLibWindows implements TermLib {
           pBufferInfo.ref.srWindow.Right - pBufferInfo.ref.srWindow.Left + 1;
       return windowWidth;
     } finally {
-      free(pBufferInfo);
+      calloc.free(pBufferInfo);
     }
   }
 
@@ -74,7 +74,7 @@ class TermLibWindows implements TermLib {
     try {
       SetConsoleCursorInfo(outputHandle, lpConsoleCursorInfo);
     } finally {
-      free(lpConsoleCursorInfo);
+      calloc.free(lpConsoleCursorInfo);
     }
   }
 
@@ -83,7 +83,7 @@ class TermLibWindows implements TermLib {
     try {
       SetConsoleCursorInfo(outputHandle, lpConsoleCursorInfo);
     } finally {
-      free(lpConsoleCursorInfo);
+      calloc.free(lpConsoleCursorInfo);
     }
   }
 
@@ -107,9 +107,9 @@ class TermLibWindows implements TermLib {
 
       SetConsoleCursorPosition(outputHandle, origin.ref);
     } finally {
-      free(origin);
-      free(pCharsWritten);
-      free(pBufferInfo);
+      calloc.free(origin);
+      calloc.free(pCharsWritten);
+      calloc.free(pBufferInfo);
     }
   }
 
@@ -120,7 +120,7 @@ class TermLibWindows implements TermLib {
     try {
       SetConsoleCursorPosition(outputHandle, coord.ref);
     } finally {
-      free(coord);
+      calloc.free(coord);
     }
   }
 
