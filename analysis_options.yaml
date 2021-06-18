@@ -6,25 +6,10 @@ analyzer:
     implicit-dynamic: false
   errors:
     todo: ignore
-  
 
 linter:
   rules:
-
-
-
     # Disable because of FFI to non-Dart constants
     camel_case_types: false
     constant_identifier_names: false  
     non_constant_identifier_names: false
-
-
-
-
-
-    # Some additional lints we want to enforce
-    omit_local_variable_types: true
-    prefer_expression_function_bodies: true
-    prefer_interpolation_to_compose_strings: true
-    prefer_relative_imports: true
-    unnecessary_lambdas: true
