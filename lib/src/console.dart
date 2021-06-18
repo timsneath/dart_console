@@ -10,7 +10,7 @@ import 'ansi.dart';
 import 'enums.dart';
 
 import 'ffi/termlib.dart';
-import 'ffi/win/termlib-win.dart';
+import 'ffi/win/termlib_win.dart';
 import 'key.dart';
 
 /// A screen position, measured in rows and columns from the top-left origin

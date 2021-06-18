@@ -22,13 +22,13 @@ class TermLibWindows implements TermLib {
   int getWindowHeight() {
     final pBufferInfo = calloc<CONSOLE_SCREEN_BUFFER_INFO>();
     try {
-      final bufferInfo = pBufferInfo.ref;
       GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
+
       final windowHeight =
-          bufferInfo.srWindow.Bottom - bufferInfo.srWindow.Top + 1;
+          pBufferInfo.ref.srWindow.Bottom - pBufferInfo.ref.srWindow.Top + 1;
       return windowHeight;
     } finally {
-      calloc.free(pBufferInfo);
+      free(pBufferInfo);
     }
   }
 
@@ -36,13 +36,13 @@ class TermLibWindows implements TermLib {
   int getWindowWidth() {
     final pBufferInfo = calloc<CONSOLE_SCREEN_BUFFER_INFO>();
     try {
-      final bufferInfo = pBufferInfo.ref;
       GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
+
       final windowWidth =
-          bufferInfo.srWindow.Right - bufferInfo.srWindow.Left + 1;
+          pBufferInfo.ref.srWindow.Right - pBufferInfo.ref.srWindow.Left + 1;
       return windowWidth;
     } finally {
-      calloc.free(pBufferInfo);
+      free(pBufferInfo);
     }
   }
 
@@ -71,14 +71,20 @@ class TermLibWindows implements TermLib {
 
   void hideCursor() {
     final lpConsoleCursorInfo = calloc<CONSOLE_CURSOR_INFO>()..ref.bVisible = 0;
-    SetConsoleCursorInfo(outputHandle, lpConsoleCursorInfo);
-    calloc.free(lpConsoleCursorInfo);
+    try {
+      SetConsoleCursorInfo(outputHandle, lpConsoleCursorInfo);
+    } finally {
+      free(lpConsoleCursorInfo);
+    }
   }
 
   void showCursor() {
     final lpConsoleCursorInfo = calloc<CONSOLE_CURSOR_INFO>()..ref.bVisible = 1;
-    SetConsoleCursorInfo(outputHandle, lpConsoleCursorInfo);
-    calloc.free(lpConsoleCursorInfo);
+    try {
+      SetConsoleCursorInfo(outputHandle, lpConsoleCursorInfo);
+    } finally {
+      free(lpConsoleCursorInfo);
+    }
   }
 
   void clearScreen() {
@@ -101,9 +107,9 @@ class TermLibWindows implements TermLib {
 
       SetConsoleCursorPosition(outputHandle, origin.ref);
     } finally {
-      calloc.free(origin);
-      calloc.free(pCharsWritten);
-      calloc.free(pBufferInfo);
+      free(origin);
+      free(pCharsWritten);
+      free(pBufferInfo);
     }
   }
 
@@ -111,8 +117,11 @@ class TermLibWindows implements TermLib {
     final coord = calloc<COORD>()
       ..ref.X = x
       ..ref.Y = y;
-    SetConsoleCursorPosition(outputHandle, coord.ref);
-    calloc.free(coord);
+    try {
+      SetConsoleCursorPosition(outputHandle, coord.ref);
+    } finally {
+      free(coord);
+    }
   }
 
   TermLibWindows() {
