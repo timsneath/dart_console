@@ -6,6 +6,7 @@ import 'dart:ffi';
 import 'dart:io';
 
 final TIOCGWINSZ = Platform.isMacOS ? 0x40087468 : 0x5413;
+final TIOCSWINSZ = Platform.isMacOS ? 0x80087467 : 0x5414;
 
 // struct winsize {
 // 	unsigned short  ws_row;         /* rows, in characters */

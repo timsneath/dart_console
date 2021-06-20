@@ -16,6 +16,9 @@ abstract class TermLib {
   int getWindowHeight();
   int getWindowWidth();
 
+  int setWindowHeight(int height);
+  int setWindowWidth(int width);
+
   void enableRawMode();
   void disableRawMode();
 

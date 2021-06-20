@@ -47,6 +47,18 @@ class TermLibWindows implements TermLib {
   }
 
   @override
+  int setWindowHeight(int height) {
+    throw UnsupportedError(
+        'Setting window height is not supported for Windows terminals.');
+  }
+
+  @override
+  int setWindowWidth(int width) {
+    throw UnsupportedError(
+        'Setting window width is not supported for Windows terminals.');
+  }
+
+  @override
   void enableRawMode() {
     final dwMode = (~ENABLE_ECHO_INPUT) &
         (~ENABLE_ECHO_INPUT) &
