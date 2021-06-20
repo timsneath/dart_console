@@ -47,6 +47,53 @@ class TermLibWindows implements TermLib {
   }
 
   @override
+  int setWindowHeight(int height) {
+    final pBufferInfo = calloc<CONSOLE_SCREEN_BUFFER_INFO>();
+
+    try {
+      final bufferInfo = pBufferInfo.ref;
+      final originalwindowHeight =
+          bufferInfo.srWindow.Bottom - bufferInfo.srWindow.Top + 1;
+
+      var result = originalwindowHeight;
+      if (GetConsoleScreenBufferInfo(outputHandle, pBufferInfo) != 0) {
+        final pWindowRect = calloc<SMALL_RECT>();
+        pWindowRect.ref.Bottom = height - originalwindowHeight;
+        if (SetConsoleWindowInfo(outputHandle, 0, pWindowRect) != 0) {
+          result = height;
+        }
+        free(pWindowRect);
+      }
+      return result;
+    } finally {
+      calloc.free(pBufferInfo);
+    }
+  }
+
+  @override
+  int setWindowWidth(int width) {
+    final pBufferInfo = calloc<CONSOLE_SCREEN_BUFFER_INFO>();
+
+    try {
+      final bufferInfo = pBufferInfo.ref;
+      final originalWindowWidth =
+          bufferInfo.srWindow.Right - bufferInfo.srWindow.Left + 1;
+      var result = originalWindowWidth;
+      if (GetConsoleScreenBufferInfo(outputHandle, pBufferInfo) != 0) {
+        final pWindowRect = calloc<SMALL_RECT>();
+        pWindowRect.ref.Right = width - originalWindowWidth;
+        if (SetConsoleWindowInfo(outputHandle, 0, pWindowRect) != 0) {
+          result = width;
+        }
+        free(pWindowRect);
+      }
+      return result;
+    } finally {
+      free(pBufferInfo);
+    }
+  }
+
+  @override
   void enableRawMode() {
     final dwMode = (~ENABLE_ECHO_INPUT) &
         (~ENABLE_ECHO_INPUT) &

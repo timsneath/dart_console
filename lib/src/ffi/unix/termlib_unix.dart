@@ -26,77 +26,81 @@ class TermLibUnix implements TermLib {
   late final tcgetattrDart tcgetattr;
   late final tcsetattrDart tcsetattr;
 
-  Pointer<WinSize> _getWinSizeUnmanaged() {
-    final winSizePointer = ffi.allocate<WinSize>();
+  Pointer<WinSize> _getWindowSize() {
+    final winSizePointer = calloc<WinSize>();
+
     final result = ioctl(STDOUT_FILENO, TIOCGWINSZ, winSizePointer.cast());
-    if (result == -1) {
-      ffi.free(winSizePointer);
-      return nullptr;
-    }
+    if (result == -1) return nullptr;
+
     return winSizePointer;
   }
 
   @override
   int getWindowHeight() {
-    final winSizePointer = _getWinSizeUnmanaged();
+    final winSizePointer = _getWindowSize();
+
     if (winSizePointer == nullptr) return -1;
 
-    final winSize = winSizePointer.ref;
-    if (winSize.ws_row == 0) {
-      return -1;
-    } else {
-      final result = winSize.ws_row;
+    try {
+      final row = winSizePointer.ref.ws_row;
+      return row == 0 ? -1 : row;
+    } finally {
       calloc.free(winSizePointer);
-      return result;
     }
   }
 
   @override
-  int setWindowHeight(int width) {
-    final winSizePointer = _getWinSizeUnmanaged();
+  int setWindowHeight(int height) {
+    final winSizePointer = _getWindowSize();
     if (winSizePointer == nullptr) return -1;
 
-    final winSize = winSizePointer.ref;
-    if (winSize.ws_row == 0) {
-      return -1;
-    } else {
-      winSize.ws_row = width;
-      final setResult = ioctl(STDOUT_FILENO, TIOCSWINSZ, winSizePointer.cast());
-      final result = (setResult == -1) ? setResult : winSize.ws_row;
-      ffi.free(winSize.addressOf);
-      return result;
+    try {
+      final winSize = winSizePointer.ref;
+      if (winSize.ws_row == 0) {
+        return -1;
+      } else {
+        winSize.ws_row = height;
+        final setResult =
+            ioctl(STDOUT_FILENO, TIOCSWINSZ, winSizePointer.cast());
+        final result = (setResult == -1) ? setResult : winSize.ws_row;
+        return result;
+      }
+    } finally {
+      calloc.free(winSizePointer);
     }
   }
 
   @override
   int getWindowWidth() {
-    final winSizePointer = _getWinSizeUnmanaged();
+    final winSizePointer = _getWindowSize();
     if (winSizePointer == nullptr) return -1;
 
-    final winSize = winSizePointer.ref;
-    if (winSize.ws_col == 0) {
-      return -1;
-    } else {
-      final result = winSize.ws_col;
+    try {
+      final col = winSizePointer.ref.ws_col;
+      return col == 0 ? -1 : col;
+    } finally {
       calloc.free(winSizePointer);
-      return result;
     }
   }
 
   @override
-  int setWindowWidth(int height) {
-    final winSizePointer = _getWinSizeUnmanaged();
+  int setWindowWidth(int width) {
+    final winSizePointer = _getWindowSize();
     if (winSizePointer == nullptr) return -1;
 
-    final winSize = winSizePointer.ref;
-    if (winSize.ws_col == 0) {
-      return -1;
-    } else {
-      winSize.ws_col = height;
-      final setResult = ioctl(STDOUT_FILENO, TIOCSWINSZ, winSizePointer.cast());
-      final result = (setResult == -1) ? setResult : winSize.ws_col;
-      ffi.free(winSize.addressOf);
-      return result;
+    try {
+      final winSize = winSizePointer.ref;
+      if (winSize.ws_col == 0) {
+        return -1;
+      } else {
+        winSize.ws_col = width;
+        final setResult =
+            ioctl(STDOUT_FILENO, TIOCSWINSZ, winSizePointer.cast());
+        final result = (setResult == -1) ? setResult : winSize.ws_col;
+        return result;
+      }
+    } finally {
+      calloc.free(winSizePointer);
     }
   }
 
