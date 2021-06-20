@@ -48,56 +48,14 @@ class TermLibWindows implements TermLib {
 
   @override
   int setWindowHeight(int height) {
-    final pBufferInfo = calloc<CONSOLE_SCREEN_BUFFER_INFO>();
-
-    try {
-      final bufferInfo = pBufferInfo.ref;
-      final originalwindowHeight =
-          bufferInfo.srWindow.Bottom - bufferInfo.srWindow.Top + 1;
-
-      var result = originalwindowHeight;
-      if (GetConsoleScreenBufferInfo(outputHandle, pBufferInfo) != 0) {
-        final pWindowRect = calloc<SMALL_RECT>()
-          ..ref.Left = bufferInfo.srWindow.Left
-          ..ref.Top = bufferInfo.srWindow.Top
-          ..ref.Right = bufferInfo.srWindow.Right
-          ..ref.Bottom = bufferInfo.srWindow.Top + height - 1;
-        if (SetConsoleWindowInfo(outputHandle, 0, pWindowRect) != 0) {
-          result = pWindowRect.ref.Bottom - pWindowRect.ref.Top + 1;
-        }
-        free(pWindowRect);
-      }
-      return result;
-    } finally {
-      calloc.free(pBufferInfo);
-    }
+    throw UnsupportedError(
+        'Setting window height is not supported for Windows terminals.');
   }
 
   @override
   int setWindowWidth(int width) {
-    final pBufferInfo = calloc<CONSOLE_SCREEN_BUFFER_INFO>();
-
-    try {
-      final bufferInfo = pBufferInfo.ref;
-      final originalWindowWidth =
-          bufferInfo.srWindow.Right - bufferInfo.srWindow.Left + 1;
-
-      var result = originalWindowWidth;
-      if (GetConsoleScreenBufferInfo(outputHandle, pBufferInfo) != 0) {
-        final pWindowRect = calloc<SMALL_RECT>()
-          ..ref.Left = bufferInfo.srWindow.Left
-          ..ref.Top = bufferInfo.srWindow.Top
-          ..ref.Right = bufferInfo.srWindow.Left + width - 1
-          ..ref.Bottom = bufferInfo.srWindow.Bottom;
-        if (SetConsoleWindowInfo(outputHandle, 0, pWindowRect) != 0) {
-          result = pWindowRect.ref.Right - pWindowRect.ref.Left + 1;
-        }
-        free(pWindowRect);
-      }
-      return result;
-    } finally {
-      free(pBufferInfo);
-    }
+    throw UnsupportedError(
+        'Setting window width is not supported for Windows terminals.');
   }
 
   @override
