@@ -58,7 +58,7 @@ class TermLibWindows implements TermLib {
       var result = originalwindowHeight;
       if (GetConsoleScreenBufferInfo(outputHandle, pBufferInfo) != 0) {
         final pWindowRect = calloc<SMALL_RECT>();
-        pWindowRect.ref.Bottom = height - originalwindowHeight;
+        pWindowRect.ref.Bottom = bufferInfo.srWindow.Top + height - 1;
         if (SetConsoleWindowInfo(outputHandle, 0, pWindowRect) != 0) {
           result = height;
         }
@@ -81,7 +81,7 @@ class TermLibWindows implements TermLib {
       var result = originalWindowWidth;
       if (GetConsoleScreenBufferInfo(outputHandle, pBufferInfo) != 0) {
         final pWindowRect = calloc<SMALL_RECT>();
-        pWindowRect.ref.Right = width - originalWindowWidth;
+        pWindowRect.ref.Right = bufferInfo.srWindow.Left + width - 1;
         if (SetConsoleWindowInfo(outputHandle, 0, pWindowRect) != 0) {
           result = width;
         }
