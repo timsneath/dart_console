@@ -12,9 +12,6 @@ void main() {
       '$originalHeight rows.');
 
   if (originalHeight != -1 && originalWidth != -1) {
-    termlib.setWindowHeight(originalHeight - 1);
-    termlib.setWindowWidth(originalWidth - 2);
-
     print('Per TermLib, this console window has ${termlib.getWindowWidth()} '
         'cols and ${termlib.getWindowHeight()} rows after manipulation');
   } else {

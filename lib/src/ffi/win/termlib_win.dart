@@ -57,10 +57,13 @@ class TermLibWindows implements TermLib {
 
       var result = originalwindowHeight;
       if (GetConsoleScreenBufferInfo(outputHandle, pBufferInfo) != 0) {
-        final pWindowRect = calloc<SMALL_RECT>();
-        pWindowRect.ref.Bottom = bufferInfo.srWindow.Top + height - 1;
+        final pWindowRect = calloc<SMALL_RECT>()
+          ..ref.Left = bufferInfo.srWindow.Left
+          ..ref.Top = bufferInfo.srWindow.Top
+          ..ref.Right = bufferInfo.srWindow.Right
+          ..ref.Bottom = bufferInfo.srWindow.Top + height - 1;
         if (SetConsoleWindowInfo(outputHandle, 0, pWindowRect) != 0) {
-          result = height;
+          result = pWindowRect.ref.Bottom - pWindowRect.ref.Top + 1;
         }
         free(pWindowRect);
       }
@@ -78,12 +81,16 @@ class TermLibWindows implements TermLib {
       final bufferInfo = pBufferInfo.ref;
       final originalWindowWidth =
           bufferInfo.srWindow.Right - bufferInfo.srWindow.Left + 1;
+
       var result = originalWindowWidth;
       if (GetConsoleScreenBufferInfo(outputHandle, pBufferInfo) != 0) {
-        final pWindowRect = calloc<SMALL_RECT>();
-        pWindowRect.ref.Right = bufferInfo.srWindow.Left + width - 1;
+        final pWindowRect = calloc<SMALL_RECT>()
+          ..ref.Left = bufferInfo.srWindow.Left
+          ..ref.Top = bufferInfo.srWindow.Top
+          ..ref.Right = bufferInfo.srWindow.Left + width - 1
+          ..ref.Bottom = bufferInfo.srWindow.Bottom;
         if (SetConsoleWindowInfo(outputHandle, 0, pWindowRect) != 0) {
-          result = width;
+          result = pWindowRect.ref.Right - pWindowRect.ref.Left + 1;
         }
         free(pWindowRect);
       }
