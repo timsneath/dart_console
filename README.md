@@ -15,17 +15,14 @@ development, including:
 - Writing aligned text to the screen
 
 The library has been used to implement a [Dart][dart] version of the
-[Kilo][kilo] text editor; when compiled with [dart2native][dart2native] that
-results in a self-contained `kilo` executable. The library is sufficient for a
-reasonably complete set of usage, including `readline`-style CLI and basic text
-games.
+[Kilo][kilo] text editor; when compiled with Dart it results in a self-contained
+`kilo` executable. The library is sufficient for a reasonably complete set of
+usage, including `readline`-style CLI and basic text games.
 
 The library assumes a terminal that recognizes and implements common ANSI escape
-sequences. The package has been tested on macOS, Linux and 
-[Windows 10 version 1903][vt-win10]. Windows support is preliminary - the
-library is tested on the [Windows Terminal][winterm] and `cmd`, but some
-functions will not work on older versions of Windows that do not support ANSI
-escape sequences.
+sequences. The package has been tested on macOS, Linux and Windows 10. Note that
+Windows did not support ANSI escape sequences in [earlier
+versions][vt-win10-roadmap].
 
 The library uses the [win32](https://pub.dev/packages/win32) package for
 accessing the Win32 API through FFI. That package contains many examples of
@@ -68,9 +65,9 @@ More comprehensive demos of the `Console` class are provided, as follows:
 
 ## Acknowledgements
 
-Special thanks to [Matt Sullivan (@mjohnsullivan)][@mjohnsullivan] and
-[Samir Jindel (@sjindel-google)][@sjindel-google] for their help understanding
-the vagaries of FFI in its early state.
+Special thanks to [Matt Sullivan (@mjohnsullivan)][@mjohnsullivan] and [Samir
+Jindel (@sjindel-google)][@sjindel-google] for their help in explaining FFI to
+me when it was first introduced and still undocumented. 
 
 Thanks to [@erf] for contributing the Game of Life example.
 
@@ -80,10 +77,10 @@ Please file feature requests and bugs at the [issue tracker][tracker].
 
 [kilo]: https://github.com/antirez/kilo
 [dart]: https://dart.dev/get-dart
-[dart2native]: https://dart.dev/tools/dart2native
 [dart_kilo]: https://github.com/timsneath/dart_kilo
 [vt-win10]: https://docs.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
-[winterm]: https://www.microsoft.com/en-us/p/windows-terminal-preview/9n0dx20hk701
+[vt-win10-roadmap]: https://docs.microsoft.com/en-us/windows/console/ecosystem-roadmap#virtual-terminal-server
+[winterm]: https://www.microsoft.com/en-us/p/windows-terminal/9n0dx20hk701
 [FFI]: https://dart.dev/server/c-interop
 [@mjohnsullivan]: https://github.com/mjohnsullivan
 [@sjindel-google]: https://github.com/sjindel-google

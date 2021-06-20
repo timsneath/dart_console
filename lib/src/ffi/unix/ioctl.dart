@@ -16,16 +16,16 @@ final TIOCSWINSZ = Platform.isMacOS ? 0x40087467 : 0x5414;
 // };
 class WinSize extends Struct {
   @Int16()
-  int ws_row;
+  external int ws_row;
 
   @Int16()
-  int ws_col;
+  external int ws_col;
 
   @Int16()
-  int ws_xpixel;
+  external int ws_xpixel;
 
   @Int16()
-  int ws_ypixel;
+  external int ws_ypixel;
 }
 
 // int ioctl(int, unsigned long, ...);

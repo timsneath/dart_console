@@ -75,61 +75,22 @@ const int VTIME = 17; // time in 1/10s before returning
 // 	speed_t         c_ospeed;       /* output speed */
 // };
 class TermIOS extends Struct {
-  @Int64()
-  int c_iflag;
-  @Int64()
-  int c_oflag;
-  @Int64()
-  int c_cflag;
-  @Int64()
-  int c_lflag;
+  @IntPtr()
+  external int c_iflag;
+  @IntPtr()
+  external int c_oflag;
+  @IntPtr()
+  external int c_cflag;
+  @IntPtr()
+  external int c_lflag;
 
-  // This replaces c_cc[20]
-  @Int8()
-  int c_cc0;
-  @Int8()
-  int c_cc1;
-  @Int8()
-  int c_cc2;
-  @Int8()
-  int c_cc3;
-  @Int8()
-  int c_cc4;
-  @Int8()
-  int c_cc5;
-  @Int8()
-  int c_cc6;
-  @Int8()
-  int c_cc7;
-  @Int8()
-  int c_cc8;
-  @Int8()
-  int c_cc9;
-  @Int8()
-  int c_cc10;
-  @Int8()
-  int c_cc11;
-  @Int8()
-  int c_cc12;
-  @Int8()
-  int c_cc13;
-  @Int8()
-  int c_cc14;
-  @Int8()
-  int c_cc15;
-  @Int8()
-  int c_cc16; // VMIN
-  @Int8()
-  int c_cc17; // VTIME
-  @Int8()
-  int c_cc18;
-  @Int8()
-  int c_cc19;
+  @Array(20)
+  external Array<Uint8> c_cc;
 
-  @Int64()
-  int c_ispeed;
-  @Int64()
-  int c_ospeed;
+  @IntPtr()
+  external int c_ispeed;
+  @IntPtr()
+  external int c_ospeed;
 }
 
 // int tcgetattr(int, struct termios *);

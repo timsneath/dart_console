@@ -1,6 +1,7 @@
 import 'dart:ffi';
 import 'dart:io';
-import 'package:ffi/ffi.dart' as ffi;
+
+import 'package:ffi/ffi.dart';
 
 // int ioctl(int, unsigned long, ...);
 typedef ioctlVoidNative = Int32 Function(Int32, Int64, Pointer<Void>);
@@ -38,7 +39,7 @@ void main() {
 
   final ioctl = libc.lookupFunction<ioctlVoidNative, ioctlVoidDart>('ioctl');
 
-  final winSizePointer = ffi.allocate<WinSize>();
+  final winSizePointer = calloc<WinSize>();
   final result = ioctl(STDOUT_FILENO, TIOCGWINSZ, winSizePointer.cast());
   print('result is $result');
 
@@ -46,5 +47,5 @@ void main() {
   print('Per ioctl, this console window has ${winSize.ws_col} cols and '
       '${winSize.ws_row} rows.');
 
-  ffi.free(winSizePointer);
+  calloc.free(winSizePointer);
 }

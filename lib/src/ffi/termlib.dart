@@ -9,8 +9,8 @@
 
 import 'dart:io';
 
-import 'unix/termlib-unix.dart';
-import 'win/termlib-win.dart';
+import 'unix/termlib_unix.dart';
+import 'win/termlib_win.dart';
 
 abstract class TermLib {
   int getWindowHeight();

@@ -34,7 +34,7 @@ String ansiSetTextStyles(
     bool underscore = false,
     bool blink = false,
     bool inverted = false}) {
-  var styles = <int>[];
+  final styles = <int>[];
   if (bold) styles.add(1);
   if (underscore) styles.add(4);
   if (blink) styles.add(5);
