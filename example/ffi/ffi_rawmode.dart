@@ -89,60 +89,22 @@ const int VTIME = 17; // time in 1/10s before returning
 // 	speed_t         c_ospeed;       /* output speed */
 // };
 class TermIOS extends Struct {
-  @Int64()
-  int c_iflag;
-  @Int64()
-  int c_oflag;
-  @Int64()
-  int c_cflag;
-  @Int64()
-  int c_lflag;
+  @IntPtr()
+  external int c_iflag;
+  @IntPtr()
+  external int c_oflag;
+  @IntPtr()
+  external int c_cflag;
+  @IntPtr()
+  external int c_lflag;
 
-  @Int8()
-  int c_cc0;
-  @Int8()
-  int c_cc1;
-  @Int8()
-  int c_cc2;
-  @Int8()
-  int c_cc3;
-  @Int8()
-  int c_cc4;
-  @Int8()
-  int c_cc5;
-  @Int8()
-  int c_cc6;
-  @Int8()
-  int c_cc7;
-  @Int8()
-  int c_cc8;
-  @Int8()
-  int c_cc9;
-  @Int8()
-  int c_cc10;
-  @Int8()
-  int c_cc11;
-  @Int8()
-  int c_cc12;
-  @Int8()
-  int c_cc13;
-  @Int8()
-  int c_cc14;
-  @Int8()
-  int c_cc15;
-  @Int8()
-  int c_cc16; // VMIN
-  @Int8()
-  int c_cc17; // VTIME
-  @Int8()
-  int c_cc18;
-  @Int8()
-  int c_cc19;
+  @Array(20)
+  external Array<Uint8> c_cc;
 
-  @Int64()
-  int c_ispeed;
-  @Int64()
-  int c_ospeed;
+  @IntPtr()
+  external int c_ispeed;
+  @IntPtr()
+  external int c_ospeed;
 }
 
 void main() {
@@ -170,26 +132,9 @@ void main() {
     ..ref.c_lflag = origTermIOS.ref.c_lflag & ~(ECHO | ICANON | IEXTEN | ISIG)
     ..ref.c_ispeed = origTermIOS.ref.c_ispeed
     ..ref.c_oflag = origTermIOS.ref.c_ospeed
-    ..ref.c_cc0 = origTermIOS.ref.c_cc0
-    ..ref.c_cc1 = origTermIOS.ref.c_cc1
-    ..ref.c_cc2 = origTermIOS.ref.c_cc2
-    ..ref.c_cc3 = origTermIOS.ref.c_cc3
-    ..ref.c_cc4 = origTermIOS.ref.c_cc4
-    ..ref.c_cc5 = origTermIOS.ref.c_cc5
-    ..ref.c_cc6 = origTermIOS.ref.c_cc6
-    ..ref.c_cc7 = origTermIOS.ref.c_cc7
-    ..ref.c_cc8 = origTermIOS.ref.c_cc8
-    ..ref.c_cc9 = origTermIOS.ref.c_cc9
-    ..ref.c_cc10 = origTermIOS.ref.c_cc10
-    ..ref.c_cc11 = origTermIOS.ref.c_cc11
-    ..ref.c_cc12 = origTermIOS.ref.c_cc12
-    ..ref.c_cc13 = origTermIOS.ref.c_cc13
-    ..ref.c_cc14 = origTermIOS.ref.c_cc14
-    ..ref.c_cc15 = origTermIOS.ref.c_cc15
-    ..ref.c_cc16 = 0
-    ..ref.c_cc17 = 1
-    ..ref.c_cc18 = origTermIOS.ref.c_cc18
-    ..ref.c_cc19 = origTermIOS.ref.c_cc19;
+    ..ref.c_cc = origTermIOS.ref.c_cc
+    ..ref.c_cc[VMIN] = 0 // VMIN -- return each byte, or 0 for timeout
+    ..ref.c_cc[VTIME] = 1; // VTIME -- 100ms timeout (unit is 1/10s)
 
   print('origTermIOS.c_iflag: 0b${origTermIOS.ref.c_iflag.toRadixString(2)}');
   print('newTermIOS.c_iflag:  0b${newTermIOS.ref.c_iflag.toRadixString(2)}');

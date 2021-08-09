@@ -168,6 +168,15 @@ class Console {
   /// buffering of input until a full line is entered.
   bool get rawMode => _isRawMode;
 
+  /// Returns whether the terminal supports Unicode emojis (👍)
+  ///
+  /// Assume Unicode emojis are supported when not on Windows.
+  /// If we are on Windows, Unicode emojis are supported in Windows Terminal,
+  /// which sets the WT_SESSION environment variable. See:
+  /// https://github.com/microsoft/terminal/issues/1040
+  bool get supportsEmoji =>
+      !Platform.isWindows || Platform.environment.containsKey('WT_SESSION');
+
   /// Clears the entire screen
   void clearScreen() {
     if (Platform.isWindows) {
@@ -300,8 +309,12 @@ class Console {
 
     // avoid infinite loop if we're getting a bad result
     while (i < 16) {
+      final readByte = stdin.readByteSync();
+
+      if (readByte == -1) break; // headless console may not report back
+
       // ignore: use_string_buffers
-      result += String.fromCharCode(stdin.readByteSync());
+      result += String.fromCharCode(readByte);
       if (result.endsWith('R')) break;
       i++;
     }
@@ -426,23 +439,32 @@ class Console {
   /// Text alignment operates based off the current window width, and pads
   /// the remaining characters with a space character.
   void writeLine([String? text, TextAlignment alignment = TextAlignment.left]) {
+    final int width = windowWidth;
+    if (text != null) {
+      writeAligned(text, width, alignment);
+    }
+    stdout.writeln();
+  }
+
+  /// Writes a quantity of text to the console with padding to the given width.
+  void writeAligned(String text,
+      [int? width, TextAlignment alignment = TextAlignment.left]) {
+    width ??= text.length;
+
     var alignedText = text;
 
-    if (text != null) {
-      switch (alignment) {
-        case TextAlignment.center:
-          final padding = ((windowWidth - text.length) / 2).round();
-          alignedText =
-              text.padLeft(text.length + padding).padRight(windowWidth);
-          break;
-        case TextAlignment.right:
-          alignedText = text.padLeft(windowWidth);
-          break;
-        default:
-      }
-      stdout.write(alignedText);
+    switch (alignment) {
+      case TextAlignment.center:
+        final padding = ((width - text.length) / 2).round();
+        alignedText = text.padLeft(text.length + padding).padRight(width);
+        break;
+      case TextAlignment.right:
+        alignedText = text.padLeft(width);
+        break;
+      default:
+        alignedText = text.padRight(width);
     }
-    stdout.write(newLine);
+    stdout.write(alignedText);
   }
 
   /// Reads a single key from the input, including a variety of control
