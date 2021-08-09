@@ -25,7 +25,8 @@ abstract class TermLib {
   factory TermLib() {
     if (Platform.isWindows) {
       return TermLibWindows();
-    } else {}
-    return TermLibUnix();
+    } else {
+      return TermLibUnix();
+    }
   }
 }
