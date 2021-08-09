@@ -168,6 +168,15 @@ class Console {
   /// buffering of input until a full line is entered.
   bool get rawMode => _isRawMode;
 
+  /// Returns whether the terminal supports Unicode emojis (👍)
+  ///
+  /// Assume Unicode emojis are supported when not on Windows.
+  /// If we are on Windows, Unicode emojis are supported in Windows Terminal,
+  /// which sets the WT_SESSION environment variable. See:
+  /// https://github.com/microsoft/terminal/issues/1040
+  bool get supportsEmoji =>
+      !Platform.isWindows || Platform.environment.containsKey('WT_SESSION');
+
   /// Clears the entire screen
   void clearScreen() {
     if (Platform.isWindows) {
@@ -300,8 +309,12 @@ class Console {
 
     // avoid infinite loop if we're getting a bad result
     while (i < 16) {
+      final readByte = stdin.readByteSync();
+
+      if (readByte == -1) break; // headless console may not report back
+
       // ignore: use_string_buffers
-      result += String.fromCharCode(stdin.readByteSync());
+      result += String.fromCharCode(readByte);
       if (result.endsWith('R')) break;
       i++;
     }
