@@ -9,3 +9,4 @@ library dart_console;
 export 'src/console.dart';
 export 'src/enums.dart';
 export 'src/key.dart';
+export 'src/table.dart';

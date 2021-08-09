@@ -439,23 +439,32 @@ class Console {
   /// Text alignment operates based off the current window width, and pads
   /// the remaining characters with a space character.
   void writeLine([String? text, TextAlignment alignment = TextAlignment.left]) {
+    final int width = windowWidth;
+    if (text != null) {
+      writeAligned(text, width, alignment);
+    }
+    stdout.writeln();
+  }
+
+  /// Writes a quantity of text to the console with padding to the given width.
+  void writeAligned(String text,
+      [int? width, TextAlignment alignment = TextAlignment.left]) {
+    width ??= text.length;
+
     var alignedText = text;
 
-    if (text != null) {
-      switch (alignment) {
-        case TextAlignment.center:
-          final padding = ((windowWidth - text.length) / 2).round();
-          alignedText =
-              text.padLeft(text.length + padding).padRight(windowWidth);
-          break;
-        case TextAlignment.right:
-          alignedText = text.padLeft(windowWidth);
-          break;
-        default:
-      }
-      stdout.write(alignedText);
+    switch (alignment) {
+      case TextAlignment.center:
+        final padding = ((width - text.length) / 2).round();
+        alignedText = text.padLeft(text.length + padding).padRight(width);
+        break;
+      case TextAlignment.right:
+        alignedText = text.padLeft(width);
+        break;
+      default:
+        alignedText = text.padRight(width);
     }
-    stdout.write(newLine);
+    stdout.write(alignedText);
   }
 
   /// Reads a single key from the input, including a variety of control
