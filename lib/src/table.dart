@@ -4,19 +4,31 @@ import 'enums.dart';
 import 'console.dart';
 
 class ConsoleTable {
-  List<List<String>> table = [[]];
+  final List<List<String>> _table = [[]];
 
-  int get columns => table[0].length;
+  int get columns => _table[0].length;
 
-  void addColumn([String header = '']) {
-    table[0].add(header);
+  final List<TextAlignment> _columnAlignments = [];
+
+  List<int> get _maxColumnLengths => List<int>.generate(columns, (column) {
+        int maxLength = 0;
+        for (final row in _table) {
+          maxLength = max(maxLength, row[column].length);
+        }
+        return maxLength;
+      }, growable: false);
+
+  void addColumn(
+      {String header = '', TextAlignment alignment = TextAlignment.left}) {
+    _table[0].add(header);
+    _columnAlignments.add(alignment);
 
     // TODO: handle adding a column after one or more rows have been added
   }
 
   void addRow(List<String> row) {
     if (row.length == columns) {
-      table.add(row);
+      _table.add(row);
     } else {
       // TODO: sparse populate
     }
@@ -25,19 +37,13 @@ class ConsoleTable {
   void printTable() {
     final console = Console();
 
-    final columnWidths = List<int>.generate(columns, (column) {
-      int maxLength = 0;
-      for (final row in table) {
-        maxLength = max(maxLength, row[column].length);
-      }
-      return maxLength;
-    }, growable: false);
+    final columnWidths = _maxColumnLengths;
 
     // print table rows
-    for (int row = 0; row < table.length; row++) {
-      for (int column = 0; column < table[row].length; column++) {
-        console.writeAligned(
-            table[row][column], columnWidths[column] + 1, TextAlignment.left);
+    for (int row = 0; row < _table.length; row++) {
+      for (int column = 0; column < _table[row].length; column++) {
+        console.writeAligned(_table[row][column], columnWidths[column] + 1,
+            _columnAlignments[column]);
       }
       console.writeLine();
     }
