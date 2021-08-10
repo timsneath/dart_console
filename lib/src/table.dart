@@ -3,7 +3,7 @@ import 'dart:math' show max;
 import 'enums.dart';
 import 'console.dart';
 
-class ConsoleTable {
+class Table {
   final List<List<String>> _table = [[]];
 
   int get columns => _table[0].length;
@@ -35,7 +35,7 @@ class ConsoleTable {
     _table.add(fullRow);
   }
 
-  void printTable() {
+  void print() {
     final console = Console();
 
     final columnWidths = _maxColumnLengths;
