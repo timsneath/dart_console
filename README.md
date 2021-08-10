@@ -62,6 +62,7 @@ More comprehensive demos of the `Console` class are provided, as follows:
 | `readline.dart` | Sample command-line interface / REPL |
 | `kilo.dart` | Rudimentary text editor |
 | `life.dart` | Game of Life |
+| `table.dart` | Demo of table support |
 
 ## Acknowledgements
 
