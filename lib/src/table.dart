@@ -3,7 +3,7 @@ import 'dart:math' show max;
 import 'enums.dart';
 import 'console.dart';
 
-class ConsoleTable {
+class Table {
   final List<List<String>> _table = [[]];
 
   int get columns => _table[0].length;
@@ -18,7 +18,7 @@ class ConsoleTable {
         return maxLength;
       }, growable: false);
 
-  void addColumn(
+  void addColumnDefinition(
       {String header = '', TextAlignment alignment = TextAlignment.left}) {
     _table[0].add(header);
     _columnAlignments.add(alignment);
@@ -27,23 +27,25 @@ class ConsoleTable {
   }
 
   void addRow(List<String> row) {
-    if (row.length == columns) {
-      _table.add(row);
-    } else {
-      // TODO: sparse populate
-    }
+    // Take as many elements as available, but pad as necessary
+    final fullRow = <String>[
+      ...row,
+      for (var i = row.length; i < columns; i++) ''
+    ];
+    _table.add(fullRow);
   }
 
-  void printTable() {
+  void print() {
     final console = Console();
 
     final columnWidths = _maxColumnLengths;
 
     // print table rows
     for (int row = 0; row < _table.length; row++) {
-      for (int column = 0; column < _table[row].length; column++) {
-        console.writeAligned(_table[row][column], columnWidths[column] + 1,
+      for (int column = 0; column < columns; column++) {
+        console.writeAligned(_table[row][column], columnWidths[column],
             _columnAlignments[column]);
+        console.write(' '); // padding
       }
       console.writeLine();
     }
