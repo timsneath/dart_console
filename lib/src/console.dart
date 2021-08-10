@@ -689,7 +689,7 @@ class Console {
             break;
           case ControlCharacter.delete:
           case ControlCharacter.ctrlD:
-            if (index < buffer.length - 1) {
+            if (index < buffer.length) {
               buffer = buffer.substring(0, index) + buffer.substring(index + 1);
             } else if (cancelOnEOF) {
               return null;
