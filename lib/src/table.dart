@@ -59,12 +59,16 @@ class Table {
   BorderStyle borderStyle = BorderStyle.normal;
   ConsoleColor? borderColor;
 
-  final List<TextAlignment> _columnAlignments = [];
+  final List<TextAlignment> _columnAlignments = <TextAlignment>[];
+  final List<int> _wrapWidths = <int>[];
 
   void addColumnDefinition(
-      {String header = '', TextAlignment alignment = TextAlignment.left}) {
+      {String header = '',
+      TextAlignment alignment = TextAlignment.left,
+      int wrapWidth = 0}) {
     _table[0].add(header);
     _columnAlignments.add(alignment);
+    _wrapWidths.add(wrapWidth);
 
     // TODO: handle adding a column after one or more rows have been added
   }
@@ -130,6 +134,14 @@ class Table {
       }
       return maxLength;
     }, growable: false);
+  }
+
+  int _calculateRowHeight(List<String> row) {
+    int maxHeight = 1;
+    for (final column in row) {
+      maxHeight = max(maxHeight, column.toString().split('\n').length);
+    }
+    return maxHeight;
   }
 
   String _tablePrologue(int tableWidth, List<int> columnWidths) {
@@ -268,19 +280,35 @@ class Table {
     // Print table rows
     final startRow = hasHeader ? 0 : 1;
     for (int row = startRow; row < _table.length; row++) {
-      buffer.write(_rowStart());
-
+      final wrappedRow = <String>[];
       for (int column = 0; column < columns; column++) {
-        final cell = _table[row][column].toString();
-        final columnAlignment = column < _columnAlignments.length
-            ? _columnAlignments[column]
-            : TextAlignment.left;
+        // Wrap the text if there's a viable width
+        if (column < _wrapWidths.length) {
+          wrappedRow.add(
+              _table[row][column].toString().wrapText(_wrapWidths[column]));
+        } else {
+          wrappedRow.add(_table[row][column].toString());
+        }
+      }
+      // Count number of lines in each row
+      final rowHeight = _calculateRowHeight(wrappedRow);
 
-        buffer.write(cell.alignText(
-            width: columnWidths[column], alignment: columnAlignment));
+      for (int line = 0; line < rowHeight; line++) {
+        buffer.write(_rowStart());
 
-        if (column < columns - 1) {
-          buffer.write(_rowDelimiter());
+        for (int column = 0; column < columns; column++) {
+          final lines = wrappedRow[column].toString().split('\n');
+          final cell = line < lines.length ? lines[line] : '';
+          final columnAlignment = column < _columnAlignments.length
+              ? _columnAlignments[column]
+              : TextAlignment.left;
+
+          buffer.write(cell.alignText(
+              width: columnWidths[column], alignment: columnAlignment));
+
+          if (column < columns - 1) {
+            buffer.write(_rowDelimiter());
+          }
         }
       }
 

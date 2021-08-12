@@ -36,16 +36,26 @@ const earlyPresidents = [
 ];
 
 void main() {
-  final table = Table();
-  table
-    ..borderColor = ConsoleColor.green
-    ..borderStyle = BorderStyle.rounded
-    ..borderType = BorderType.vertical
-    ..addColumnDefinition(header: 'Number', alignment: TextAlignment.right)
-    ..addColumnDefinition(header: 'Presidency')
-    ..addColumnDefinition(header: 'President')
-    ..addRows(earlyPresidents.take(3).toList());
-
+  final table = Table()
+    ..borderStyle = BorderStyle.ascii
+    ..borderType = BorderType.header
+    ..addColumnDefinition(header: 'Fruit')
+    ..addColumnDefinition(header: 'Qty', alignment: TextAlignment.right)
+    ..addColumnDefinition(header: 'Notes')
+    ..addRows([
+      ['apples', '10'],
+      ['bananas', '5'],
+      ['apricots', '7']
+    ]);
+  // final table = Table()
+  //   ..borderStyle = BorderStyle.double
+  //   ..borderType = BorderType.horizontal
+  //   ..addColumnDefinition(header: 'Number', alignment: TextAlignment.center)
+  //   ..addColumnDefinition(
+  //       header: 'Presidency', alignment: TextAlignment.right, wrapWidth: 16)
+  //   ..addColumnDefinition(header: 'President')
+  //   ..addColumnDefinition(header: 'Party')
+  //   ..addRows(earlyPresidents);
   print(table.render());
 
   final golden = File('golden.txt').openSync(mode: FileMode.writeOnly);
