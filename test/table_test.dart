@@ -1,11 +1,44 @@
 import 'package:test/test.dart';
 import 'package:dart_console/dart_console.dart';
 
+const earlyPresidents = [
+  [
+    1,
+    'April 30, 1789 - March 4, 1797',
+    'George Washington',
+    'unaffiliated',
+  ],
+  [
+    2,
+    'March 4, 1797 - March 4, 1801',
+    'John Adams',
+    'Federalist',
+  ],
+  [
+    3,
+    'March 4, 1801 - March 4, 1809',
+    'Thomas Jefferson',
+    'Democratic-Republican',
+  ],
+  [
+    4,
+    'March 4, 1809 - March 4, 1817',
+    'James Madison',
+    'Democratic-Republican',
+  ],
+  [
+    5,
+    'March 4, 1817 - March 4, 1825',
+    'James Monroe',
+    'Democratic-Republican',
+  ],
+];
+
 void main() {
   test('ASCII grid', () {
     final table = Table()
-      ..setBorderStyle(BorderStyle.ascii)
-      ..setBorderType(BorderType.grid)
+      ..borderStyle = BorderStyle.ascii
+      ..borderType = BorderType.grid
       ..addColumnDefinition(header: 'Fruit')
       ..addColumnDefinition(header: 'Qty', alignment: TextAlignment.right)
       ..addColumnDefinition(header: 'Notes')
@@ -35,8 +68,8 @@ void main() {
 
   test('ASCII header', () {
     final table = Table()
-      ..setBorderStyle(BorderStyle.ascii)
-      ..setBorderType(BorderType.header)
+      ..borderStyle = BorderStyle.ascii
+      ..borderType = BorderType.header
       ..addColumnDefinition(header: 'Fruit')
       ..addColumnDefinition(header: 'Qty', alignment: TextAlignment.right)
       ..addColumnDefinition(header: 'Notes')
@@ -59,10 +92,11 @@ void main() {
 -----------------------------------
 '''));
   });
+
   test('ASCII outline', () {
     final table = Table()
-      ..setBorderStyle(BorderStyle.ascii)
-      ..setBorderType(BorderType.outline)
+      ..borderStyle = BorderStyle.ascii
+      ..borderType = BorderType.outline
       ..addColumnDefinition(header: 'Fruit')
       ..addColumnDefinition(header: 'Qty', alignment: TextAlignment.right)
       ..addRows([
@@ -79,10 +113,11 @@ void main() {
 ----------------
 '''));
   });
+
   test('borderless', () {
     final table = Table()
-      ..setBorderStyle(BorderStyle.none)
-      ..setBorderType(BorderType.header)
+      ..borderStyle = BorderStyle.none
+      ..borderType = BorderType.header
       ..addColumnDefinition(header: 'Fruit')
       ..addColumnDefinition(header: 'Qty', alignment: TextAlignment.right)
       ..addColumnDefinition(header: 'Notes')
@@ -104,50 +139,21 @@ kumquats    59
 ''';
     expect(table.render(), equals(golden));
 
-    table.setBorderType(BorderType.grid);
+    // Changing border type shouldn't have any impact if there's no border
+    table.borderType = BorderType.grid;
     expect(table.render(), equals(golden));
 
-    table.setBorderType(BorderType.outline);
+    table.borderType = BorderType.outline;
     expect(table.render(), equals(golden));
   });
+
   test('glyphs', () {
     final table = Table()
       ..addColumnDefinition(header: 'Number', alignment: TextAlignment.right)
       ..addColumnDefinition(header: 'Presidency')
       ..addColumnDefinition(header: 'President')
       ..addColumnDefinition(header: 'Party')
-      ..addRows([
-        [
-          1,
-          'April 30, 1789 - March 4, 1797',
-          'George Washington',
-          'unaffiliated',
-        ],
-        [
-          2,
-          'March 4, 1797 - March 4, 1801',
-          'John Adams',
-          'Federalist',
-        ],
-        [
-          3,
-          'March 4, 1801 - March 4, 1809',
-          'Thomas Jefferson',
-          'Democratic-Republican',
-        ],
-        [
-          4,
-          'March 4, 1809 - March 4, 1817',
-          'James Madison',
-          'Democratic-Republican',
-        ],
-        [
-          5,
-          'March 4, 1817 - March 4, 1825',
-          'James Monroe',
-          'Democratic-Republican',
-        ],
-      ]);
+      ..addRows(earlyPresidents);
 
     expect(table.render(), equals('''
 ┌────────┬────────────────────────────────┬───────────────────┬───────────────────────┐
@@ -159,6 +165,29 @@ kumquats    59
 │      4 │ March 4, 1809 - March 4, 1817  │ James Madison     │ Democratic-Republican │
 │      5 │ March 4, 1817 - March 4, 1825  │ James Monroe      │ Democratic-Republican │
 └────────┴────────────────────────────────┴───────────────────┴───────────────────────┘
+'''));
+  });
+
+  test('color border', () {
+    final table = Table()
+      ..borderColor = ConsoleColor.brightCyan
+      ..borderStyle = BorderStyle.bold
+      ..addColumnDefinition(header: 'Number', alignment: TextAlignment.right)
+      ..addColumnDefinition(header: 'Presidency')
+      ..addColumnDefinition(header: 'President')
+      ..addColumnDefinition(header: 'Party')
+      ..addRows(earlyPresidents);
+
+    expect(table.render(), equals('''
+[96m┏━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━┓[m
+[96m┃ [mNumber[96m ┃ [mPresidency                    [96m ┃ [mPresident        [96m ┃ [mParty                [96m ┃[m
+[96m┣━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━┫[m
+[96m┃ [m     1[96m ┃ [mApril 30, 1789 - March 4, 1797[96m ┃ [mGeorge Washington[96m ┃ [munaffiliated         [96m ┃[m
+[96m┃ [m     2[96m ┃ [mMarch 4, 1797 - March 4, 1801 [96m ┃ [mJohn Adams       [96m ┃ [mFederalist           [96m ┃[m
+[96m┃ [m     3[96m ┃ [mMarch 4, 1801 - March 4, 1809 [96m ┃ [mThomas Jefferson [96m ┃ [mDemocratic-Republican[96m ┃[m
+[96m┃ [m     4[96m ┃ [mMarch 4, 1809 - March 4, 1817 [96m ┃ [mJames Madison    [96m ┃ [mDemocratic-Republican[96m ┃[m
+[96m┃ [m     5[96m ┃ [mMarch 4, 1817 - March 4, 1825 [96m ┃ [mJames Monroe     [96m ┃ [mDemocratic-Republican[96m ┃[m
+[96m┗━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━┛[m
 '''));
   });
 }

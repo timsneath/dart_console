@@ -1,5 +1,7 @@
 import 'dart:math' show max;
 
+import 'package:dart_console/src/ansi.dart';
+
 import 'enums.dart';
 import 'string_utils.dart';
 
@@ -49,9 +51,9 @@ class Table {
 
   int get columns => _table[0].length;
 
-  BorderGlyphSet borderGlyphs = BorderGlyphSet.normal();
-  bool hasBorder = true;
   BorderType borderType = BorderType.header;
+  BorderStyle borderStyle = BorderStyle.normal;
+  ConsoleColor? borderColor;
 
   final List<TextAlignment> _columnAlignments = [];
 
@@ -83,30 +85,21 @@ class Table {
     }
   }
 
-  void setBorderStyle(BorderStyle borderStyle) {
-    hasBorder = true;
+  bool get hasBorder => borderStyle != BorderStyle.none;
 
+  BorderGlyphSet get borderGlyphs {
     switch (borderStyle) {
       case BorderStyle.none:
-        borderGlyphs = BorderGlyphSet.none();
-        hasBorder = false;
-        break;
+        return BorderGlyphSet.none();
       case BorderStyle.ascii:
-        borderGlyphs = BorderGlyphSet.ascii();
-        break;
+        return BorderGlyphSet.ascii();
       case BorderStyle.bold:
-        borderGlyphs = BorderGlyphSet.bold();
-        break;
+        return BorderGlyphSet.bold();
       case BorderStyle.double:
-        borderGlyphs = BorderGlyphSet.double();
-        break;
+        return BorderGlyphSet.double();
       default:
-        borderGlyphs = BorderGlyphSet.normal();
+        return BorderGlyphSet.normal();
     }
-  }
-
-  void setBorderType(BorderType borderType) {
-    this.borderType = borderType;
   }
 
   int _calculateTableWidth() {
@@ -134,18 +127,22 @@ class Table {
     if (borderType == BorderType.outline) {
       delimiter = borderGlyphs.horizontalLine;
     } else {
-      delimiter = '${borderGlyphs.horizontalLine}'
-          '${borderGlyphs.teeDown}'
-          '${borderGlyphs.horizontalLine}';
+      delimiter = [
+        borderGlyphs.horizontalLine,
+        borderGlyphs.teeDown,
+        borderGlyphs.horizontalLine,
+      ].join();
     }
 
     return [
+      if (borderColor != null) ansiSetColor(ansiForegroundColors[borderColor]!),
       borderGlyphs.topLeftCorner,
       borderGlyphs.horizontalLine,
       [for (final column in columnWidths) borderGlyphs.horizontalLine * column]
           .join(delimiter),
       borderGlyphs.horizontalLine,
       borderGlyphs.topRightCorner,
+      if (borderColor != null) ansiResetColor,
       '\n',
     ].join();
   }
@@ -153,17 +150,21 @@ class Table {
   String _tableRule(int tableWidth, List<int> columnWidths) {
     if (!hasBorder) return '';
 
-    final delimiter = '${borderGlyphs.horizontalLine}'
-        '${borderGlyphs.cross}'
-        '${borderGlyphs.horizontalLine}';
+    final delimiter = [
+      borderGlyphs.horizontalLine,
+      borderGlyphs.cross,
+      borderGlyphs.horizontalLine,
+    ].join();
 
     return [
+      if (borderColor != null) ansiSetColor(ansiForegroundColors[borderColor]!),
       borderGlyphs.teeRight,
       borderGlyphs.horizontalLine,
       [for (final column in columnWidths) borderGlyphs.horizontalLine * column]
           .join(delimiter),
       borderGlyphs.horizontalLine,
       borderGlyphs.teeLeft,
+      if (borderColor != null) ansiResetColor,
       '\n',
     ].join();
   }
@@ -176,44 +177,62 @@ class Table {
     if (borderType == BorderType.outline) {
       delimiter = borderGlyphs.horizontalLine;
     } else {
-      delimiter = '${borderGlyphs.horizontalLine}'
-          '${borderGlyphs.teeUp}'
-          '${borderGlyphs.horizontalLine}';
+      delimiter = [
+        borderGlyphs.horizontalLine,
+        borderGlyphs.teeUp,
+        borderGlyphs.horizontalLine,
+      ].join();
     }
 
     return [
+      if (borderColor != null) ansiSetColor(ansiForegroundColors[borderColor]!),
       borderGlyphs.bottomLeftCorner,
       borderGlyphs.horizontalLine,
       [for (final column in columnWidths) borderGlyphs.horizontalLine * column]
           .join(delimiter),
       borderGlyphs.horizontalLine,
       borderGlyphs.bottomRightCorner,
+      if (borderColor != null) ansiResetColor,
       '\n',
     ].join();
   }
 
   String _rowStart() {
-    if (hasBorder) {
-      return '${borderGlyphs.verticalLine} ';
-    } else {
-      return '';
-    }
+    if (!hasBorder) return '';
+
+    return [
+      if (borderColor != null) ansiSetColor(ansiForegroundColors[borderColor]!),
+      borderGlyphs.verticalLine,
+      ' ',
+      if (borderColor != null) ansiResetColor,
+    ].join();
   }
 
   String _rowDelimiter() {
     if (hasBorder && borderType != BorderType.outline) {
-      return ' ${borderGlyphs.verticalLine} ';
+      return [
+        if (borderColor != null)
+          ansiSetColor(ansiForegroundColors[borderColor]!),
+        ' ',
+        borderGlyphs.verticalLine,
+        ' ',
+        if (borderColor != null) ansiResetColor,
+      ].join();
     } else {
       return ' ';
     }
   }
 
   String _rowEnd() {
-    if (hasBorder) {
-      return ' ${borderGlyphs.verticalLine}\n';
-    } else {
-      return '\n';
-    }
+    if (!hasBorder) return '\n';
+
+    return [
+      if (borderColor != null) ansiSetColor(ansiForegroundColors[borderColor]!),
+      ' ',
+      borderGlyphs.verticalLine,
+      if (borderColor != null) ansiResetColor,
+      '\n',
+    ].join();
   }
 
   String render() {
