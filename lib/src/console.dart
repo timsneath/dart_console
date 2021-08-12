@@ -12,6 +12,7 @@ import 'enums.dart';
 import 'ffi/termlib.dart';
 import 'ffi/win/termlib_win.dart';
 import 'key.dart';
+import 'string_utils.dart';
 
 /// A screen position, measured in rows and columns from the top-left origin
 /// of the screen. Coordinates are zero-based, and converted as necessary
@@ -449,22 +450,8 @@ class Console {
   /// Writes a quantity of text to the console with padding to the given width.
   void writeAligned(String text,
       [int? width, TextAlignment alignment = TextAlignment.left]) {
-    width ??= text.length;
-
-    var alignedText = text;
-
-    switch (alignment) {
-      case TextAlignment.center:
-        final padding = ((width - text.length) / 2).round();
-        alignedText = text.padLeft(text.length + padding).padRight(width);
-        break;
-      case TextAlignment.right:
-        alignedText = text.padLeft(width);
-        break;
-      default:
-        alignedText = text.padRight(width);
-    }
-    stdout.write(alignedText);
+    stdout.write(
+        text.alignText(width: width ?? text.length, alignment: alignment));
   }
 
   /// Reads a single key from the input, including a variety of control
