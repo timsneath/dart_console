@@ -1,6 +1,25 @@
 import 'enums.dart';
 
-extension AlignString on String {
+extension StringUtils on String {
+  String wrapText(int width) {
+    final words = split(' ');
+    final textLine = StringBuffer();
+    final outputText = StringBuffer();
+
+    for (final word in words) {
+      if ((textLine.length + word.length) >= width) {
+        textLine.write('\n');
+        outputText.write(textLine);
+        textLine.clear();
+        textLine.write('$word ');
+      } else {
+        textLine.write('$word ');
+      }
+    }
+    outputText.write(textLine.toString());
+    return outputText.toString();
+  }
+
   String alignText(
       {required int width, TextAlignment alignment = TextAlignment.left}) {
     switch (alignment) {
