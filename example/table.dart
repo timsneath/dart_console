@@ -36,14 +36,15 @@ const earlyPresidents = [
 ];
 
 void main() {
-  final table = Table()
-    ..borderColor = ConsoleColor.brightCyan
-    ..borderStyle = BorderStyle.bold
+  final table = Table();
+  table
+    ..borderColor = ConsoleColor.green
+    ..borderStyle = BorderStyle.rounded
+    ..borderType = BorderType.vertical
     ..addColumnDefinition(header: 'Number', alignment: TextAlignment.right)
     ..addColumnDefinition(header: 'Presidency')
     ..addColumnDefinition(header: 'President')
-    ..addColumnDefinition(header: 'Party')
-    ..addRows(earlyPresidents);
+    ..addRows(earlyPresidents.take(3).toList());
 
   print(table.render());
 
