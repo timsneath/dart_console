@@ -283,7 +283,7 @@ class Table {
       final wrappedRow = <String>[];
       for (int column = 0; column < columns; column++) {
         // Wrap the text if there's a viable width
-        if (column < _wrapWidths.length) {
+        if (column < _wrapWidths.length && _wrapWidths[column] > 0) {
           wrappedRow.add(
               _table[row][column].toString().wrapText(_wrapWidths[column]));
         } else {
@@ -310,9 +310,9 @@ class Table {
             buffer.write(_rowDelimiter());
           }
         }
-      }
 
-      buffer.write(_rowEnd());
+        buffer.write(_rowEnd());
+      }
 
       // Print a rule line underneath the header only
       if (row == 0 &&

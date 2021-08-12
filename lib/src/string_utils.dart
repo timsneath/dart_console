@@ -16,6 +16,7 @@ extension StringUtils on String {
         textLine.write('$word ');
       }
     }
+    outputText.write(textLine.toString());
     return outputText.toString();
   }
 
