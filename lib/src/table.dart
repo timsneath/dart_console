@@ -5,7 +5,7 @@ import 'package:dart_console/src/ansi.dart';
 import 'enums.dart';
 import 'string_utils.dart';
 
-enum BorderStyle { none, ascii, normal, rounded, bold, double }
+enum BorderStyle { none, ascii, square, rounded, bold, double }
 enum BorderType { outline, header, grid, vertical, horizontal }
 enum FontStyle { normal, bold, underscore, boldUnderscore }
 
@@ -33,7 +33,7 @@ class BoxGlyphSet {
     return BoxGlyphSet('-|----+--||');
   }
 
-  factory BoxGlyphSet.normal() {
+  factory BoxGlyphSet.square() {
     return BoxGlyphSet('─│┌┐└┘┼┴┬┤├');
   }
 
@@ -56,10 +56,11 @@ class Table {
 
   int get columns => _table[0].length;
 
-  BorderType borderType = BorderType.header;
-  BorderStyle borderStyle = BorderStyle.normal;
-  FontStyle headerStyle = FontStyle.normal;
   ConsoleColor? borderColor;
+  BorderType borderType = BorderType.header;
+  BorderStyle borderStyle = BorderStyle.rounded;
+  String title = '';
+  FontStyle headerStyle = FontStyle.normal;
 
   final List<TextAlignment> _columnAlignments = <TextAlignment>[];
   final List<int> _wrapWidths = <int>[];
@@ -98,14 +99,14 @@ class Table {
         return BoxGlyphSet.none();
       case BorderStyle.ascii:
         return BoxGlyphSet.ascii();
-      case BorderStyle.rounded:
-        return BoxGlyphSet.rounded();
+      case BorderStyle.square:
+        return BoxGlyphSet.square();
       case BorderStyle.bold:
         return BoxGlyphSet.bold();
       case BorderStyle.double:
         return BoxGlyphSet.double();
       default:
-        return BoxGlyphSet.normal();
+        return BoxGlyphSet.rounded();
     }
   }
 
@@ -307,6 +308,16 @@ class Table {
     final tableWidth = _calculateTableWidth();
     final columnWidths = _calculateColumnWidths();
 
+    // Title
+    if (title != '') {
+      buffer.writeln([
+        ansiSetTextStyles(bold: true),
+        title.alignText(width: tableWidth, alignment: TextAlignment.center),
+        ansiResetColor,
+      ].join());
+    }
+
+    // Top line of table bounding box
     buffer.write(_tablePrologue(tableWidth, columnWidths));
 
     // Print table rows
@@ -335,6 +346,7 @@ class Table {
               ? _columnAlignments[column]
               : TextAlignment.left;
 
+          // Write text, with header formatting if appropriate
           if (row == 0 && headerStyle != FontStyle.normal) {
             buffer.write(setFontStyle(headerStyle));
           }

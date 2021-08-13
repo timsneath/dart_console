@@ -41,17 +41,16 @@ void main() {
       expect(table.render(), isEmpty);
     });
 
-    test('Table with no column definitions should not render', () {
-      final table = Table();
-      table.addRows(earlyPresidents);
+    test('Table with no column defs should not render header', () {
+      final table = Table()..addRows(earlyPresidents);
       expect(table.render(), equals('''
-┌───┬────────────────────────────────┬───────────────────┬───────────────────────┐
+╭───┬────────────────────────────────┬───────────────────┬───────────────────────╮
 │ 1 │ April 30, 1789 - March 4, 1797 │ George Washington │ unaffiliated          │
 │ 2 │ March 4, 1797 - March 4, 1801  │ John Adams        │ Federalist            │
 │ 3 │ March 4, 1801 - March 4, 1809  │ Thomas Jefferson  │ Democratic-Republican │
 │ 4 │ March 4, 1809 - March 4, 1817  │ James Madison     │ Democratic-Republican │
 │ 5 │ March 4, 1817 - March 4, 1825  │ James Monroe      │ Democratic-Republican │
-└───┴────────────────────────────────┴───────────────────┴───────────────────────┘
+╰───┴────────────────────────────────┴───────────────────┴───────────────────────╯
 '''));
     });
   });
@@ -195,7 +194,8 @@ kumquats    59
         ..addColumnDefinition(header: 'Presidency')
         ..addColumnDefinition(header: 'President')
         ..addColumnDefinition(header: 'Party')
-        ..addRows(earlyPresidents);
+        ..addRows(earlyPresidents)
+        ..borderStyle = BorderStyle.square;
 
       expect(table.render(), equals('''
 ┌────────┬────────────────────────────────┬───────────────────┬───────────────────────┐
