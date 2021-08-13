@@ -57,6 +57,25 @@ void main() {
   });
 
   group('Table formatting', () {
+    test('none', () {
+      final table = Table()
+        ..borderStyle = BorderStyle.none
+        ..headerStyle = FontStyle.underscore
+        ..addColumnDefinition(header: 'Fruit')
+        ..addColumnDefinition(header: 'Qty', alignment: TextAlignment.right)
+        ..addRows([
+          ['apples', 10],
+          ['bananas', 5],
+          ['apricots', 7]
+        ]);
+      expect(table.render(), equals('''
+[4mFruit   [m [4mQty[m
+apples    10
+bananas    5
+apricots   7
+'''));
+    });
+
     test('ASCII grid', () {
       final table = Table()
         ..borderStyle = BorderStyle.ascii
@@ -129,6 +148,7 @@ void main() {
       expect(table.render(), equals('''
 ----------------
 | Fruit    Qty |
+|              |
 | apples    10 |
 | bananas    5 |
 | apricots   7 |
@@ -252,6 +272,7 @@ kumquats    59
       expect(table.render(), equals('''
 [32m╭────────┬────────────────────────────────┬───────────────────╮[m
 [32m│ [mNumber[32m │ [mPresidency                    [32m │ [mPresident        [32m │[m
+[32m│        │                                │                   │[m
 [32m│ [m     1[32m │ [mApril 30, 1789 - March 4, 1797[32m │ [mGeorge Washington[32m │[m
 [32m│ [m     2[32m │ [mMarch 4, 1797 - March 4, 1801 [32m │ [mJohn Adams       [32m │[m
 [32m│ [m     3[32m │ [mMarch 4, 1801 - March 4, 1809 [32m │ [mThomas Jefferson [32m │[m

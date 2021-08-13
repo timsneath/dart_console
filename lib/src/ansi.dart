@@ -25,10 +25,11 @@ const ansiResetCursorPosition = '\x1b[H';
 const ansiMoveCursorToScreenEdge = '\x1b[999C\x1b[999B';
 String ansiCursorPosition(int row, int col) => '\x1b[$row;${col}H';
 
-const ansiResetColor = '\x1b[m';
 String ansiSetColor(int color) => '\x1b[${color}m';
 String ansiSetExtendedForegroundColor(int color) => '\x1b[38;5;${color}m';
 String ansiSetExtendedBackgroundColor(int color) => '\x1b[48;5;${color}m';
+const ansiResetColor = '\x1b[m';
+
 String ansiSetTextStyles(
     {bool bold = false,
     bool underscore = false,

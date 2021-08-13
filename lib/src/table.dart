@@ -7,6 +7,7 @@ import 'string_utils.dart';
 
 enum BorderStyle { none, ascii, normal, rounded, bold, double }
 enum BorderType { outline, header, grid, vertical, horizontal }
+enum FontStyle { normal, bold, underscore, boldUnderscore }
 
 class BoxGlyphSet {
   final String? glyphs;
@@ -57,6 +58,7 @@ class Table {
 
   BorderType borderType = BorderType.header;
   BorderStyle borderStyle = BorderStyle.normal;
+  FontStyle headerStyle = FontStyle.normal;
   ConsoleColor? borderColor;
 
   final List<TextAlignment> _columnAlignments = <TextAlignment>[];
@@ -176,24 +178,45 @@ class Table {
 
   String _tableRule(int tableWidth, List<int> columnWidths) {
     if (!hasBorder) return '';
-    if (borderType == BorderType.vertical) return '';
+
+    if (borderType == BorderType.outline) {
+      return [
+        if (borderColor != null)
+          ansiSetColor(ansiForegroundColors[borderColor]!),
+        borderGlyphs.verticalLine,
+        ' ' * (tableWidth - 2),
+        borderGlyphs.verticalLine,
+        if (borderColor != null) ansiResetColor,
+        '\n'
+      ].join();
+    }
 
     final delimiter = [
-      borderGlyphs.horizontalLine,
-      borderType == BorderType.horizontal
-          ? borderGlyphs.horizontalLine
-          : borderGlyphs.cross,
-      borderGlyphs.horizontalLine,
+      borderType == BorderType.vertical ? ' ' : borderGlyphs.horizontalLine,
+      if (borderType == BorderType.horizontal)
+        borderGlyphs.horizontalLine
+      else if (borderType == BorderType.vertical)
+        borderGlyphs.verticalLine
+      else
+        borderGlyphs.cross,
+      borderType == BorderType.vertical ? ' ' : borderGlyphs.horizontalLine,
     ].join();
+
+    final horizontalLine =
+        borderType == BorderType.vertical ? ' ' : borderGlyphs.horizontalLine;
 
     return [
       if (borderColor != null) ansiSetColor(ansiForegroundColors[borderColor]!),
-      borderGlyphs.teeRight,
-      borderGlyphs.horizontalLine,
-      [for (final column in columnWidths) borderGlyphs.horizontalLine * column]
+      borderType == BorderType.vertical
+          ? borderGlyphs.verticalLine
+          : borderGlyphs.teeRight,
+      horizontalLine,
+      [for (final column in columnWidths) horizontalLine * column]
           .join(delimiter),
-      borderGlyphs.horizontalLine,
-      borderGlyphs.teeLeft,
+      horizontalLine,
+      borderType == BorderType.vertical
+          ? borderGlyphs.verticalLine
+          : borderGlyphs.teeLeft,
       if (borderColor != null) ansiResetColor,
       '\n',
     ].join();
@@ -267,6 +290,15 @@ class Table {
     ].join();
   }
 
+  String setFontStyle(FontStyle style) {
+    return ansiSetTextStyles(
+        bold: (style == FontStyle.bold || style == FontStyle.boldUnderscore),
+        underscore: (style == FontStyle.underscore ||
+            style == FontStyle.boldUnderscore));
+  }
+
+  String resetFontStyle() => ansiResetColor;
+
   String render() {
     if (_table[0].isEmpty) return '';
 
@@ -303,8 +335,14 @@ class Table {
               ? _columnAlignments[column]
               : TextAlignment.left;
 
+          if (row == 0 && headerStyle != FontStyle.normal) {
+            buffer.write(setFontStyle(headerStyle));
+          }
           buffer.write(cell.alignText(
               width: columnWidths[column], alignment: columnAlignment));
+          if (row == 0 && headerStyle != FontStyle.normal) {
+            buffer.write(resetFontStyle());
+          }
 
           if (column < columns - 1) {
             buffer.write(_rowDelimiter());
@@ -315,14 +353,12 @@ class Table {
       }
 
       // Print a rule line underneath the header only
-      if (row == 0 &&
-          (borderType == BorderType.header ||
-              borderType == BorderType.horizontal)) {
+      if (row == 0) {
         buffer.write(_tableRule(tableWidth, columnWidths));
       }
 
       // Print a rule line after all internal rows for grid type
-      if (borderType == BorderType.grid && row != _table.length - 1) {
+      else if (borderType == BorderType.grid && row != _table.length - 1) {
         buffer.write(_tableRule(tableWidth, columnWidths));
       }
     }

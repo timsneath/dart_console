@@ -37,14 +37,15 @@ const earlyPresidents = [
 
 void main() {
   final table = Table()
-    ..borderStyle = BorderStyle.rounded
-    ..borderType = BorderType.grid
-    ..addColumnDefinition(header: 'Number', alignment: TextAlignment.center)
-    ..addColumnDefinition(
-        header: 'Presidency', alignment: TextAlignment.right, wrapWidth: 18)
-    ..addColumnDefinition(header: 'President')
-    ..addColumnDefinition(header: 'Party')
-    ..addRows(earlyPresidents);
+    ..borderStyle = BorderStyle.none
+    ..headerStyle = FontStyle.underscore
+    ..addColumnDefinition(header: 'Fruit')
+    ..addColumnDefinition(header: 'Qty', alignment: TextAlignment.right)
+    ..addRows([
+      ['apples', 10],
+      ['bananas', 5],
+      ['apricots', 7]
+    ]);
   print(table.render());
 
   final golden = File('golden.txt').openSync(mode: FileMode.writeOnly);
