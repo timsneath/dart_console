@@ -13,6 +13,7 @@ development, including:
   keyboard input processing than the default `dart:io` library.
 - Reading keys and control sequences from the keyboard
 - Writing aligned text to the screen
+- Tabular data display (preview)
 
 The library has been used to implement a [Dart][dart] version of the
 [Kilo][kilo] text editor; when compiled with Dart it results in a self-contained
@@ -62,7 +63,6 @@ More comprehensive demos of the `Console` class are provided, as follows:
 | `readline.dart` | Sample command-line interface / REPL |
 | `kilo.dart` | Rudimentary text editor |
 | `life.dart` | Game of Life |
-| `table.dart` | Demo of table support |
 
 ## Acknowledgements
 

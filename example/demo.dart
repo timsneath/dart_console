@@ -4,6 +4,8 @@ import 'dart:math';
 
 import 'package:dart_console/dart_console.dart';
 
+import 'table.dart';
+
 final console = Console();
 
 List<Function> demoScreens = <Function>[
@@ -106,7 +108,35 @@ List<Function> demoScreens = <Function>[
     console.resetColorAttributes();
   }),
 
-  // SCREEN 5: Twinkling stars
+  // SCREEN 5: Tabular display
+  (() {
+    console.setBackgroundColor(ConsoleColor.magenta);
+    console.setForegroundColor(ConsoleColor.white);
+    console.writeLine('Tabular Display Examples', TextAlignment.center);
+    console.resetColorAttributes();
+
+    console.writeLine();
+
+    final calendar = Calendar.now();
+    console.write(calendar.render());
+
+    console.writeLine();
+
+    final table = Table()
+      ..borderColor = ConsoleColor.blue
+      ..borderStyle = BorderStyle.rounded
+      ..borderType = BorderType.horizontal
+      ..addColumnDefinition(header: 'Number', alignment: TextAlignment.center)
+      ..addColumnDefinition(
+          header: 'Presidency', alignment: TextAlignment.right)
+      ..addColumnDefinition(header: 'President')
+      ..addColumnDefinition(header: 'Party')
+      ..addRows(earlyPresidents)
+      ..title = 'Early Presidents of the United States';
+    console.write(table.render());
+  }),
+
+  // SCREEN 6: Twinkling stars
   (() {
     final stars = Queue<Coordinate>();
     final rng = Random();
