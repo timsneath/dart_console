@@ -1,3 +1,7 @@
+## 1.1.0-pre.0
+
+- Add tabular display and calendar support. 
+
 ## 1.0.0
 
 - Support sound null safety and latest win32 and ffi dependencies.
