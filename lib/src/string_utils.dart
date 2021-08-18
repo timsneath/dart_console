@@ -32,4 +32,11 @@ extension StringUtils on String {
         return padRight(width);
     }
   }
+
+  String stripEscapeCharacters() {
+    return replaceAll(RegExp(r'\x1b\[[\x30-\x3f]*[\x20-\x2f]*[\x40-\x7e]'), '')
+        .replaceAll(RegExp(r'\x1b[PX^_].*?\x1b\\'), '')
+        .replaceAll(RegExp(r'\x1b\][^\a]*(?:\a|\x1b\\)'), '')
+        .replaceAll(RegExp(r'\x1b[\[\]A-Z\\^_@]'), '');
+  }
 }

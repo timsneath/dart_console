@@ -404,11 +404,22 @@ class Console {
   /// Note that not all styles may be supported by all terminals.
   void setTextStyle(
       {bool bold = false,
+      bool faint = false,
+      bool italic = false,
       bool underscore = false,
       bool blink = false,
-      bool inverted = false}) {
+      bool inverted = false,
+      bool invisible = false,
+      bool strikethru = false}) {
     stdout.write(ansiSetTextStyles(
-        bold: bold, underscore: underscore, blink: blink, inverted: inverted));
+        bold: bold,
+        faint: faint,
+        italic: italic,
+        underscore: underscore,
+        blink: blink,
+        inverted: inverted,
+        invisible: invisible,
+        strikethru: strikethru));
   }
 
   /// Resets all color attributes and text styles to the default terminal
