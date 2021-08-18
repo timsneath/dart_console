@@ -32,14 +32,22 @@ const ansiResetColor = '\x1b[m';
 
 String ansiSetTextStyles(
     {bool bold = false,
+    bool faint = false,
+    bool italic = false,
     bool underscore = false,
     bool blink = false,
-    bool inverted = false}) {
+    bool inverted = false,
+    bool invisible = false,
+    bool strikethru = false}) {
   final styles = <int>[];
   if (bold) styles.add(1);
+  if (faint) styles.add(2);
+  if (italic) styles.add(3);
   if (underscore) styles.add(4);
   if (blink) styles.add(5);
   if (inverted) styles.add(7);
+  if (invisible) styles.add(8);
+  if (strikethru) styles.add(9);
   return '\x1b[${styles.join(";")}m';
 }
 
