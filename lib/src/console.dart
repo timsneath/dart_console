@@ -619,7 +619,29 @@ class Console {
       key = Key.control(ControlCharacter.unknown);
     } else {
       // assume other characters are printable
-      key = Key.printable(String.fromCharCode(codeUnit));
+      final bytes = <int>[codeUnit];
+      String char;
+
+      while (true) {
+        try {
+          char = systemEncoding.decode(bytes);
+          break;
+        } on FormatException {
+          if (bytes.length > 4) {
+            rethrow;
+          } else {
+            // support for multibyte characters
+            final nextByte = stdin.readByteSync();
+            if (nextByte > 0) {
+              bytes.add(nextByte);
+            } else {
+              rethrow;
+            }
+          }
+        }
+      }
+
+      key = Key.printable(char);
     }
     rawMode = false;
     return key;
