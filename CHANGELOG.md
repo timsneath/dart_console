@@ -1,3 +1,7 @@
+## 1.2.0
+
+- Update to latest ffi package
+
 ## 1.1.0-pre.0
 
 - Add tabular display and calendar support. 
