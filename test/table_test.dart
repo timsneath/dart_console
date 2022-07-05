@@ -286,7 +286,7 @@ kumquats    59
         ..borderType = BorderType.grid
         ..addColumnDefinition(header: 'Number', alignment: TextAlignment.center)
         ..addColumnDefinition(
-            header: 'Presidency', alignment: TextAlignment.right, wrapWidth: 18)
+            header: 'Presidency', alignment: TextAlignment.right, width: 18)
         ..addColumnDefinition(header: 'President')
         ..addColumnDefinition(header: 'Party')
         ..addRows(earlyPresidents);
