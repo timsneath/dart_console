@@ -68,10 +68,10 @@ class Table {
   void addColumnDefinition(
       {String header = '',
       TextAlignment alignment = TextAlignment.left,
-      int wrapWidth = 0}) {
+      int width = 0}) {
     _table[0].add(header);
     _columnAlignments.add(alignment);
-    _wrapWidths.add(wrapWidth);
+    _wrapWidths.add(width);
 
     // TODO: handle adding a column after one or more rows have been added
   }
@@ -133,7 +133,8 @@ class Table {
     return List<int>.generate(columns, (column) {
       int maxLength = 0;
       for (final row in _table) {
-        maxLength = max(maxLength, row[column].toString().length);
+        maxLength = max(
+            maxLength, row[column].toString().stripEscapeCharacters().length);
       }
       return maxLength;
     }, growable: false);

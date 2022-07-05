@@ -2,8 +2,8 @@ import 'package:dart_console/dart_console.dart';
 import 'dart:io';
 
 void main() {
-  // final calendar = Calendar.now();
-  final calendar = Calendar(DateTime(1969, 08, 15));
+  final calendar = Calendar.now();
+  // final calendar = Calendar(DateTime(1969, 08, 15));
 
   print(calendar.render());
 

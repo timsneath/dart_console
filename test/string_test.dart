@@ -1,7 +1,53 @@
 import 'package:dart_console/dart_console.dart';
+import 'package:dart_console/src/ansi.dart';
+
 import 'package:test/test.dart';
 
 void main() {
+  test('displayLength', () {
+    const hello = 'Hello';
+    final yellowAttr = ansiSetExtendedForegroundColor(
+        ansiForegroundColors[ConsoleColor.brightYellow]!);
+    final yellowHello = yellowAttr + hello + ansiResetColor;
+
+    expect(yellowHello.displayWidth, equals(hello.length));
+  });
+
+  test('wrap short text', () {
+    const hello = 'Hello';
+    expect(hello.wrapText(7), equals('Hello'));
+  });
+
+  test('align plain text single line left', () {
+    const hello = 'Hello';
+    expect(hello.alignText(width: 7), equals('Hello  '));
+    expect(hello.alignText(width: 7).length, equals(7));
+  });
+
+  test('align color text single line left', () {
+    const hello = 'Hello';
+    final yellowAttr = ansiSetExtendedForegroundColor(
+        ansiForegroundColors[ConsoleColor.brightYellow]!);
+    final yellowHello = yellowAttr + hello + ansiResetColor;
+
+    print(yellowHello.alignText(width: 7));
+
+    expect(yellowHello.alignText(width: 7).stripEscapeCharacters(),
+        equals('Hello  '));
+  });
+
+  test('align color text single line centered', () {
+    const hello = 'Hello';
+    final yellowAttr = ansiSetExtendedForegroundColor(
+        ansiForegroundColors[ConsoleColor.brightYellow]!);
+    final yellowHello = yellowAttr + hello + ansiResetColor;
+
+    expect(yellowHello.alignText(width: 7).stripEscapeCharacters().length,
+        equals(7));
+    expect(yellowHello.alignText(width: 7, alignment: TextAlignment.center),
+        equals(' \x1B[38;5;93mHello\x1B[m '));
+  });
+
   test('Strip escape characters', () {
     final calendar = Calendar(DateTime(1969, 08, 15));
     final colorCal = calendar.render();
