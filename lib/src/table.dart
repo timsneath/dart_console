@@ -6,7 +6,9 @@ import 'enums.dart';
 import 'string_utils.dart';
 
 enum BorderStyle { none, ascii, square, rounded, bold, double }
+
 enum BorderType { outline, header, grid, vertical, horizontal }
+
 enum FontStyle { normal, bold, underscore, boldUnderscore }
 
 class BoxGlyphSet {

@@ -46,6 +46,7 @@ int findLastMatchRow = -1;
 
 // Current search direction
 enum FindDirection { forwards, backwards }
+
 FindDirection findDirection = FindDirection.forwards;
 
 String messageText = '';
