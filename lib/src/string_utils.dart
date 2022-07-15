@@ -29,12 +29,16 @@ extension StringUtils on String {
 
   String alignText(
       {required int width, TextAlignment alignment = TextAlignment.left}) {
-    // We don't use the padLeft() and padRight() methods here, since they
+    // We can't use the padLeft() and padRight() methods here, since they
     // don't account for ANSI escape sequences.
     switch (alignment) {
       case TextAlignment.center:
-        final padding = ' ' * ((width - displayWidth) / 2).round();
-        return padding + this + padding;
+        // By using ceil _and_ floor, we ensure that the target width is reached
+        // even if the padding is uneven (e.g. a single character wrapped in a 4
+        // character width should be wrapped as '··c·' rather than '··c··').
+        final leftPadding = ' ' * ((width - displayWidth) / 2).ceil();
+        final rightPadding = ' ' * ((width - displayWidth) / 2).floor();
+        return leftPadding + this + rightPadding;
       case TextAlignment.right:
         final padding = ' ' * (width - displayWidth);
         return padding + this;

@@ -41,6 +41,12 @@ void main() {
         equals('Hello  '));
   });
 
+  test('align odd length in even space', () {
+    const char = 'c';
+    expect(char.alignText(width: 4, alignment: TextAlignment.center),
+        equals('  c '));
+  });
+
   test('align color text single line centered', () {
     const hello = 'Hello';
     final yellowAttr = ansiSetExtendedForegroundColor(
