@@ -106,19 +106,19 @@ class TermLibUnix implements TermLib {
 
   @override
   void enableRawMode() {
-    final _origTermIOS = _origTermIOSPointer.ref;
+    final origTermIOS = _origTermIOSPointer.ref;
 
     final newTermIOSPointer = calloc<TermIOS>()
       ..ref.c_iflag =
-          _origTermIOS.c_iflag & ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON)
-      ..ref.c_oflag = _origTermIOS.c_oflag & ~OPOST
-      ..ref.c_cflag = _origTermIOS.c_cflag | CS8
-      ..ref.c_lflag = _origTermIOS.c_lflag & ~(ECHO | ICANON | IEXTEN | ISIG)
-      ..ref.c_cc = _origTermIOS.c_cc
+          origTermIOS.c_iflag & ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON)
+      ..ref.c_oflag = origTermIOS.c_oflag & ~OPOST
+      ..ref.c_cflag = origTermIOS.c_cflag | CS8
+      ..ref.c_lflag = origTermIOS.c_lflag & ~(ECHO | ICANON | IEXTEN | ISIG)
+      ..ref.c_cc = origTermIOS.c_cc
       ..ref.c_cc[VMIN] = 0 // VMIN -- return each byte, or 0 for timeout
       ..ref.c_cc[VTIME] = 1 // VTIME -- 100ms timeout (unit is 1/10s)
-      ..ref.c_ispeed = _origTermIOS.c_ispeed
-      ..ref.c_oflag = _origTermIOS.c_ospeed;
+      ..ref.c_ispeed = origTermIOS.c_ispeed
+      ..ref.c_oflag = origTermIOS.c_ospeed;
 
     tcsetattr(STDIN_FILENO, TCSAFLUSH, newTermIOSPointer);
 

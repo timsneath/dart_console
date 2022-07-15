@@ -6,7 +6,9 @@ import 'enums.dart';
 import 'string_utils.dart';
 
 enum BorderStyle { none, ascii, square, rounded, bold, double }
+
 enum BorderType { outline, header, grid, vertical, horizontal }
+
 enum FontStyle { normal, bold, underscore, boldUnderscore }
 
 class BoxGlyphSet {
@@ -50,6 +52,8 @@ class BoxGlyphSet {
   }
 }
 
+/// An experimental class for drawing tables. This isn't fully functional for
+/// color drawing at present.
 class Table {
   // Row 0 is the header row
   final List<List<Object>> _table = [[]];

@@ -648,7 +648,7 @@ class Console {
       {bool cancelOnBreak = false,
       bool cancelOnEscape = false,
       bool cancelOnEOF = false,
-      Function(String text, Key lastPressed)? callback}) {
+      void Function(String text, Key lastPressed)? callback}) {
     var buffer = '';
     var index = 0; // cursor position relative to buffer, not screen
 
