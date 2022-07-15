@@ -6,7 +6,9 @@ import 'enums.dart';
 import 'string_utils.dart';
 
 enum BorderStyle { none, ascii, square, rounded, bold, double }
+
 enum BorderType { outline, header, grid, vertical, horizontal }
+
 enum FontStyle { normal, bold, underscore, boldUnderscore }
 
 class BoxGlyphSet {
@@ -50,6 +52,8 @@ class BoxGlyphSet {
   }
 }
 
+/// An experimental class for drawing tables. This isn't fully functional for
+/// color drawing at present.
 class Table {
   // Row 0 is the header row
   final List<List<Object>> _table = [[]];
@@ -68,10 +72,10 @@ class Table {
   void addColumnDefinition(
       {String header = '',
       TextAlignment alignment = TextAlignment.left,
-      int wrapWidth = 0}) {
+      int width = 0}) {
     _table[0].add(header);
     _columnAlignments.add(alignment);
-    _wrapWidths.add(wrapWidth);
+    _wrapWidths.add(width);
 
     // TODO: handle adding a column after one or more rows have been added
   }
@@ -133,7 +137,8 @@ class Table {
     return List<int>.generate(columns, (column) {
       int maxLength = 0;
       for (final row in _table) {
-        maxLength = max(maxLength, row[column].toString().length);
+        maxLength = max(
+            maxLength, row[column].toString().stripEscapeCharacters().length);
       }
       return maxLength;
     }, growable: false);

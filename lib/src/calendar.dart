@@ -1,3 +1,4 @@
+import 'package:dart_console/src/ansi.dart';
 import 'package:intl/intl.dart';
 
 import 'enums.dart';
@@ -18,6 +19,9 @@ class Calendar extends Table {
     // ISO format has 1..7 for Mon..Sun, so we adjust this to match the array
     final startDate = calendarDate.weekday == 7 ? 0 : calendarDate.weekday;
 
+    final todayColor =
+        ansiSetColor(ansiForegroundColors[ConsoleColor.brightYellow]!);
+
     final calendarDates = <String>[
       for (int i = 0; i < startDate; i++) '',
       for (int i = 1; i <= 31; i++)
@@ -25,7 +29,7 @@ class Calendar extends Table {
           if (calendarDate.year == DateTime.now().year &&
               calendarDate.month == DateTime.now().month &&
               i == DateTime.now().day)
-            '*$i'
+            '$todayColor$i$ansiResetColor'
           else
             '$i',
     ];

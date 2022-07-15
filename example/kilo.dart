@@ -46,6 +46,7 @@ int findLastMatchRow = -1;
 
 // Current search direction
 enum FindDirection { forwards, backwards }
+
 FindDirection findDirection = FindDirection.forwards;
 
 String messageText = '';
@@ -433,7 +434,7 @@ void editorSetStatusMessage(String message) {
 }
 
 String? editorPrompt(String message,
-    [Function(String text, Key lastPressed)? callback]) {
+    [void Function(String text, Key lastPressed)? callback]) {
   final originalCursorRow = cursorRow;
 
   editorSetStatusMessage(message);

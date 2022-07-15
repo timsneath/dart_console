@@ -286,29 +286,29 @@ kumquats    59
         ..borderType = BorderType.grid
         ..addColumnDefinition(header: 'Number', alignment: TextAlignment.center)
         ..addColumnDefinition(
-            header: 'Presidency', alignment: TextAlignment.right, wrapWidth: 18)
+            header: 'Presidency', alignment: TextAlignment.right, width: 18)
         ..addColumnDefinition(header: 'President')
         ..addColumnDefinition(header: 'Party')
         ..addRows(earlyPresidents);
 
       expect(table.render(), equals('''
 ╭────────┬────────────────────────────────┬───────────────────┬───────────────────────╮
-│ Number │                    Presidency  │ President         │ Party                 │
+│ Number │                     Presidency │ President         │ Party                 │
 ├────────┼────────────────────────────────┼───────────────────┼───────────────────────┤
-│    1   │              April 30, 1789 -  │ George Washington │ unaffiliated          │
-│        │                 March 4, 1797  │                   │                       │
+│    1   │               April 30, 1789 - │ George Washington │ unaffiliated          │
+│        │                  March 4, 1797 │                   │                       │
 ├────────┼────────────────────────────────┼───────────────────┼───────────────────────┤
-│    2   │               March 4, 1797 -  │ John Adams        │ Federalist            │
-│        │                 March 4, 1801  │                   │                       │
+│    2   │                March 4, 1797 - │ John Adams        │ Federalist            │
+│        │                  March 4, 1801 │                   │                       │
 ├────────┼────────────────────────────────┼───────────────────┼───────────────────────┤
-│    3   │               March 4, 1801 -  │ Thomas Jefferson  │ Democratic-Republican │
-│        │                 March 4, 1809  │                   │                       │
+│    3   │                March 4, 1801 - │ Thomas Jefferson  │ Democratic-Republican │
+│        │                  March 4, 1809 │                   │                       │
 ├────────┼────────────────────────────────┼───────────────────┼───────────────────────┤
-│    4   │               March 4, 1809 -  │ James Madison     │ Democratic-Republican │
-│        │                 March 4, 1817  │                   │                       │
+│    4   │                March 4, 1809 - │ James Madison     │ Democratic-Republican │
+│        │                  March 4, 1817 │                   │                       │
 ├────────┼────────────────────────────────┼───────────────────┼───────────────────────┤
-│    5   │               March 4, 1817 -  │ James Monroe      │ Democratic-Republican │
-│        │                 March 4, 1825  │                   │                       │
+│    5   │                March 4, 1817 - │ James Monroe      │ Democratic-Republican │
+│        │                  March 4, 1825 │                   │                       │
 ╰────────┴────────────────────────────────┴───────────────────┴───────────────────────╯
 '''));
     });
