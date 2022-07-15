@@ -18,6 +18,11 @@ void main() {
     expect(hello.wrapText(7), equals('Hello'));
   });
 
+  test('wrap long text', () {
+    const hello = 'HELLO HELLO Hello Hello hello hello';
+    expect(hello.wrapText(11), equals('HELLO HELLO\nHello Hello\nhello hello'));
+  });
+
   test('align plain text single line left', () {
     const hello = 'Hello';
     expect(hello.alignText(width: 7), equals('Hello  '));
@@ -32,7 +37,7 @@ void main() {
 
     print(yellowHello.alignText(width: 7));
 
-    expect(yellowHello.alignText(width: 7).stripEscapeCharacters(),
+    expect(yellowHello.stripEscapeCharacters().alignText(width: 7),
         equals('Hello  '));
   });
 
@@ -42,7 +47,13 @@ void main() {
         ansiForegroundColors[ConsoleColor.brightYellow]!);
     final yellowHello = yellowAttr + hello + ansiResetColor;
 
-    expect(yellowHello.alignText(width: 7).stripEscapeCharacters().length,
+    expect(yellowHello.displayWidth, equals(5));
+
+    final paddedWidth = 7;
+    final padding = ((paddedWidth - yellowHello.displayWidth) / 2).round();
+    expect(padding, equals(1));
+
+    expect(yellowHello.stripEscapeCharacters().alignText(width: 7).length,
         equals(7));
     expect(yellowHello.alignText(width: 7, alignment: TextAlignment.center),
         equals(' \x1B[38;5;93mHello\x1B[m '));
