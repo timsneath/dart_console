@@ -11,4 +11,5 @@ export 'src/console.dart';
 export 'src/enums.dart';
 export 'src/key.dart';
 export 'src/table.dart';
+export 'src/scrollbackbuffer.dart';
 export 'src/string_utils.dart';
