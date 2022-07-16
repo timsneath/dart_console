@@ -35,7 +35,7 @@ class Calendar extends Table {
     ];
 
     while (true) {
-      addRow(calendarDates.take(7).toList());
+      insertRow(calendarDates.take(7).toList());
       if (calendarDates.length > 7) {
         calendarDates.removeRange(0, 7);
       } else {

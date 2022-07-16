@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dart_console/dart_console.dart';
 
 const earlyPresidents = [
@@ -41,15 +39,10 @@ void main() {
     ..insertColumn(header: 'Presidency', alignment: TextAlignment.right)
     ..insertColumn(header: 'President')
     ..insertColumn(header: 'Party')
-    ..addRows(earlyPresidents)
+    ..insertRows(earlyPresidents)
     ..borderStyle = BorderStyle.square
     ..borderColor = ConsoleColor.brightBlue
     ..borderType = BorderType.vertical
     ..headerStyle = FontStyle.bold;
   print(table);
-  print(table.render(plainText: true));
-
-  final golden = File('golden.txt').openSync(mode: FileMode.writeOnly);
-  golden.writeStringSync(table.render(plainText: true));
-  golden.closeSync();
 }

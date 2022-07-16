@@ -138,7 +138,7 @@ List<Function> demoScreens = <Function>[
       ..insertColumn(header: 'Presidency', alignment: TextAlignment.right)
       ..insertColumn(header: 'President')
       ..insertColumn(header: 'Party')
-      ..addRows(earlyPresidents)
+      ..insertRows(earlyPresidents)
       ..title = 'Early Presidents of the United States';
     console.write(table);
   }),

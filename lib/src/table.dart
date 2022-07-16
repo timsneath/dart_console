@@ -71,19 +71,34 @@ class Table {
   final List<TextAlignment> _columnAlignments = <TextAlignment>[];
   final List<int> _columnWidths = <int>[];
 
+  // Asserts that the internal table structure is consistent and that the _table
+  // object is not ragged. This should be called after every function that
+  // manipulates the table, using `assert(_tableIntegrity)`.
+  bool get _tableIntegrity =>
+      _table.length == rows + 1 &&
+      _columnAlignments.length == columns &&
+      _columnWidths.length == columns &&
+      _table.every((row) => row.length == columns);
+
   // Class members that manage the style and formatting of the table follow.
   // These may be manipulated directly.
 
   /// A title to be displayed above the table.
   String title = '';
 
-  /// The font formatting for the table header row.
+  /// The font formatting for the title.
+  FontStyle titleStyle = FontStyle.bold;
+
+  bool showHeader = true;
+
+  /// The font formatting for the header row.
   ///
   /// By default, headers are rendered in the same way as the rest of the table,
   /// but you can specify a different format.
   FontStyle headerStyle = FontStyle.normal;
 
-  // TODO: Add headerColor
+  /// The color to be used for rendering the header row.
+  ConsoleColor? headerColor;
 
   /// The color to be used for rendering the table border.
   ConsoleColor? borderColor;
@@ -149,7 +164,7 @@ class Table {
       TextAlignment alignment = TextAlignment.left,
       int width = 0,
       int? index}) {
-    final insertIndex = index ?? _table[0].length;
+    final insertIndex = index ?? columns;
     _table[0].insert(insertIndex, header);
     _columnAlignments.insert(insertIndex, alignment);
     _columnWidths.insert(insertIndex, width);
@@ -158,13 +173,29 @@ class Table {
     for (var i = 1; i < _table.length; i++) {
       _table[i].insert(insertIndex, '');
     }
+
+    assert(_tableIntegrity);
+  }
+
+  /// Adjusts the formatting for a given column.
+  void setColumnFormatting(
+    int column, {
+    String? header,
+    TextAlignment? alignment,
+    int? width,
+  }) {
+    if (header != null) _table[0][column] = header;
+    if (alignment != null) _columnAlignments[column] = alignment;
+    if (width != null) _columnWidths[column] = width;
+
+    assert(_tableIntegrity);
   }
 
   /// Removes the column with given index.
   ///
   /// The index must be in the range 0..[columns]-1.
-  void deleteColumn({required int index}) {
-    if (index >= _table[0].length || index < 0) {
+  void deleteColumn(int index) {
+    if (index >= columns || index < 0) {
       throw ArgumentError('index must be a valid column index');
     }
 
@@ -172,30 +203,52 @@ class Table {
       row.removeAt(index);
     }
 
-    if (_columnAlignments.isNotEmpty) _columnAlignments.removeAt(index);
-    if (_columnWidths.isNotEmpty) _columnWidths.removeAt(index);
+    _columnAlignments.removeAt(index);
+    _columnWidths.removeAt(index);
+
+    assert(_tableIntegrity);
   }
 
   /// Adds a new row to the table.
-  void addRow(List<Object> row) {
-    // If rows added without a header definition, then we treat this as a
-    // headerless table, and add an empty header row.
+  void insertRow(List<Object> row, {int? index}) {
+    // If this is the first row to be added to the table, and there are no
+    // column definitions added so far, then treat this as a headerless table,
+    // adding an empty header row and setting defaults for the table structure.
     if (_table[0].isEmpty) {
       _table[0] = List<String>.filled(row.length, '', growable: true);
+      _columnAlignments.clear();
+      _columnAlignments.insertAll(
+          0, List<TextAlignment>.filled(columns, TextAlignment.left));
+      _columnWidths.clear();
+      _columnWidths.insertAll(0, List<int>.filled(columns, 0));
+      showHeader = false;
     }
 
-    // TODO: If when a row is first added, no column definitions exist, add
-    //       default definitions. Then remove the check in deleteColumn.
-
-    // Take as many elements as available, but pad as necessary
+    // Take as many elements as there are columns, padding as necessary. Extra
+    // elements are discarded. This enables a sparse row to be added while
+    // ensuring that the table remains non-ragged.
     final fullRow = [...row, for (var i = row.length; i < columns; i++) ''];
-    _table.add(fullRow);
+    _table.insert(index ?? rows + 1, fullRow.take(columns).toList());
+
+    assert(_tableIntegrity);
   }
 
-  void addRows(List<List<Object>> rows) => rows.forEach(addRow);
+  void insertRows(List<List<Object>> rows) => rows.forEach(insertRow);
+
+  /// Removes the row with given index.
+  ///
+  /// The index must be in the range 0..[rows]-1.
+  void deleteRow(int index) {
+    if (index >= rows || index < 0) {
+      throw ArgumentError('index must be a valid row index');
+    }
+
+    _table.removeAt(index);
+
+    assert(_tableIntegrity);
+  }
 
   bool get _hasBorder => borderStyle != BorderStyle.none;
-  bool get _hasHeader => _columnAlignments.isNotEmpty;
 
   BoxGlyphSet get _borderGlyphs {
     switch (borderStyle) {
@@ -417,9 +470,9 @@ class Table {
     // Title
     if (title != '') {
       buffer.writeln([
-        ansiSetTextStyles(bold: true),
+        _setFontStyle(titleStyle),
         title.alignText(width: tableWidth, alignment: TextAlignment.center),
-        ansiResetColor,
+        _resetFontStyle(),
       ].join());
     }
 
@@ -427,7 +480,7 @@ class Table {
     buffer.write(_tablePrologue(tableWidth, columnWidths));
 
     // Print table rows
-    final startRow = _hasHeader ? 0 : 1;
+    final startRow = showHeader ? 0 : 1;
     for (int row = startRow; row < _table.length; row++) {
       final wrappedRow = <String>[];
       for (int column = 0; column < columns; column++) {
@@ -452,13 +505,19 @@ class Table {
               ? _columnAlignments[column]
               : TextAlignment.left;
 
+          // TODO: Only the text of a header should be underlined
+
           // Write text, with header formatting if appropriate
           if (row == 0 && headerStyle != FontStyle.normal) {
             buffer.write(_setFontStyle(headerStyle));
           }
+          if (row == 0 && headerColor != null) {
+            buffer.write(ansiSetColor(ansiForegroundColors[headerColor]!));
+          }
           buffer.write(cell.alignText(
               width: columnWidths[column], alignment: columnAlignment));
-          if (row == 0 && headerStyle != FontStyle.normal) {
+          if (row == 0 &&
+              (headerStyle != FontStyle.normal || headerColor != null)) {
             buffer.write(_resetFontStyle());
           }
 

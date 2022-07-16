@@ -24,6 +24,9 @@ class Coordinate extends Point<int> {
 
   int get row => x;
   int get col => y;
+
+  @override
+  String toString() => '($row, $col)';
 }
 
 /// A representation of the current console window.
