@@ -1,6 +1,17 @@
-## 1.1.0-pre.0
+## 1.1.0
 
-- Add tabular display and calendar support. 
+- Add table class for tabulated text (and demo `example/table.dart`)
+- Add calendar display, building on table primitives (and demo
+  `example/calendar.dart`)
+- Update to lints package and fix various issues.
+- Add support for faint and strikethru font styles.
+- Add support for testing whether the terminal supports emojis.
+- Add support for resizing console window (thanks @FaFre)
+- Add `writeAligned` function for center- and right-justified text.
+- Fix error with forward deleting last character on a line (thanks
+  @mhdolatabadi)
+- Bump dependencies and support package:ffi 2.x
+- Add lots of tests, including Github Actions automation.
 
 ## 1.0.0
 
