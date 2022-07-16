@@ -1,3 +1,7 @@
+## 1.1.1
+
+- Update some lints and platform specifications to satisfy pana.
+
 ## 1.1.0
 
 - Add table class for tabulated text (and demo `example/table.dart`)
