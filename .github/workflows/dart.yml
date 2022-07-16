@@ -10,37 +10,15 @@ jobs:
   build:
     runs-on: ${{matrix.os}}
     strategy:
-      # We want to see the results on edge even if beta fails (and vice versa).
-      # This prevents one failure from stopping the entire run.
-      fail-fast: false
-
       matrix:
-        # Include newest and latest versions of Windows, plus Ubuntu (to make
-        # sure that tests don't fail on a non-supported platform).
-        os: [windows-latest, windows-2016, ubuntu-latest]
-
-        sdk: [stable, beta, main]
-
-        # One SDK version is plenty on Ubuntu. It's a safety test. Similarly,
-        # it's unlikely that we'll find unique bugs associated with running the
-        # oldest Windows version on leading-edge Dart releases that won't be
-        # caught by running on the latest Windows version.
-        exclude:
-          - os: ubuntu-latest
-            sdk: main
-          - os: ubuntu-latest
-            sdk: beta
-          - os: windows-2016
-            sdk: main
-          - os: windows-2016
-            sdk: beta
+        os: [windows-latest, ubuntu-latest]
 
     steps:
       - name: Fetch sources
         uses: actions/checkout@v2
 
       - name: Set up Dart
-        uses: dart-lang/setup-dart@v1.2
+        uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{matrix.sdk}}
 
@@ -58,3 +36,14 @@ jobs:
 
       - name: Run tests
         run: dart test
+
+      - name: Add code coverage package
+        run: dart pub global activate coverage
+
+      - name: Generate code coverage
+        run: dart pub global run coverage:test_with_coverage
+
+      - name: Upload code coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: coverage/lcov.info
