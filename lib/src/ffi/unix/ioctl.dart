@@ -2,6 +2,10 @@
 //
 // Dart representations of functions and constants used in ioctl.h
 
+// Ignore this lint, since these are UNIX identifiers that we're replicating.
+//
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:ffi';
 import 'dart:io';
 
@@ -29,5 +33,5 @@ class WinSize extends Struct {
 }
 
 // int ioctl(int, unsigned long, ...);
-typedef ioctlNative = Int32 Function(Int32, Int64, Pointer<Void>);
-typedef ioctlDart = int Function(int, int, Pointer<Void>);
+typedef IOCtlNative = Int32 Function(Int32, Int64, Pointer<Void>);
+typedef IOCtlDart = int Function(int, int, Pointer<Void>);

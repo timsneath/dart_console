@@ -7,10 +7,3 @@ analyzer:
     strict-raw-types: true
   errors:
     todo: ignore
-
-linter:
-  rules:
-    # Disable because of FFI to non-Dart constants
-    camel_case_types: false
-    constant_identifier_names: false  
-    non_constant_identifier_names: false

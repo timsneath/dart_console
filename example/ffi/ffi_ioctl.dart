@@ -1,11 +1,15 @@
+// Ignore these lints, since these are UNIX identifiers that we're replicating
+//
+// ignore_for_file: non_constant_identifier_names, constant_identifier_names
+
 import 'dart:ffi';
 import 'dart:io';
 
 import 'package:ffi/ffi.dart';
 
 // int ioctl(int, unsigned long, ...);
-typedef ioctlVoidNative = Int32 Function(Int32, Int64, Pointer<Void>);
-typedef ioctlVoidDart = int Function(int, int, Pointer<Void>);
+typedef IOCtlNative = Int32 Function(Int32, Int64, Pointer<Void>);
+typedef IOCtlDart = int Function(int, int, Pointer<Void>);
 
 final TIOCGWINSZ = Platform.isMacOS ? 0x40087468 : 0x5413;
 const STDIN_FILENO = 0;
@@ -37,7 +41,7 @@ void main() {
       ? DynamicLibrary.open('/usr/lib/libSystem.dylib')
       : DynamicLibrary.open('libc-2.28.so');
 
-  final ioctl = libc.lookupFunction<ioctlVoidNative, ioctlVoidDart>('ioctl');
+  final ioctl = libc.lookupFunction<IOCtlNative, IOCtlDart>('ioctl');
 
   final winSizePointer = calloc<WinSize>();
   final result = ioctl(STDOUT_FILENO, TIOCGWINSZ, winSizePointer.cast());

@@ -49,9 +49,13 @@ enum ControlCharacter {
   backspace,
   wordBackspace,
 
+  // ignore: constant_identifier_names
   F1,
+  // ignore: constant_identifier_names
   F2,
+  // ignore: constant_identifier_names
   F3,
+  // ignore: constant_identifier_names
   F4,
 
   unknown

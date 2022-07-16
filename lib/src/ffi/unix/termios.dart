@@ -2,6 +2,10 @@
 //
 // Dart representations of functions and constants used in termios.h
 
+// Ignore these lints, since these are UNIX identifiers that we're replicating
+//
+// ignore_for_file: non_constant_identifier_names, constant_identifier_names
+
 import 'dart:ffi';
 
 // INPUT FLAGS
@@ -94,12 +98,12 @@ class TermIOS extends Struct {
 }
 
 // int tcgetattr(int, struct termios *);
-typedef tcgetattrNative = Int32 Function(
+typedef TCGetAttrNative = Int32 Function(
     Int32 fildes, Pointer<TermIOS> termios);
-typedef tcgetattrDart = int Function(int fildes, Pointer<TermIOS> termios);
+typedef TCGetAttrDart = int Function(int fildes, Pointer<TermIOS> termios);
 
 // int tcsetattr(int, int, const struct termios *);
-typedef tcsetattrNative = Int32 Function(
+typedef TCSetAttrNative = Int32 Function(
     Int32 fildes, Int32 optional_actions, Pointer<TermIOS> termios);
-typedef tcsetattrDart = int Function(
+typedef TCSetAttrDart = int Function(
     int fildes, int optional_actions, Pointer<TermIOS> termios);

@@ -22,9 +22,9 @@ class TermLibUnix implements TermLib {
 
   late final Pointer<TermIOS> _origTermIOSPointer;
 
-  late final ioctlDart ioctl;
-  late final tcgetattrDart tcgetattr;
-  late final tcsetattrDart tcsetattr;
+  late final IOCtlDart ioctl;
+  late final TCGetAttrDart tcgetattr;
+  late final TCSetAttrDart tcsetattr;
 
   Pointer<WinSize> _getWindowSize() {
     final winSizePointer = calloc<WinSize>();
@@ -136,11 +136,11 @@ class TermLibUnix implements TermLib {
         ? DynamicLibrary.open('/usr/lib/libSystem.dylib')
         : DynamicLibrary.open('libc.so.6');
 
-    ioctl = _stdlib.lookupFunction<ioctlNative, ioctlDart>('ioctl');
+    ioctl = _stdlib.lookupFunction<IOCtlNative, IOCtlDart>('ioctl');
     tcgetattr =
-        _stdlib.lookupFunction<tcgetattrNative, tcgetattrDart>('tcgetattr');
+        _stdlib.lookupFunction<TCGetAttrNative, TCGetAttrDart>('tcgetattr');
     tcsetattr =
-        _stdlib.lookupFunction<tcsetattrNative, tcsetattrDart>('tcsetattr');
+        _stdlib.lookupFunction<TCSetAttrNative, TCSetAttrDart>('tcsetattr');
 
     // store console mode settings so we can return them again as necessary
     _origTermIOSPointer = calloc<TermIOS>();
