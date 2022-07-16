@@ -126,7 +126,7 @@ List<Function> demoScreens = <Function>[
     console.writeLine();
 
     final calendar = Calendar.now();
-    console.write(calendar.render());
+    console.write(calendar);
 
     console.writeLine();
 
@@ -140,7 +140,7 @@ List<Function> demoScreens = <Function>[
       ..insertColumn(header: 'Party')
       ..addRows(earlyPresidents)
       ..title = 'Early Presidents of the United States';
-    console.write(table.render());
+    console.write(table);
   }),
 
   // SCREEN 6: Twinkling stars

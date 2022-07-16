@@ -50,12 +50,12 @@ void main() {
   group('Table operations', () {
     test('Empty table should not render', () {
       final table = Table();
-      expect(table.render(), isEmpty);
+      expect(table.toString(), isEmpty);
     });
 
     test('Table with no column defs should not render header', () {
       final table = Table()..addRows(earlyPresidents);
-      expect(table.render(), equals('''
+      expect(table.toString(), equals('''
 ╭───┬────────────────────────────────┬───────────────────┬───────────────────────╮
 │ 1 │ April 30, 1789 - March 4, 1797 │ George Washington │ unaffiliated          │
 │ 2 │ March 4, 1797 - March 4, 1801  │ John Adams        │ Federalist            │
@@ -80,7 +80,7 @@ void main() {
         ..insertColumn(header: 'Density')
         ..borderStyle = BorderStyle.rounded;
 
-      expect(table.render(), equals('''
+      expect(table.toString(), equals('''
 ╭─────────┬────────┬──────────────────┬──────┬─────────╮
 │ Planet  │ Radius │ Orbital Distance │ Mass │ Density │
 ├─────────┼────────┼──────────────────┼──────┼─────────┤
@@ -101,7 +101,7 @@ void main() {
       table
         ..deleteColumn(index: 1)
         ..deleteColumn(index: 0);
-      expect(table.render(), isEmpty);
+      expect(table.toString(), isEmpty);
     });
 
     test('Not possible to remove more columns than exist', () {
@@ -114,7 +114,7 @@ void main() {
 
     test('Add rows without column definitions should give a sane result', () {
       final table = Table()..addRows(planets);
-      expect(table.render(), equals('''
+      expect(table.toString(), equals('''
 ╭─────────┬─────────────────╮
 │ Mercury │ 5.7909227 × 10⁷ │
 │ Venus   │ 1.0820948 × 10⁸ │
@@ -141,7 +141,7 @@ void main() {
           ['bananas', 5],
           ['apricots', 7]
         ]);
-      expect(table.render(), equals('''
+      expect(table.toString(), equals('''
 [4mFruit   [m [4mQty[m
 apples    10
 bananas    5
@@ -163,7 +163,7 @@ apricots   7
         ])
         ..addRow(['dates', '10000', 'a big number'])
         ..addRow(['kumquats', '59']);
-      expect(table.render(), equals('''
+      expect(table.toString(), equals('''
 -----------------------------------
 | Fruit    |   Qty | Notes        |
 |----------+-------+--------------|
@@ -194,7 +194,7 @@ apricots   7
         ])
         ..addRow(['dates', '10000', 'a big number'])
         ..addRow(['kumquats', '59']);
-      expect(table.render(), equals('''
+      expect(table.toString(), equals('''
 -----------------------------------
 | Fruit    |   Qty | Notes        |
 |----------+-------+--------------|
@@ -218,7 +218,7 @@ apricots   7
           ['bananas', 5],
           ['apricots', 7]
         ]);
-      expect(table.render(), equals('''
+      expect(table.toString(), equals('''
 ----------------
 | Fruit    Qty |
 |              |
@@ -252,14 +252,14 @@ apricots     7
 dates    10000 a big number
 kumquats    59             
 ''';
-      expect(table.render(), equals(golden));
+      expect(table.toString(), equals(golden));
 
       // Changing border type shouldn't have any impact if there's no border
       table.borderType = BorderType.grid;
-      expect(table.render(), equals(golden));
+      expect(table.toString(), equals(golden));
 
       table.borderType = BorderType.outline;
-      expect(table.render(), equals(golden));
+      expect(table.toString(), equals(golden));
     });
 
     test('Glyphs', () {
@@ -271,7 +271,7 @@ kumquats    59
         ..addRows(earlyPresidents)
         ..borderStyle = BorderStyle.square;
 
-      expect(table.render(), equals('''
+      expect(table.toString(), equals('''
 ┌────────┬────────────────────────────────┬───────────────────┬───────────────────────┐
 │ Number │ Presidency                     │ President         │ Party                 │
 ├────────┼────────────────────────────────┼───────────────────┼───────────────────────┤
@@ -294,7 +294,7 @@ kumquats    59
         ..insertColumn(header: 'Party')
         ..addRows(earlyPresidents);
 
-      expect(table.render(), equals('''
+      expect(table.toString(), equals('''
 [96m┏━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━┓[m
 [96m┃ [mNumber[96m ┃ [mPresidency                    [96m ┃ [mPresident        [96m ┃ [mParty                [96m ┃[m
 [96m┣━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━┫[m
@@ -318,7 +318,7 @@ kumquats    59
         ..insertColumn(header: 'Party')
         ..addRows(earlyPresidents);
 
-      expect(table.render(), equals('''
+      expect(table.toString(), equals('''
 [34m╔═════════════════════════════════════════════════════════════════════════════════════╗[m
 [34m║ [mNumber                       Presidency   President           Party                [34m ║[m
 [34m╠═════════════════════════════════════════════════════════════════════════════════════╣[m
@@ -342,7 +342,7 @@ kumquats    59
         ..insertColumn(header: 'President')
         ..addRows(earlyPresidents.take(3).toList());
 
-      expect(table.render(), equals('''
+      expect(table.toString(), equals('''
 [32m╭────────┬────────────────────────────────┬───────────────────╮[m
 [32m│ [mNumber[32m │ [mPresidency                    [32m │ [mPresident        [32m │[m
 [32m│        │                                │                   │[m
@@ -364,7 +364,7 @@ kumquats    59
         ..insertColumn(header: 'Party')
         ..addRows(earlyPresidents);
 
-      expect(table.render(), equals('''
+      expect(table.toString(), equals('''
 ╭────────┬────────────────────────────────┬───────────────────┬───────────────────────╮
 │ Number │                     Presidency │ President         │ Party                 │
 ├────────┼────────────────────────────────┼───────────────────┼───────────────────────┤
@@ -397,7 +397,7 @@ kumquats    59
         ..borderColor = ConsoleColor.brightRed
         ..borderType = BorderType.vertical;
 
-      expect(table.render(), equals('''
+      expect(table.toString(), equals('''
 [1;4mPlanet [m [1;4mOrbital Distance[m
 Mercury  5.7909227 × 10⁷
 Venus    1.0820948 × 10⁸
@@ -420,7 +420,7 @@ Neptune  4.4983964 × 10⁹
         ..borderColor = ConsoleColor.brightRed
         ..borderType = BorderType.outline;
 
-      expect(table.render(), equals('''
+      expect(table.toString(), equals('''
 [91m╭──────────────────────────╮[m
 [91m│ [m[1mPlanet [m [1mOrbital Distance[m[91m │[m
 [91m│                          │[m
@@ -433,6 +433,31 @@ Neptune  4.4983964 × 10⁹
 [91m│ [mUranus   2.8706582 × 10⁹[91m │[m
 [91m│ [mNeptune  4.4983964 × 10⁹[91m │[m
 [91m╰──────────────────────────╯[m
+'''));
+    });
+
+    test('Can strip out ANSI formatting successfully', () {
+      final table = Table()
+        ..insertColumn(header: 'Number', alignment: TextAlignment.right)
+        ..insertColumn(header: 'Presidency')
+        ..insertColumn(header: 'President')
+        ..insertColumn(header: 'Party')
+        ..addRows(earlyPresidents)
+        ..borderStyle = BorderStyle.square
+        ..borderColor = ConsoleColor.brightBlue
+        ..borderType = BorderType.vertical
+        ..headerStyle = FontStyle.bold;
+
+      expect(table.render(plainText: true), equals('''
+┌────────┬────────────────────────────────┬───────────────────┬───────────────────────┐
+│ Number │ Presidency                     │ President         │ Party                 │
+│        │                                │                   │                       │
+│      1 │ April 30, 1789 - March 4, 1797 │ George Washington │ unaffiliated          │
+│      2 │ March 4, 1797 - March 4, 1801  │ John Adams        │ Federalist            │
+│      3 │ March 4, 1801 - March 4, 1809  │ Thomas Jefferson  │ Democratic-Republican │
+│      4 │ March 4, 1809 - March 4, 1817  │ James Madison     │ Democratic-Republican │
+│      5 │ March 4, 1817 - March 4, 1825  │ James Monroe      │ Democratic-Republican │
+└────────┴────────────────────────────────┴───────────────────┴───────────────────────┘
 '''));
     });
   });

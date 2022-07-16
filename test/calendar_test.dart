@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 void main() {
   test('Basic calendar test', () {
     final aug1969 = Calendar(DateTime(1969, 08, 15));
-    expect(aug1969.render(), equals('''
+    expect(aug1969.toString(), equals('''
 [1m                August 1969                [m
 ╭─────┬─────┬─────┬─────┬─────┬─────┬─────╮
 │ Sun │ Mon │ Tue │ Wed │ Thu │ Fri │ Sat │
@@ -22,6 +22,6 @@ void main() {
   test('Color calendar test', () {
     final nowCalendar = Calendar.now();
     final today = DateTime.now().day;
-    expect(nowCalendar.render(), contains('[93m$today[m'));
+    expect(nowCalendar.toString(), contains('[93m$today[m'));
   });
 }

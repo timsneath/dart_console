@@ -2,6 +2,9 @@
 
 // Externally exposed enumerations used by the `Console` class.
 
+// TODO: Update this with an enhanced enum that includes RGB and 256-color
+// values, and returns a string to enable and a string to disable.
+
 /// The named ANSI colors.
 enum ConsoleColor {
   black,

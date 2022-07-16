@@ -427,14 +427,14 @@ class Console {
   void resetColorAttributes() => stdout.write(ansiResetColor);
 
   /// Writes the text to the console.
-  void write(String text) => stdout.write(text);
+  void write(Object text) => stdout.write(text);
 
   /// Returns the current newline string.
   String get newLine => _isRawMode ? '\r\n' : '\n';
 
   /// Writes an error message to the console, with newline automatically
   /// appended.
-  void writeErrorLine(String text) {
+  void writeErrorLine(Object text) {
     stderr.write(text);
 
     // Even if we're in raw mode, we write '\n', since raw mode only applies
@@ -450,19 +450,20 @@ class Console {
   ///
   /// Text alignment operates based off the current window width, and pads
   /// the remaining characters with a space character.
-  void writeLine([String? text, TextAlignment alignment = TextAlignment.left]) {
+  void writeLine([Object? text, TextAlignment alignment = TextAlignment.left]) {
     final int width = windowWidth;
     if (text != null) {
-      writeAligned(text, width, alignment);
+      writeAligned(text.toString(), width, alignment);
     }
     stdout.writeln();
   }
 
   /// Writes a quantity of text to the console with padding to the given width.
-  void writeAligned(String text,
+  void writeAligned(Object text,
       [int? width, TextAlignment alignment = TextAlignment.left]) {
-    stdout.write(
-        text.alignText(width: width ?? text.length, alignment: alignment));
+    final textAsString = text.toString();
+    stdout.write(textAsString.alignText(
+        width: width ?? textAsString.length, alignment: alignment));
   }
 
   /// Reads a single key from the input, including a variety of control

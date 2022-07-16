@@ -6,9 +6,9 @@ void main() {
   // or
   // final calendar = Calendar.now();
 
-  print(calendar.render());
+  print(calendar);
 
   final golden = File('golden.txt').openSync(mode: FileMode.writeOnly);
-  golden.writeStringSync(calendar.render());
+  golden.writeStringSync(calendar.toString());
   golden.closeSync();
 }

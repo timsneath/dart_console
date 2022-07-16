@@ -37,15 +37,19 @@ const earlyPresidents = [
 
 void main() {
   final table = Table()
-    ..insertColumn(header: 'Number', alignment: TextAlignment.right)
-    ..insertColumn(header: 'Presidency')
+    ..insertColumn(header: 'Number', alignment: TextAlignment.center)
+    ..insertColumn(header: 'Presidency', alignment: TextAlignment.right)
     ..insertColumn(header: 'President')
     ..insertColumn(header: 'Party')
     ..addRows(earlyPresidents)
-    ..borderStyle = BorderStyle.square;
-  print(table.render());
+    ..borderStyle = BorderStyle.square
+    ..borderColor = ConsoleColor.brightBlue
+    ..borderType = BorderType.vertical
+    ..headerStyle = FontStyle.bold;
+  print(table);
+  print(table.render(plainText: true));
 
   final golden = File('golden.txt').openSync(mode: FileMode.writeOnly);
-  golden.writeStringSync(table.render());
+  golden.writeStringSync(table.render(plainText: true));
   golden.closeSync();
 }
