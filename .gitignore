@@ -1,14 +1,18 @@
 # Files and directories created by pub
 .dart_tool/
 .packages
-# Remove the following pattern if you wish to check in your lock file
+
+# Library packages do not typically check in pubspec.lock
 pubspec.lock
 
-# Conventional directory for build outputs
+# Conventional directory for build output.
 build/
 
 # Directory created by dartdoc
 doc/api/
+
+# Don't need to include code coverage in the package
+coverage/
 
 **/*.so
 **/*.dylib
