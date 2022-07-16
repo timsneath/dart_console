@@ -37,10 +37,10 @@ const earlyPresidents = [
 
 void main() {
   final table = Table()
-    ..addColumnDefinition(header: 'Number', alignment: TextAlignment.right)
-    ..addColumnDefinition(header: 'Presidency')
-    ..addColumnDefinition(header: 'President')
-    ..addColumnDefinition(header: 'Party')
+    ..insertColumn(header: 'Number', alignment: TextAlignment.right)
+    ..insertColumn(header: 'Presidency')
+    ..insertColumn(header: 'President')
+    ..insertColumn(header: 'Party')
     ..addRows(earlyPresidents)
     ..borderStyle = BorderStyle.square;
   print(table.render());
