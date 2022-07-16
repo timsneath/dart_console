@@ -7,6 +7,12 @@ description:
 environment:
   sdk: '>=2.12.0 <3.0.0'
 
+# Explicitly declare that this package works on all desktop platforms.
+platforms:
+  linux:
+  macos:
+  windows:
+
 dependencies:
   ffi: '>=1.0.0 <3.0.0'
   win32: ^2.6.1
