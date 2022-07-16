@@ -65,10 +65,72 @@ void main() {
 ╰───┴────────────────────────────────┴───────────────────┴───────────────────────╯
 '''));
     });
+
+    test('Can add columns and make other changes after table is defined', () {
+      final table = Table()
+        ..addColumnDefinition(header: 'Planet')
+        ..addColumnDefinition(
+            header: 'Orbital Distance', alignment: TextAlignment.right)
+        ..addRows(planets)
+        ..borderStyle = BorderStyle.square;
+
+      table
+        ..addColumnDefinition(header: 'Mass')
+        ..insertColumn(header: 'Radius', index: 1)
+        ..insertColumn(header: 'Density')
+        ..borderStyle = BorderStyle.rounded;
+
+      expect(table.render(), equals('''
+╭─────────┬────────┬──────────────────┬──────┬─────────╮
+│ Planet  │ Radius │ Orbital Distance │ Mass │ Density │
+├─────────┼────────┼──────────────────┼──────┼─────────┤
+│ Mercury │        │  5.7909227 × 10⁷ │      │         │
+│ Venus   │        │  1.0820948 × 10⁸ │      │         │
+│ Earth   │        │  1.4959826 × 10⁸ │      │         │
+│ Mars    │        │  2.2794382 × 10⁸ │      │         │
+│ Jupiter │        │  7.7834082 × 10⁸ │      │         │
+│ Saturn  │        │  1.4266664 × 10⁹ │      │         │
+│ Uranus  │        │  2.8706582 × 10⁹ │      │         │
+│ Neptune │        │  4.4983964 × 10⁹ │      │         │
+╰─────────┴────────┴──────────────────┴──────┴─────────╯
+'''));
+    });
+
+    test('Removing all columns should leave an empty table', () {
+      final table = Table()..addRows(planets);
+      table
+        ..deleteColumn(index: 1)
+        ..deleteColumn(index: 0);
+      expect(table.render(), isEmpty);
+    });
+
+    test('Not possible to remove more columns than exist', () {
+      final table = Table()..addRows(planets);
+      table
+        ..deleteColumn(index: 1)
+        ..deleteColumn(index: 0);
+      expect(() => table.deleteColumn(index: 0), throwsArgumentError);
+    });
+
+    test('Add rows without column definitions should give a sane result', () {
+      final table = Table()..addRows(planets);
+      expect(table.render(), equals('''
+╭─────────┬─────────────────╮
+│ Mercury │ 5.7909227 × 10⁷ │
+│ Venus   │ 1.0820948 × 10⁸ │
+│ Earth   │ 1.4959826 × 10⁸ │
+│ Mars    │ 2.2794382 × 10⁸ │
+│ Jupiter │ 7.7834082 × 10⁸ │
+│ Saturn  │ 1.4266664 × 10⁹ │
+│ Uranus  │ 2.8706582 × 10⁹ │
+│ Neptune │ 4.4983964 × 10⁹ │
+╰─────────┴─────────────────╯
+'''));
+    });
   });
 
   group('Table formatting', () {
-    test('none', () {
+    test('None', () {
       final table = Table()
         ..borderStyle = BorderStyle.none
         ..headerStyle = FontStyle.underscore
@@ -167,7 +229,7 @@ apricots   7
 '''));
     });
 
-    test('borderless', () {
+    test('Borderless table', () {
       final table = Table()
         ..borderStyle = BorderStyle.none
         ..borderType = BorderType.header
@@ -200,7 +262,7 @@ kumquats    59
       expect(table.render(), equals(golden));
     });
 
-    test('glyphs', () {
+    test('Glyphs', () {
       final table = Table()
         ..addColumnDefinition(header: 'Number', alignment: TextAlignment.right)
         ..addColumnDefinition(header: 'Presidency')
@@ -222,7 +284,7 @@ kumquats    59
 '''));
     });
 
-    test('color border', () {
+    test('Color border', () {
       final table = Table()
         ..borderColor = ConsoleColor.brightCyan
         ..borderStyle = BorderStyle.bold
@@ -245,7 +307,7 @@ kumquats    59
 '''));
     });
 
-    test('horizontal double border', () {
+    test('Horizontal double border', () {
       final table = Table()
         ..borderColor = ConsoleColor.blue
         ..borderStyle = BorderStyle.double
@@ -270,7 +332,7 @@ kumquats    59
 '''));
     });
 
-    test('rounded border vertical', () {
+    test('Rounded border vertical', () {
       final table = Table();
       table
         ..borderColor = ConsoleColor.green
@@ -292,7 +354,7 @@ kumquats    59
 '''));
     });
 
-    test('wrapped text', () {
+    test('Wrapped text', () {
       final table = Table()
         ..borderStyle = BorderStyle.rounded
         ..borderType = BorderType.grid
@@ -325,7 +387,7 @@ kumquats    59
 '''));
     });
 
-    test('borders do not render when style is none', () {
+    test('Borders do not render when style is none', () {
       final table = Table()
         ..addColumnDefinition(header: 'Planet')
         ..addColumnDefinition(
@@ -349,7 +411,7 @@ Neptune  4.4983964 × 10⁹
 '''));
     });
 
-    test('outline table has rule line with right colors', () {
+    test('Outline table has rule line with right colors', () {
       final table = Table()
         ..addColumnDefinition(header: 'Planet')
         ..addColumnDefinition(

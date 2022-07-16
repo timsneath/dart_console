@@ -77,15 +77,52 @@ class Table {
     _columnAlignments.add(alignment);
     _wrapWidths.add(width);
 
-    // TODO: handle adding a column after one or more rows have been added
+    for (var i = 1; i < _table.length; i++) {
+      _table[i].add('');
+    }
+  }
+
+  void insertColumn(
+      {String header = '',
+      TextAlignment alignment = TextAlignment.left,
+      int width = 0,
+      int? index}) {
+    final insertIndex = index ?? _table[0].length;
+    _table[0].insert(insertIndex, header);
+    _columnAlignments.insert(insertIndex, alignment);
+    _wrapWidths.insert(insertIndex, width);
+
+    // Skip header and add empty cells
+    for (var i = 1; i < _table.length; i++) {
+      _table[i].insert(insertIndex, '');
+    }
+  }
+
+  /// Removes the column with given index.
+  ///
+  /// The index must be in the range [0..columnCount-1].
+  void deleteColumn({required int index}) {
+    if (index >= _table[0].length || index < 0) {
+      throw ArgumentError('index must be a valid column index');
+    }
+
+    for (var row in _table) {
+      row.removeAt(index);
+    }
+
+    if (_columnAlignments.isNotEmpty) _columnAlignments.removeAt(index);
+    if (_wrapWidths.isNotEmpty) _wrapWidths.removeAt(index);
   }
 
   void addRow(List<Object> row) {
     // If rows added without a header definition, then we treat this as a
     // headerless table, and add an empty header row.
     if (_table[0].isEmpty) {
-      _table[0] = List<String>.filled(row.length, '');
+      _table[0] = List<String>.filled(row.length, '', growable: true);
     }
+
+    // TODO: If when a row is first added, no column definitions exist, add
+    //       default definitions. Then remove the check in deleteColumn.
 
     // Take as many elements as available, but pad as necessary
     final fullRow = [...row, for (var i = row.length; i < columns; i++) ''];

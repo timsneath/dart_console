@@ -68,7 +68,7 @@ const int EXTPROC = 0x00000800; // external processing
 const int TOSTOP = 0x00400000; // stop background jobs from output
 const int FLUSHO = 0x00800000; // output being flushed (state)
 const int NOKERNINFO = 0x02000000; // no kernel output from VSTATUS
-const int PENDIN = 0x20000000; // XXX retype pending input (state)
+const int PENDIN = 0x20000000; // retype pending input (state)
 const int NOFLSH = 0x80000000; // don't flush after interrupt
 
 const int TCSANOW = 0; // make change immediate
