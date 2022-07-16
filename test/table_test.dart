@@ -114,6 +114,24 @@ void main() {
       expect(() => table.deleteColumn(0), throwsArgumentError);
     });
 
+    test('Delete rows', () {
+      final table = Table()..insertRows(planets);
+      expect(() => table.deleteRow(table.rows + 1), throwsArgumentError);
+      expect(() => table.deleteRow(table.rows), throwsArgumentError);
+      expect(() => table.deleteRow(-1), throwsArgumentError);
+
+      expect(table.rows, equals(8));
+      expect(() => table.deleteRow(table.rows - 1), returnsNormally);
+      expect(table.toString(), isNot(contains('Neptune')));
+      expect(table.toString(), contains('Uranus'));
+
+      expect(table.rows, equals(7));
+      expect(() => table.deleteRow(0), returnsNormally);
+      expect(table.toString(), isNot(contains('Mercury')));
+
+      expect(table.rows, equals(6));
+    });
+
     test('Add rows without column definitions should give a valid result', () {
       final table = Table()..insertRows(planets);
       expect(table.toString(), equals('''

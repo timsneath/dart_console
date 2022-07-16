@@ -146,7 +146,7 @@ class Table {
   /// To add a new column, use [insertColumn].
   int get columns => _table[0].length;
 
-  /// Returns the number of rows in the table.
+  /// Returns the number of rows in the table, excluding the header row.
   int get rows => _table.length - 1;
 
   // Methods to manipulate the table structure.
@@ -239,11 +239,11 @@ class Table {
   ///
   /// The index must be in the range 0..[rows]-1.
   void deleteRow(int index) {
-    if (index >= rows || index < 0) {
+    if (!(index >= 0 && index < rows)) {
       throw ArgumentError('index must be a valid row index');
     }
 
-    _table.removeAt(index);
+    _table.removeAt(index + 1); // Header is row 0
 
     assert(_tableIntegrity);
   }
