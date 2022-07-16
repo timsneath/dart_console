@@ -34,6 +34,18 @@ const earlyPresidents = [
   ],
 ];
 
+const planets = [
+  ['Mercury', '5.7909227 × 10⁷'],
+  ['Venus', '1.0820948 × 10⁸'],
+  ['Earth', '1.4959826 × 10⁸'],
+  ['Mars', '2.2794382 × 10⁸'],
+  ['Jupiter', '7.7834082 × 10⁸'],
+  ['Saturn', '1.4266664 × 10⁹'],
+  ['Uranus', '2.8706582 × 10⁹'],
+  ['Neptune', '4.4983964 × 10⁹'],
+  // sorry Pluto :(
+];
+
 void main() {
   group('Table operations', () {
     test('Empty table should not render', () {
@@ -310,6 +322,56 @@ kumquats    59
 │    5   │                March 4, 1817 - │ James Monroe      │ Democratic-Republican │
 │        │                  March 4, 1825 │                   │                       │
 ╰────────┴────────────────────────────────┴───────────────────┴───────────────────────╯
+'''));
+    });
+
+    test('borders do not render when style is none', () {
+      final table = Table()
+        ..addColumnDefinition(header: 'Planet')
+        ..addColumnDefinition(
+            header: 'Orbital Distance', alignment: TextAlignment.right)
+        ..addRows(planets)
+        ..headerStyle = FontStyle.boldUnderscore
+        ..borderStyle = BorderStyle.none
+        ..borderColor = ConsoleColor.brightRed
+        ..borderType = BorderType.vertical;
+
+      expect(table.render(), equals('''
+[1;4mPlanet [m [1;4mOrbital Distance[m
+Mercury  5.7909227 × 10⁷
+Venus    1.0820948 × 10⁸
+Earth    1.4959826 × 10⁸
+Mars     2.2794382 × 10⁸
+Jupiter  7.7834082 × 10⁸
+Saturn   1.4266664 × 10⁹
+Uranus   2.8706582 × 10⁹
+Neptune  4.4983964 × 10⁹
+'''));
+    });
+
+    test('outline table has rule line with right colors', () {
+      final table = Table()
+        ..addColumnDefinition(header: 'Planet')
+        ..addColumnDefinition(
+            header: 'Orbital Distance', alignment: TextAlignment.right)
+        ..addRows(planets)
+        ..headerStyle = FontStyle.bold
+        ..borderColor = ConsoleColor.brightRed
+        ..borderType = BorderType.outline;
+
+      expect(table.render(), equals('''
+[91m╭──────────────────────────╮[m
+[91m│ [m[1mPlanet [m [1mOrbital Distance[m[91m │[m
+[91m│                          │[m
+[91m│ [mMercury  5.7909227 × 10⁷[91m │[m
+[91m│ [mVenus    1.0820948 × 10⁸[91m │[m
+[91m│ [mEarth    1.4959826 × 10⁸[91m │[m
+[91m│ [mMars     2.2794382 × 10⁸[91m │[m
+[91m│ [mJupiter  7.7834082 × 10⁸[91m │[m
+[91m│ [mSaturn   1.4266664 × 10⁹[91m │[m
+[91m│ [mUranus   2.8706582 × 10⁹[91m │[m
+[91m│ [mNeptune  4.4983964 × 10⁹[91m │[m
+[91m╰──────────────────────────╯[m
 '''));
     });
   });

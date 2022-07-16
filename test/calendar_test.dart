@@ -18,4 +18,10 @@ void main() {
 ╰─────┴─────┴─────┴─────┴─────┴─────┴─────╯
 '''));
   });
+
+  test('Color calendar test', () {
+    final nowCalendar = Calendar.now();
+    final today = DateTime.now().day;
+    expect(nowCalendar.render(), contains('[93m$today[m'));
+  });
 }
