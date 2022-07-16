@@ -69,18 +69,12 @@ class Table {
   final List<TextAlignment> _columnAlignments = <TextAlignment>[];
   final List<int> _wrapWidths = <int>[];
 
+  @Deprecated('Use insertColumn instead, which is more flexible.')
   void addColumnDefinition(
-      {String header = '',
-      TextAlignment alignment = TextAlignment.left,
-      int width = 0}) {
-    _table[0].add(header);
-    _columnAlignments.add(alignment);
-    _wrapWidths.add(width);
-
-    for (var i = 1; i < _table.length; i++) {
-      _table[i].add('');
-    }
-  }
+          {String header = '',
+          TextAlignment alignment = TextAlignment.left,
+          int width = 0}) =>
+      insertColumn(header: header, alignment: alignment, width: width);
 
   void insertColumn(
       {String header = '',

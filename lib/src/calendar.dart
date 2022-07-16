@@ -13,7 +13,7 @@ class Calendar extends Table {
   Calendar(DateTime dateTime)
       : calendarDate = dateTime.subtract(Duration(days: dateTime.day - 1)) {
     for (final day in dayLabels) {
-      addColumnDefinition(header: day, alignment: TextAlignment.right);
+      insertColumn(header: day, alignment: TextAlignment.right);
     }
 
     // ISO format has 1..7 for Mon..Sun, so we adjust this to match the array

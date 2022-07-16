@@ -68,14 +68,14 @@ void main() {
 
     test('Can add columns and make other changes after table is defined', () {
       final table = Table()
-        ..addColumnDefinition(header: 'Planet')
-        ..addColumnDefinition(
+        ..insertColumn(header: 'Planet')
+        ..insertColumn(
             header: 'Orbital Distance', alignment: TextAlignment.right)
         ..addRows(planets)
         ..borderStyle = BorderStyle.square;
 
       table
-        ..addColumnDefinition(header: 'Mass')
+        ..insertColumn(header: 'Mass')
         ..insertColumn(header: 'Radius', index: 1)
         ..insertColumn(header: 'Density')
         ..borderStyle = BorderStyle.rounded;
@@ -134,8 +134,8 @@ void main() {
       final table = Table()
         ..borderStyle = BorderStyle.none
         ..headerStyle = FontStyle.underscore
-        ..addColumnDefinition(header: 'Fruit')
-        ..addColumnDefinition(header: 'Qty', alignment: TextAlignment.right)
+        ..insertColumn(header: 'Fruit')
+        ..insertColumn(header: 'Qty', alignment: TextAlignment.right)
         ..addRows([
           ['apples', 10],
           ['bananas', 5],
@@ -153,9 +153,9 @@ apricots   7
       final table = Table()
         ..borderStyle = BorderStyle.ascii
         ..borderType = BorderType.grid
-        ..addColumnDefinition(header: 'Fruit')
-        ..addColumnDefinition(header: 'Qty', alignment: TextAlignment.right)
-        ..addColumnDefinition(header: 'Notes')
+        ..insertColumn(header: 'Fruit')
+        ..insertColumn(header: 'Qty', alignment: TextAlignment.right)
+        ..insertColumn(header: 'Notes')
         ..addRows([
           ['apples', '10'],
           ['bananas', '5'],
@@ -184,9 +184,9 @@ apricots   7
       final table = Table()
         ..borderStyle = BorderStyle.ascii
         ..borderType = BorderType.header
-        ..addColumnDefinition(header: 'Fruit')
-        ..addColumnDefinition(header: 'Qty', alignment: TextAlignment.right)
-        ..addColumnDefinition(header: 'Notes')
+        ..insertColumn(header: 'Fruit')
+        ..insertColumn(header: 'Qty', alignment: TextAlignment.right)
+        ..insertColumn(header: 'Notes')
         ..addRows([
           ['apples', '10'],
           ['bananas', '5'],
@@ -211,8 +211,8 @@ apricots   7
       final table = Table()
         ..borderStyle = BorderStyle.ascii
         ..borderType = BorderType.outline
-        ..addColumnDefinition(header: 'Fruit')
-        ..addColumnDefinition(header: 'Qty', alignment: TextAlignment.right)
+        ..insertColumn(header: 'Fruit')
+        ..insertColumn(header: 'Qty', alignment: TextAlignment.right)
         ..addRows([
           ['apples', 10],
           ['bananas', 5],
@@ -233,9 +233,9 @@ apricots   7
       final table = Table()
         ..borderStyle = BorderStyle.none
         ..borderType = BorderType.header
-        ..addColumnDefinition(header: 'Fruit')
-        ..addColumnDefinition(header: 'Qty', alignment: TextAlignment.right)
-        ..addColumnDefinition(header: 'Notes')
+        ..insertColumn(header: 'Fruit')
+        ..insertColumn(header: 'Qty', alignment: TextAlignment.right)
+        ..insertColumn(header: 'Notes')
         ..addRows([
           ['apples', '10'],
           ['bananas', '5'],
@@ -264,10 +264,10 @@ kumquats    59
 
     test('Glyphs', () {
       final table = Table()
-        ..addColumnDefinition(header: 'Number', alignment: TextAlignment.right)
-        ..addColumnDefinition(header: 'Presidency')
-        ..addColumnDefinition(header: 'President')
-        ..addColumnDefinition(header: 'Party')
+        ..insertColumn(header: 'Number', alignment: TextAlignment.right)
+        ..insertColumn(header: 'Presidency')
+        ..insertColumn(header: 'President')
+        ..insertColumn(header: 'Party')
         ..addRows(earlyPresidents)
         ..borderStyle = BorderStyle.square;
 
@@ -288,10 +288,10 @@ kumquats    59
       final table = Table()
         ..borderColor = ConsoleColor.brightCyan
         ..borderStyle = BorderStyle.bold
-        ..addColumnDefinition(header: 'Number', alignment: TextAlignment.right)
-        ..addColumnDefinition(header: 'Presidency')
-        ..addColumnDefinition(header: 'President')
-        ..addColumnDefinition(header: 'Party')
+        ..insertColumn(header: 'Number', alignment: TextAlignment.right)
+        ..insertColumn(header: 'Presidency')
+        ..insertColumn(header: 'President')
+        ..insertColumn(header: 'Party')
         ..addRows(earlyPresidents);
 
       expect(table.render(), equals('''
@@ -312,11 +312,10 @@ kumquats    59
         ..borderColor = ConsoleColor.blue
         ..borderStyle = BorderStyle.double
         ..borderType = BorderType.horizontal
-        ..addColumnDefinition(header: 'Number', alignment: TextAlignment.center)
-        ..addColumnDefinition(
-            header: 'Presidency', alignment: TextAlignment.right)
-        ..addColumnDefinition(header: 'President')
-        ..addColumnDefinition(header: 'Party')
+        ..insertColumn(header: 'Number', alignment: TextAlignment.center)
+        ..insertColumn(header: 'Presidency', alignment: TextAlignment.right)
+        ..insertColumn(header: 'President')
+        ..insertColumn(header: 'Party')
         ..addRows(earlyPresidents);
 
       expect(table.render(), equals('''
@@ -338,9 +337,9 @@ kumquats    59
         ..borderColor = ConsoleColor.green
         ..borderStyle = BorderStyle.rounded
         ..borderType = BorderType.vertical
-        ..addColumnDefinition(header: 'Number', alignment: TextAlignment.right)
-        ..addColumnDefinition(header: 'Presidency')
-        ..addColumnDefinition(header: 'President')
+        ..insertColumn(header: 'Number', alignment: TextAlignment.right)
+        ..insertColumn(header: 'Presidency')
+        ..insertColumn(header: 'President')
         ..addRows(earlyPresidents.take(3).toList());
 
       expect(table.render(), equals('''
@@ -358,11 +357,11 @@ kumquats    59
       final table = Table()
         ..borderStyle = BorderStyle.rounded
         ..borderType = BorderType.grid
-        ..addColumnDefinition(header: 'Number', alignment: TextAlignment.center)
-        ..addColumnDefinition(
+        ..insertColumn(header: 'Number', alignment: TextAlignment.center)
+        ..insertColumn(
             header: 'Presidency', alignment: TextAlignment.right, width: 18)
-        ..addColumnDefinition(header: 'President')
-        ..addColumnDefinition(header: 'Party')
+        ..insertColumn(header: 'President')
+        ..insertColumn(header: 'Party')
         ..addRows(earlyPresidents);
 
       expect(table.render(), equals('''
@@ -389,8 +388,8 @@ kumquats    59
 
     test('Borders do not render when style is none', () {
       final table = Table()
-        ..addColumnDefinition(header: 'Planet')
-        ..addColumnDefinition(
+        ..insertColumn(header: 'Planet')
+        ..insertColumn(
             header: 'Orbital Distance', alignment: TextAlignment.right)
         ..addRows(planets)
         ..headerStyle = FontStyle.boldUnderscore
@@ -413,8 +412,8 @@ Neptune  4.4983964 × 10⁹
 
     test('Outline table has rule line with right colors', () {
       final table = Table()
-        ..addColumnDefinition(header: 'Planet')
-        ..addColumnDefinition(
+        ..insertColumn(header: 'Planet')
+        ..insertColumn(
             header: 'Orbital Distance', alignment: TextAlignment.right)
         ..addRows(planets)
         ..headerStyle = FontStyle.bold
