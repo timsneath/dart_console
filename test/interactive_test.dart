@@ -21,13 +21,13 @@ void main() {
     }
   });
 
-  test('should run readme example', () {
+  test('Should run readme example', () {
     if (stdout.hasTerminal && stdin.hasTerminal) {
       expect(readme_example.main(), 0);
     }
   });
 
-  test('resize window', () {
+  test('Resize window', () {
     if (stdout.hasTerminal && stdin.hasTerminal && !Platform.isWindows) {
       final termlib = TermLib();
 

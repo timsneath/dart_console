@@ -126,7 +126,7 @@ List<Function> demoScreens = <Function>[
     console.writeLine();
 
     final calendar = Calendar.now();
-    console.write(calendar.render());
+    console.write(calendar);
 
     console.writeLine();
 
@@ -134,14 +134,13 @@ List<Function> demoScreens = <Function>[
       ..borderColor = ConsoleColor.blue
       ..borderStyle = BorderStyle.rounded
       ..borderType = BorderType.horizontal
-      ..addColumnDefinition(header: 'Number', alignment: TextAlignment.center)
-      ..addColumnDefinition(
-          header: 'Presidency', alignment: TextAlignment.right)
-      ..addColumnDefinition(header: 'President')
-      ..addColumnDefinition(header: 'Party')
-      ..addRows(earlyPresidents)
+      ..insertColumn(header: 'Number', alignment: TextAlignment.center)
+      ..insertColumn(header: 'Presidency', alignment: TextAlignment.right)
+      ..insertColumn(header: 'President')
+      ..insertColumn(header: 'Party')
+      ..insertRows(earlyPresidents)
       ..title = 'Early Presidents of the United States';
-    console.write(table.render());
+    console.write(table);
   }),
 
   // SCREEN 6: Twinkling stars

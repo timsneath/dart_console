@@ -1,4 +1,6 @@
-import 'enums.dart';
+import 'package:characters/characters.dart';
+
+import 'textalignment.dart';
 
 extension StringUtils on String {
   /// Take an input string and wrap it across multiple lines.
@@ -62,4 +64,34 @@ extension StringUtils on String {
   /// This should never be more than the length of the string; it excludes ANSI
   /// control characters.
   int get displayWidth => stripEscapeCharacters().length;
+
+  /// Given a string of numerals, returns their superscripted form.
+  ///
+  /// If the string contains non-numeral characters, they are returned
+  /// unchanged.
+  String get superscript => _convertNumerals('⁰¹²³⁴⁵⁶⁷⁸⁹');
+
+  /// Given a string of numerals, returns their subscripted form.
+  ///
+  /// If the string contains non-numeral characters, they are returned
+  /// unchanged.
+  String get subscript => _convertNumerals('₀₁₂₃₄₅₆₇₈₉');
+
+  String _convertNumerals(String replacementNumerals) {
+    const zeroCodeUnit = 0x30;
+    const nineCodeUnit = 0x39;
+
+    final buffer = StringBuffer();
+    for (var c in characters) {
+      final firstCodeUnit = c.codeUnits.first;
+      if (c.codeUnits.length == 1 &&
+          firstCodeUnit >= zeroCodeUnit &&
+          firstCodeUnit <= nineCodeUnit) {
+        buffer.write(replacementNumerals[firstCodeUnit - zeroCodeUnit]);
+      } else {
+        buffer.write(c);
+      }
+    }
+    return buffer.toString();
+  }
 }
