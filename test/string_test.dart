@@ -6,8 +6,7 @@ import 'package:test/test.dart';
 void main() {
   test('Accurate displayWidth', () {
     const hello = 'Hello';
-    final yellowAttr = ansiSetExtendedForegroundColor(
-        ansiForegroundColors[ConsoleColor.brightYellow]!);
+    final yellowAttr = ConsoleColor.brightYellow.ansiSetForegroundColorSequence;
     final yellowHello = yellowAttr + hello + ansiResetColor;
 
     expect(yellowHello.displayWidth, equals(hello.length));
@@ -31,8 +30,7 @@ void main() {
 
   test('Align color text single line left', () {
     const hello = 'Hello';
-    final yellowAttr = ansiSetExtendedForegroundColor(
-        ansiForegroundColors[ConsoleColor.brightYellow]!);
+    final yellowAttr = ConsoleColor.brightYellow.ansiSetForegroundColorSequence;
     final yellowHello = yellowAttr + hello + ansiResetColor;
 
     expect(yellowHello.stripEscapeCharacters().alignText(width: 7),
@@ -47,8 +45,7 @@ void main() {
 
   test('Align color text single line centered', () {
     const hello = 'Hello';
-    final yellowAttr = ansiSetExtendedForegroundColor(
-        ansiForegroundColors[ConsoleColor.brightYellow]!);
+    final yellowAttr = ConsoleColor.brightYellow.ansiSetForegroundColorSequence;
     final yellowHello = yellowAttr + hello + ansiResetColor;
 
     expect(yellowHello.displayWidth, equals(5));
@@ -60,7 +57,7 @@ void main() {
     expect(yellowHello.stripEscapeCharacters().alignText(width: 7).length,
         equals(7));
     expect(yellowHello.alignText(width: 7, alignment: TextAlignment.center),
-        equals(' \x1B[38;5;93mHello\x1B[m '));
+        equals(' \x1B[93mHello\x1B[m '));
   });
 
   test('Strip escape characters', () {

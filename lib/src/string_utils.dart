@@ -1,6 +1,6 @@
 import 'package:characters/characters.dart';
 
-import 'enums.dart';
+import 'textalignment.dart';
 
 extension StringUtils on String {
   /// Take an input string and wrap it across multiple lines.

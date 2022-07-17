@@ -8,8 +8,9 @@ library dart_console;
 
 export 'src/calendar.dart';
 export 'src/console.dart';
-export 'src/enums.dart';
+export 'src/consolecolor.dart';
 export 'src/key.dart';
-export 'src/table.dart';
 export 'src/scrollbackbuffer.dart';
 export 'src/string_utils.dart';
+export 'src/table.dart';
+export 'src/textalignment.dart';

@@ -6,14 +6,15 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'ansi.dart';
-import 'enums.dart';
-import 'scrollbackbuffer.dart';
-
 import 'ffi/termlib.dart';
 import 'ffi/win/termlib_win.dart';
+
+import 'ansi.dart';
+import 'consolecolor.dart';
 import 'key.dart';
+import 'scrollbackbuffer.dart';
 import 'string_utils.dart';
+import 'textalignment.dart';
 
 /// A screen position, measured in rows and columns from the top-left origin
 /// of the screen. Coordinates are zero-based, and converted as necessary
@@ -298,7 +299,7 @@ class Console {
   /// enumeration. Depending on the console theme and background color,
   /// some colors may not offer a legible contrast against the background.
   void setForegroundColor(ConsoleColor foreground) {
-    stdout.write(ansiSetColor(ansiForegroundColors[foreground]!));
+    stdout.write(foreground.ansiSetForegroundColorSequence);
   }
 
   /// Sets the console background color to a named ANSI color.
@@ -307,7 +308,7 @@ class Console {
   /// enumeration. Depending on the console theme and background color,
   /// some colors may not offer a legible contrast against the background.
   void setBackgroundColor(ConsoleColor background) {
-    stdout.write(ansiSetColor(ansiBackgroundColors[background]!));
+    stdout.write(background.ansiSetBackgroundColorSequence);
   }
 
   /// Sets the foreground to one of 256 extended ANSI colors.

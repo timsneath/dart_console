@@ -2,8 +2,9 @@ import 'dart:math' show max;
 
 import 'package:dart_console/src/ansi.dart';
 
-import 'enums.dart';
+import 'consolecolor.dart';
 import 'string_utils.dart';
+import 'textalignment.dart';
 
 enum BorderStyle { none, ascii, square, rounded, bold, double }
 
@@ -323,7 +324,7 @@ class Table {
     }
 
     return [
-      if (borderColor != null) ansiSetColor(ansiForegroundColors[borderColor]!),
+      if (borderColor != null) borderColor!.ansiSetForegroundColorSequence,
       _borderGlyphs.topLeftCorner,
       _borderGlyphs.horizontalLine,
       [for (final column in columnWidths) _borderGlyphs.horizontalLine * column]
@@ -340,8 +341,7 @@ class Table {
 
     if (borderType == BorderType.outline) {
       return [
-        if (borderColor != null)
-          ansiSetColor(ansiForegroundColors[borderColor]!),
+        if (borderColor != null) borderColor!.ansiSetForegroundColorSequence,
         _borderGlyphs.verticalLine,
         ' ' * (tableWidth - 2),
         _borderGlyphs.verticalLine,
@@ -365,7 +365,7 @@ class Table {
         borderType == BorderType.vertical ? ' ' : _borderGlyphs.horizontalLine;
 
     return [
-      if (borderColor != null) ansiSetColor(ansiForegroundColors[borderColor]!),
+      if (borderColor != null) borderColor!.ansiSetForegroundColorSequence,
       borderType == BorderType.vertical
           ? _borderGlyphs.verticalLine
           : _borderGlyphs.teeRight,
@@ -399,7 +399,7 @@ class Table {
     }
 
     return [
-      if (borderColor != null) ansiSetColor(ansiForegroundColors[borderColor]!),
+      if (borderColor != null) borderColor!.ansiSetForegroundColorSequence,
       _borderGlyphs.bottomLeftCorner,
       _borderGlyphs.horizontalLine,
       [for (final column in columnWidths) _borderGlyphs.horizontalLine * column]
@@ -415,7 +415,7 @@ class Table {
     if (!_hasBorder) return '';
 
     return [
-      if (borderColor != null) ansiSetColor(ansiForegroundColors[borderColor]!),
+      if (borderColor != null) borderColor!.ansiSetForegroundColorSequence,
       _borderGlyphs.verticalLine,
       ' ',
       if (borderColor != null) ansiResetColor,
@@ -429,7 +429,7 @@ class Table {
     if (borderType == BorderType.horizontal) return '   ';
 
     return [
-      if (borderColor != null) ansiSetColor(ansiForegroundColors[borderColor]!),
+      if (borderColor != null) borderColor!.ansiSetForegroundColorSequence,
       ' ',
       _borderGlyphs.verticalLine,
       ' ',
@@ -441,7 +441,7 @@ class Table {
     if (!_hasBorder) return '\n';
 
     return [
-      if (borderColor != null) ansiSetColor(ansiForegroundColors[borderColor]!),
+      if (borderColor != null) borderColor!.ansiSetForegroundColorSequence,
       ' ',
       _borderGlyphs.verticalLine,
       if (borderColor != null) ansiResetColor,
@@ -512,7 +512,7 @@ class Table {
             buffer.write(_setFontStyle(headerStyle));
           }
           if (row == 0 && headerColor != null) {
-            buffer.write(ansiSetColor(ansiForegroundColors[headerColor]!));
+            buffer.write(headerColor!.ansiSetForegroundColorSequence);
           }
           buffer.write(cell.alignText(
               width: columnWidths[column], alignment: columnAlignment));
