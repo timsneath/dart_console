@@ -38,12 +38,6 @@ class Coordinate extends Point<int> {
 /// A comprehensive set of demos of using the Console class can be found in the
 /// `examples/` subdirectory.
 class Console {
-  // We cache these values so we don't have to keep retrieving them. The
-  // downside is that the class isn't dynamically responsive to a resized
-  // console, but that's not unusual for console applications anyway.
-  int _windowWidth = 0;
-  int _windowHeight = 0;
-
   bool _isRawMode = false;
 
   final _termlib = TermLib();
@@ -131,74 +125,29 @@ class Console {
   void eraseCursorToEnd() => stdout.write(ansiEraseCursorToEnd);
 
   /// Returns the width of the current console window in characters.
-  ///
-  /// This command attempts to use the ioctl() system call to retrieve the
-  /// window width, and if that fails uses ANSI escape codes to identify its
-  /// location by walking off the edge of the screen and seeing what the
-  /// terminal clipped the cursor to.
-  ///
-  /// If unable to retrieve a valid width from either method, the method
-  /// throws an [Exception].
   int get windowWidth {
-    if (_windowWidth == 0) {
-      // try using ioctl() to give us the screen size
-      final width = _termlib.getWindowWidth();
-      if (width != -1) {
-        _windowWidth = width;
-      } else {
-        // otherwise, fall back to the approach of setting the cursor to beyond
-        // the edge of the screen and then reading back its actual position
-        final originalCursor = cursorPosition;
-        stdout.write(ansiMoveCursorToScreenEdge);
-        final newCursor = cursorPosition;
-        cursorPosition = originalCursor;
-
-        if (newCursor != null) {
-          _windowWidth = newCursor.col;
-        } else {
-          // we've run out of options; terminal is unsupported
-          throw Exception("Couldn't retrieve window width");
-        }
-      }
+    if (hasTerminal) {
+      return stdout.terminalColumns;
+    } else {
+      // Treat a window that has no terminal as if it is 80x25. This should be
+      // more compatible with CI/CD environments.
+      return 80;
     }
-
-    return _windowWidth;
   }
 
   /// Returns the height of the current console window in characters.
-  ///
-  /// This command attempts to use the ioctl() system call to retrieve the
-  /// window height, and if that fails uses ANSI escape codes to identify its
-  /// location by walking off the edge of the screen and seeing what the
-  /// terminal clipped the cursor to.
-  ///
-  /// If unable to retrieve a valid height from either method, the method
-  /// throws an [Exception].
   int get windowHeight {
-    if (_windowHeight == 0) {
-      // try using ioctl() to give us the screen size
-      final height = _termlib.getWindowHeight();
-      if (height != -1) {
-        _windowHeight = height;
-      } else {
-        // otherwise, fall back to the approach of setting the cursor to beyond
-        // the edge of the screen and then reading back its actual position
-        final originalCursor = cursorPosition;
-        stdout.write(ansiMoveCursorToScreenEdge);
-        final newCursor = cursorPosition;
-        cursorPosition = originalCursor;
-
-        if (newCursor != null) {
-          _windowHeight = newCursor.row;
-        } else {
-          // we've run out of options; terminal is unsupported
-          throw Exception("Couldn't retrieve window height");
-        }
-      }
+    if (hasTerminal) {
+      return stdout.terminalLines;
+    } else {
+      // Treat a window that has no terminal as if it is 80x25. This should be
+      // more compatible with CI/CD environments.
+      return 25;
     }
-
-    return _windowHeight;
   }
+
+  /// Whether there is a terminal attached to stdout.
+  bool get hasTerminal => stdout.hasTerminal;
 
   /// Hides the cursor.
   ///
