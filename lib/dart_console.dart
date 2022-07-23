@@ -14,3 +14,4 @@ export 'src/scrollbackbuffer.dart';
 export 'src/string_utils.dart';
 export 'src/table.dart';
 export 'src/textalignment.dart';
+export 'src/textspan.dart';

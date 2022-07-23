@@ -157,7 +157,7 @@ void main() {
 
     test('Different types', () {
       final table = Table()
-        ..borderColor = ConsoleColor.brightGreen
+        ..borderColor = ConsoleColor.brightGreen()
         ..borderStyle = BorderStyle.double
         ..borderType = BorderType.grid
         ..headerStyle = FontStyle.boldUnderscore
@@ -375,7 +375,7 @@ kumquats    59
 
     test('Color border', () {
       final table = Table()
-        ..borderColor = ConsoleColor.brightCyan
+        ..borderColor = ConsoleColor.brightCyan()
         ..borderStyle = BorderStyle.bold
         ..insertColumn(header: 'Number', alignment: TextAlignment.right)
         ..insertColumn(header: 'Presidency')
@@ -398,7 +398,7 @@ kumquats    59
 
     test('Horizontal double border', () {
       final table = Table()
-        ..borderColor = ConsoleColor.blue
+        ..borderColor = ConsoleColor.blue()
         ..borderStyle = BorderStyle.double
         ..borderType = BorderType.horizontal
         ..insertColumn(header: 'Number', alignment: TextAlignment.center)
@@ -423,7 +423,7 @@ kumquats    59
     test('Rounded border vertical', () {
       final table = Table();
       table
-        ..borderColor = ConsoleColor.green
+        ..borderColor = ConsoleColor.green()
         ..borderStyle = BorderStyle.rounded
         ..borderType = BorderType.vertical
         ..insertColumn(header: 'Number', alignment: TextAlignment.right)
@@ -483,7 +483,7 @@ kumquats    59
         ..insertRows(planets)
         ..headerStyle = FontStyle.boldUnderscore
         ..borderStyle = BorderStyle.none
-        ..borderColor = ConsoleColor.brightRed
+        ..borderColor = ConsoleColor.brightRed()
         ..borderType = BorderType.vertical;
 
       expect(table.toString(), equals('''
@@ -506,7 +506,7 @@ Neptune  4.4983964 × 10⁹
             header: 'Orbital Distance', alignment: TextAlignment.right)
         ..insertRows(planets)
         ..headerStyle = FontStyle.bold
-        ..borderColor = ConsoleColor.brightRed
+        ..borderColor = ConsoleColor.brightRed()
         ..borderType = BorderType.outline;
 
       expect(table.toString(), equals('''
@@ -533,7 +533,7 @@ Neptune  4.4983964 × 10⁹
         ..insertColumn(header: 'Party')
         ..insertRows(earlyPresidents)
         ..borderStyle = BorderStyle.square
-        ..borderColor = ConsoleColor.brightBlue
+        ..borderColor = ConsoleColor.brightBlue()
         ..borderType = BorderType.vertical
         ..headerStyle = FontStyle.bold;
 
@@ -552,8 +552,8 @@ Neptune  4.4983964 × 10⁹
 
     test('Color header rows', () {
       final table = Table()
-        ..borderColor = ConsoleColor.brightRed
-        ..headerColor = ConsoleColor.brightBlue
+        ..borderColor = ConsoleColor.brightRed()
+        ..headerColor = ConsoleColor.brightBlue()
         ..insertColumn(header: '#')
         ..insertColumn(header: 'Presidency')
         ..insertColumn(header: 'President')

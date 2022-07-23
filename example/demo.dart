@@ -11,8 +11,8 @@ final console = Console();
 List<Function> demoScreens = <Function>[
   // SCREEN 1: Whimsical loading screen :)
   (() {
-    console.setBackgroundColor(ConsoleColor.blue);
-    console.setForegroundColor(ConsoleColor.white);
+    console.setBackgroundColor(ConsoleColor.blue());
+    console.setForegroundColor(ConsoleColor.white());
     console.clearScreen();
 
     final row = (console.windowHeight / 2).round() - 1;
@@ -42,8 +42,8 @@ List<Function> demoScreens = <Function>[
 
   // SCREEN 2: General demonstration of basic color set and alignment.
   (() {
-    console.setBackgroundColor(ConsoleColor.blue);
-    console.setForegroundColor(ConsoleColor.white);
+    console.setBackgroundColor(ConsoleColor.blue());
+    console.setForegroundColor(ConsoleColor.white());
     console.writeLine('Simple Demo', TextAlignment.center);
     console.resetColorAttributes();
 
@@ -65,7 +65,7 @@ List<Function> demoScreens = <Function>[
     console.resetColorAttributes();
     console.writeLine();
 
-    for (final color in ConsoleColor.values) {
+    for (final color in ConsoleColor.ansiColors) {
       console.setForegroundColor(color);
       console.writeLine(color.toString().split('.').last);
     }
@@ -74,8 +74,8 @@ List<Function> demoScreens = <Function>[
 
   // SCREEN 3: Show extended foreground colors
   (() {
-    console.setBackgroundColor(ConsoleColor.red);
-    console.setForegroundColor(ConsoleColor.white);
+    console.setBackgroundColor(ConsoleColor.red());
+    console.setForegroundColor(ConsoleColor.white());
     console.writeLine(
         'ANSI Extended 256-Color Foreground Test', TextAlignment.center);
     console.resetColorAttributes();
@@ -96,8 +96,8 @@ List<Function> demoScreens = <Function>[
 
   // SCREEN 4: Show extended background colors
   (() {
-    console.setBackgroundColor(ConsoleColor.green);
-    console.setForegroundColor(ConsoleColor.white);
+    console.setBackgroundColor(ConsoleColor.green());
+    console.setForegroundColor(ConsoleColor.white());
     console.writeLine(
         'ANSI Extended 256-Color Background Test', TextAlignment.center);
     console.resetColorAttributes();
@@ -118,8 +118,8 @@ List<Function> demoScreens = <Function>[
 
   // SCREEN 5: Tabular display
   (() {
-    console.setBackgroundColor(ConsoleColor.magenta);
-    console.setForegroundColor(ConsoleColor.white);
+    console.setBackgroundColor(ConsoleColor.magenta());
+    console.setForegroundColor(ConsoleColor.white());
     console.writeLine('Tabular Display Examples', TextAlignment.center);
     console.resetColorAttributes();
 
@@ -131,7 +131,7 @@ List<Function> demoScreens = <Function>[
     console.writeLine();
 
     final table = Table()
-      ..borderColor = ConsoleColor.blue
+      ..borderColor = ConsoleColor.blue()
       ..borderStyle = BorderStyle.rounded
       ..borderType = BorderType.horizontal
       ..insertColumn(header: 'Number', alignment: TextAlignment.center)
@@ -165,13 +165,13 @@ List<Function> demoScreens = <Function>[
       stars.removeFirst();
     }
 
-    console.setBackgroundColor(ConsoleColor.yellow);
-    console.setForegroundColor(ConsoleColor.brightBlack);
+    console.setBackgroundColor(ConsoleColor.yellow());
+    console.setForegroundColor(ConsoleColor.brightBlack());
     console.writeLine('Stars', TextAlignment.center);
     console.resetColorAttributes();
 
     console.hideCursor();
-    console.setForegroundColor(ConsoleColor.brightYellow);
+    console.setForegroundColor(ConsoleColor.brightYellow());
 
     for (var i = 0; i < numStars; i++) {
       if (i < numStars - maxStarsOnScreen) {
