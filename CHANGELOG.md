@@ -1,3 +1,9 @@
+## 1.1.2
+
+- Remove ioctl and rely on ANSI escape sequences instead. Increases
+  compatibility on non-interactive terminals and fixes ARM64 compatibility
+  issue.
+
 ## 1.1.1
 
 - Update some lints and platform specifications to satisfy pana.
