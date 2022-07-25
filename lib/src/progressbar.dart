@@ -5,7 +5,7 @@
 // Adapted from
 // https://github.com/dart-lang/sdk/blob/main/pkg/nnbd_migration/lib/src/utilities/progress_bar.dart
 
-import 'dart:math';
+import 'dart:math' as math;
 
 import 'package:dart_console/dart_console.dart';
 
@@ -34,8 +34,6 @@ class ProgressBar {
 
   Coordinate? _startCoordinate;
 
-  Coordinate? _currentCoordinate;
-
   /// The width of the terminal, in terms of characters.
   late int _width;
 
@@ -49,7 +47,11 @@ class ProgressBar {
   /// By default, the progress bar shows a percentage value from 0 to 100.
   final int maxValue;
 
-  final bool showPartiallyCompletedTicks;
+  /// Whether the spinner should be shown.
+  ///
+  /// Useful where the progress bar is narrow, or where the task being
+  /// demonstrated is long-running.
+  final bool showSpinner;
 
   int _tickCount = 0;
 
@@ -59,13 +61,12 @@ class ProgressBar {
       {this.maxValue = 100,
       Coordinate? startCoordinate,
       int? barWidth,
-      this.showPartiallyCompletedTicks = true,
+      this.showSpinner = true,
       this.tickCharacters = const <String>['-', '\\', '|', '/']}) {
     if (!console.hasTerminal) {
       _shouldDrawProgress = false;
     } else {
       _shouldDrawProgress = true;
-      _currentCoordinate = console.cursorPosition;
       _startCoordinate = startCoordinate ?? console.cursorPosition;
       _width = barWidth ?? console.windowWidth;
       _innerWidth = (barWidth ?? console.windowWidth) - 2;
@@ -92,17 +93,17 @@ class ProgressBar {
     _printProgressBar('[${tickCharacters[0] * _innerWidth}]');
   }
 
-  /// Progress the bar by one tick.
+  /// Progress the bar by one tick towards its maxValue.
   void tick() {
     if (!_shouldDrawProgress) {
       return;
     }
     _tickCount++;
-    final fractionComplete = max(0, _tickCount * _innerWidth ~/ maxValue - 1);
+    final fractionComplete =
+        math.max(0, _tickCount * _innerWidth ~/ maxValue - 1);
     final remaining = _innerWidth - fractionComplete - 1;
-    final spinner = showPartiallyCompletedTicks
-        ? tickCharacters[_tickCount % tickCharacters.length]
-        : ' ';
+    final spinner =
+        showSpinner ? tickCharacters[_tickCount % tickCharacters.length] : ' ';
 
     _printProgressBar(
         '[${tickCharacters[0] * fractionComplete}$spinner${' ' * remaining}]');
@@ -111,7 +112,7 @@ class ProgressBar {
   void _printProgressBar(String progressBar) {
     // Push current location, so we can restore it after we've printed the
     // progress bar.
-    _currentCoordinate = console.cursorPosition;
+    final originalCursorPosition = console.cursorPosition;
 
     // Go to the starting location for the progress bar; if none specified, go
     // to the start of the current column.
@@ -125,6 +126,6 @@ class ProgressBar {
     console.write(progressBar);
 
     // Pop current cursor location.
-    console.cursorPosition = _currentCoordinate;
+    console.cursorPosition = originalCursorPosition;
   }
 }
