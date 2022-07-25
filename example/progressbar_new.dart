@@ -25,13 +25,17 @@ void main(List<String> args) {
     maxValue: 50,
     startCoordinate: Coordinate(row, 4),
     barWidth: progressBarWidth,
+    showPartiallyCompletedTicks: false,
+    tickCharacters: ['#'],
   );
 
-  for (var i = 0; i <= 50; i++) {
+  for (var i = 0; i < 50; i++) {
     progressBar.tick();
     sleep(const Duration(milliseconds: 40));
   }
+  progressBar.complete();
 
+  console.readKey();
   console.showCursor();
   progressBar.clear();
 
