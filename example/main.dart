@@ -17,7 +17,7 @@ void main() {
   console.writeLine('This text is center aligned.', TextAlignment.center);
   console.writeLine('This text is right aligned.', TextAlignment.right);
 
-  for (final color in ConsoleColor.ansiColors) {
+  for (final color in ConsoleColor.values) {
     console.setForegroundColor(color);
     console.writeLine(color.toString().split('.').last);
   }

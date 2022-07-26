@@ -6,7 +6,7 @@ import 'dart:math' as math;
 
 class ConsoleColor {
   /// The named ANSI colors.
-  static List<ConsoleColor> get ansiColors => <ConsoleColor>[
+  static List<ConsoleColor> get values => <ConsoleColor>[
         ConsoleColor.black,
         ConsoleColor.red,
         ConsoleColor.green,
