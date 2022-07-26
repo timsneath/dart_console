@@ -5,6 +5,12 @@ import 'dart:math' as math;
 // Externally exposed enumerations used by the `Console` class.
 
 class ConsoleColor {
+  final String ansiSetForegroundColorSequence;
+  final String ansiSetBackgroundColorSequence;
+
+  const ConsoleColor(
+      this.ansiSetForegroundColorSequence, this.ansiSetBackgroundColorSequence);
+
   /// The named ANSI colors.
   static List<ConsoleColor> get values => <ConsoleColor>[
         ConsoleColor.black,
@@ -63,10 +69,4 @@ class ConsoleColor {
 
     return ConsoleColor.fromRGB(red, green, blue);
   }
-
-  final String ansiSetForegroundColorSequence;
-  final String ansiSetBackgroundColorSequence;
-
-  const ConsoleColor(
-      this.ansiSetForegroundColorSequence, this.ansiSetBackgroundColorSequence);
 }
