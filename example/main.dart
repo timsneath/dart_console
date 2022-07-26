@@ -2,8 +2,8 @@ import 'package:dart_console/dart_console.dart';
 
 void main() {
   final console = Console();
-  console.setBackgroundColor(ConsoleColor.blue());
-  console.setForegroundColor(ConsoleColor.white());
+  console.setBackgroundColor(ConsoleColor.blue);
+  console.setForegroundColor(ConsoleColor.white);
   console.writeLine('Simple Demo', TextAlignment.center);
   console.resetColorAttributes();
 

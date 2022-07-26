@@ -3,8 +3,8 @@ import 'package:test/test.dart';
 
 void main() {
   test('Basic colored text span', () {
-    final fg = ConsoleColor.black();
-    final bg = ConsoleColor.brightCyan();
+    final fg = ConsoleColor.black;
+    final bg = ConsoleColor.brightCyan;
     final span = TextSpan('Hello', foregroundColor: fg, backgroundColor: bg);
     final text = ('<<<$span>>>');
 
@@ -12,13 +12,13 @@ void main() {
   });
 
   test('Nested colored text span', () {
-    final fg = ConsoleColor.black();
-    final bg = ConsoleColor.brightCyan();
+    final fg = ConsoleColor.black;
+    final bg = ConsoleColor.brightCyan;
     final span = TextSpan('Hello', foregroundColor: fg, backgroundColor: bg);
     final text = ('<<<$span>>>');
 
-    final fg2 = ConsoleColor.white();
-    final bg2 = ConsoleColor.green();
+    final fg2 = ConsoleColor.white;
+    final bg2 = ConsoleColor.green;
     final span2 = TextSpan(text, foregroundColor: fg2, backgroundColor: bg2);
     final text2 = ('{{{$span2}}}');
 
@@ -27,11 +27,11 @@ void main() {
   });
 
   test('Nested semi-colored text span', () {
-    final bg = ConsoleColor.cyan();
+    final bg = ConsoleColor.cyan;
     final span = TextSpan('Hello', backgroundColor: bg);
     final text = ('<<<$span>>>');
 
-    final fg2 = ConsoleColor.brightRed();
+    final fg2 = ConsoleColor.brightRed;
     final span2 = TextSpan(text, foregroundColor: fg2);
     final text2 = ('{{{$span2}}}');
 

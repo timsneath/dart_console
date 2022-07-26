@@ -20,8 +20,7 @@ class Calendar extends Table {
     // ISO format has 1..7 for Mon..Sun, so we adjust this to match the array
     final startDate = calendarDate.weekday == 7 ? 0 : calendarDate.weekday;
 
-    final todayColor =
-        ConsoleColor.brightYellow().ansiSetForegroundColorSequence;
+    final todayColor = ConsoleColor.brightYellow.ansiSetForegroundColorSequence;
 
     final calendarDates = <String>[
       for (int i = 0; i < startDate; i++) '',

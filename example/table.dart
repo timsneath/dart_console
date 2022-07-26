@@ -41,7 +41,7 @@ void main() {
     ..insertColumn(header: 'Party')
     ..insertRows(earlyPresidents)
     ..borderStyle = BorderStyle.square
-    ..borderColor = ConsoleColor.brightBlue()
+    ..borderColor = ConsoleColor.brightBlue
     ..borderType = BorderType.vertical
     ..headerStyle = FontStyle.bold;
   print(table);

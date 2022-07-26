@@ -31,8 +31,8 @@ final neighbors = [
 ];
 
 void draw() {
-  console.setBackgroundColor(ConsoleColor.black());
-  console.setForegroundColor(ConsoleColor.blue());
+  console.setBackgroundColor(ConsoleColor.black);
+  console.setForegroundColor(ConsoleColor.blue);
   console.clearScreen();
 
   buffer.clear();

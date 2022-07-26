@@ -17,13 +17,13 @@ const prompt = '>>> ';
 
 void main() {
   console.write('The ');
-  console.setForegroundColor(ConsoleColor.brightYellow());
+  console.setForegroundColor(ConsoleColor.brightYellow);
   console.write('Console.readLine()');
   console.resetColorAttributes();
   console.writeLine(' method provides a basic readline implementation.');
 
   console.write('Unlike the built-in ');
-  console.setForegroundColor(ConsoleColor.brightYellow());
+  console.setForegroundColor(ConsoleColor.brightYellow);
   console.write('stdin.readLineSync()');
   console.resetColorAttributes();
   console.writeLine(' method, you can use arrow keys as well as home/end.');
