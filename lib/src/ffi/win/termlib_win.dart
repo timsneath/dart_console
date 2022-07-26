@@ -19,34 +19,6 @@ class TermLibWindows implements TermLib {
   late final int outputHandle;
 
   @override
-  int getWindowHeight() {
-    final pBufferInfo = calloc<CONSOLE_SCREEN_BUFFER_INFO>();
-    try {
-      GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
-
-      final windowHeight =
-          pBufferInfo.ref.srWindow.Bottom - pBufferInfo.ref.srWindow.Top + 1;
-      return windowHeight;
-    } finally {
-      calloc.free(pBufferInfo);
-    }
-  }
-
-  @override
-  int getWindowWidth() {
-    final pBufferInfo = calloc<CONSOLE_SCREEN_BUFFER_INFO>();
-    try {
-      GetConsoleScreenBufferInfo(outputHandle, pBufferInfo);
-
-      final windowWidth =
-          pBufferInfo.ref.srWindow.Right - pBufferInfo.ref.srWindow.Left + 1;
-      return windowWidth;
-    } finally {
-      calloc.free(pBufferInfo);
-    }
-  }
-
-  @override
   int setWindowHeight(int height) {
     throw UnsupportedError(
         'Setting window height is not supported for Windows terminals.');
