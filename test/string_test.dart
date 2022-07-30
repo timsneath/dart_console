@@ -81,20 +81,20 @@ void main() {
   });
 
   test('Superscript', () {
-    expect(''.superscript, equals(''));
-    expect('⁰¹²³⁴⁵⁶⁷⁸⁹'.superscript, equals('⁰¹²³⁴⁵⁶⁷⁸⁹'));
-    expect('x2'.superscript, equals('x²'));
-    expect('0123456789'.superscript, equals('⁰¹²³⁴⁵⁶⁷⁸⁹'));
-    expect('///000999:::'.superscript, equals('///⁰⁰⁰⁹⁹⁹:::'));
-    expect('₀₁₂₃₄₅₆₇₈₉'.superscript, equals('₀₁₂₃₄₅₆₇₈₉'));
+    expect(''.superscript(), equals(''));
+    expect('⁰¹²³⁴⁵⁶⁷⁸⁹'.superscript(), equals('⁰¹²³⁴⁵⁶⁷⁸⁹'));
+    expect('x2'.superscript(), equals('x²'));
+    expect('0123456789'.superscript(), equals('⁰¹²³⁴⁵⁶⁷⁸⁹'));
+    expect('///000999:::'.superscript(), equals('///⁰⁰⁰⁹⁹⁹:::'));
+    expect('₀₁₂₃₄₅₆₇₈₉'.superscript(), equals('₀₁₂₃₄₅₆₇₈₉'));
   });
 
   test('Subscript', () {
-    expect(''.subscript, equals(''));
-    expect('₀₁₂₃₄₅₆₇₈₉'.subscript, equals('₀₁₂₃₄₅₆₇₈₉'));
-    expect('x2'.subscript, equals('x₂'));
-    expect('0123456789'.subscript, equals('₀₁₂₃₄₅₆₇₈₉'));
-    expect('///000999:::'.subscript, equals('///₀₀₀₉₉₉:::'));
-    expect('⁰¹²³⁴⁵⁶⁷⁸⁹'.subscript, equals('⁰¹²³⁴⁵⁶⁷⁸⁹'));
+    expect(''.subscript(), equals(''));
+    expect('₀₁₂₃₄₅₆₇₈₉'.subscript(), equals('₀₁₂₃₄₅₆₇₈₉'));
+    expect('x2'.subscript(), equals('x₂'));
+    expect('0123456789'.subscript(), equals('₀₁₂₃₄₅₆₇₈₉'));
+    expect('///000999:::'.subscript(), equals('///₀₀₀₉₉₉:::'));
+    expect('⁰¹²³⁴⁵⁶⁷⁸⁹'.subscript(), equals('⁰¹²³⁴⁵⁶⁷⁸⁹'));
   });
 }
