@@ -23,25 +23,6 @@ import 'package:dart_console/dart_console.dart';
 ///
 /// If there is no terminal, the progress bar will not be drawn.
 class ProgressBar {
-  /// The character used to draw the progress "tick".
-  ///
-  /// If multiple characters are specified, they are used to draw a "spinner",
-  /// representing partial completion of the next "tick.
-  final List<String> tickCharacters;
-
-  /// Whether the progress bar should be drawn.
-  late bool _shouldDrawProgress;
-
-  Coordinate? _startCoordinate;
-
-  /// The width of the terminal, in terms of characters.
-  late int _width;
-
-  /// The inner width of the terminal, in terms of characters.
-  ///
-  /// This represents the number of characters available for drawing progress.
-  late int _innerWidth;
-
   /// The value that represents completion of the progress bar.
   ///
   /// By default, the progress bar shows a percentage value from 0 to 100.
@@ -53,9 +34,29 @@ class ProgressBar {
   /// demonstrated is long-running.
   final bool showSpinner;
 
+  /// The character used to draw the progress "tick".
+  ///
+  /// If multiple characters are specified, they are used to draw a "spinner",
+  /// representing partial completion of the next "tick.
+  final List<String> tickCharacters;
+
+  /// The starting position from which the progress bar should be drawn.
+  Coordinate? _startCoordinate;
+
+  /// The width of the terminal, in terms of characters.
+  late final int _width;
+
+  /// Whether the progress bar should be drawn.
+  late final bool _shouldDrawProgress;
+
+  /// The inner width of the terminal, in terms of characters.
+  ///
+  /// This represents the number of characters available for drawing progress.
+  late final int _innerWidth;
+
   int _tickCount = 0;
 
-  final console = Console();
+  final _console = Console();
 
   ProgressBar(
       {this.maxValue = 100,
@@ -63,13 +64,13 @@ class ProgressBar {
       int? barWidth,
       this.showSpinner = true,
       this.tickCharacters = const <String>['-', '\\', '|', '/']}) {
-    if (!console.hasTerminal) {
+    if (!_console.hasTerminal) {
       _shouldDrawProgress = false;
     } else {
       _shouldDrawProgress = true;
-      _startCoordinate = startCoordinate ?? console.cursorPosition;
-      _width = barWidth ?? console.windowWidth;
-      _innerWidth = (barWidth ?? console.windowWidth) - 2;
+      _startCoordinate = startCoordinate ?? _console.cursorPosition;
+      _width = barWidth ?? _console.windowWidth;
+      _innerWidth = (barWidth ?? _console.windowWidth) - 2;
 
       _printProgressBar('[${' ' * _innerWidth}]');
     }
@@ -112,20 +113,20 @@ class ProgressBar {
   void _printProgressBar(String progressBar) {
     // Push current location, so we can restore it after we've printed the
     // progress bar.
-    final originalCursorPosition = console.cursorPosition;
+    final originalCursorPosition = _console.cursorPosition;
 
     // Go to the starting location for the progress bar; if none specified, go
     // to the start of the current column.
     if (_startCoordinate != null) {
-      console.cursorPosition = _startCoordinate;
+      _console.cursorPosition = _startCoordinate;
     } else {
-      console.write('\r');
+      _console.write('\r');
     }
 
     // And write the progress bar to the terminal.
-    console.write(progressBar);
+    _console.write(progressBar);
 
     // Pop current cursor location.
-    console.cursorPosition = originalCursorPosition;
+    _console.cursorPosition = originalCursorPosition;
   }
 }
