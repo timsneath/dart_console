@@ -44,7 +44,7 @@ class TermLibUnix implements TermLib {
       ..ref.c_iflag =
           origTermIOS.c_iflag & ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON)
       ..ref.c_oflag = origTermIOS.c_oflag & ~OPOST
-      ..ref.c_cflag = origTermIOS.c_cflag | CS8
+      ..ref.c_cflag = (origTermIOS.c_cflag & ~CSIZE) | CS8
       ..ref.c_lflag = origTermIOS.c_lflag & ~(ECHO | ICANON | IEXTEN | ISIG)
       ..ref.c_cc = origTermIOS.c_cc
       ..ref.c_cc[VMIN] = 0 // VMIN -- return each byte, or 0 for timeout
