@@ -33,7 +33,6 @@ class TermLibWindows implements TermLib {
   @override
   void enableRawMode() {
     final dwMode = (~ENABLE_ECHO_INPUT) &
-        (~ENABLE_ECHO_INPUT) &
         (~ENABLE_PROCESSED_INPUT) &
         (~ENABLE_LINE_INPUT) &
         (~ENABLE_WINDOW_INPUT);
