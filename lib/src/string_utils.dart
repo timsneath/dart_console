@@ -69,13 +69,13 @@ extension StringUtils on String {
   ///
   /// If the string contains non-numeral characters, they are returned
   /// unchanged.
-  String get superscript => _convertNumerals('⁰¹²³⁴⁵⁶⁷⁸⁹');
+  String superscript() => _convertNumerals('⁰¹²³⁴⁵⁶⁷⁸⁹');
 
   /// Given a string of numerals, returns their subscripted form.
   ///
   /// If the string contains non-numeral characters, they are returned
   /// unchanged.
-  String get subscript => _convertNumerals('₀₁₂₃₄₅₆₇₈₉');
+  String subscript() => _convertNumerals('₀₁₂₃₄₅₆₇₈₉');
 
   String _convertNumerals(String replacementNumerals) {
     const zeroCodeUnit = 0x30;
