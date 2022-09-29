@@ -15,7 +15,7 @@ platforms:
 
 dependencies:
   ffi: '>=1.0.0 <3.0.0'
-  win32: ^2.6.1
+  win32: ^3.0.0
   intl: ^0.17.0
   characters: ^1.2.1
 
