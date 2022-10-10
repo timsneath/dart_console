@@ -4,7 +4,7 @@
 
 // Ignore these lints, since these are UNIX identifiers that we're replicating
 //
-// ignore_for_file: non_constant_identifier_names, constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, constant_identifier_names, camel_case_types
 
 import 'dart:ffi';
 
@@ -65,9 +65,16 @@ const int VMIN = 16; // minimum number of characters to receive
 const int VTIME = 17; // time in 1/10s before returning
 
 // typedef unsigned long   tcflag_t;
+typedef tcflag_t = UnsignedLong;
+
 // typedef unsigned char   cc_t;
+typedef cc_t = UnsignedChar;
+
 // typedef unsigned long   speed_t;
+typedef speed_t = UnsignedLong;
+
 // #define NCCS            20
+const _NCCS = 20;
 
 // struct termios {
 // 	tcflag_t        c_iflag;        /* input flags */
@@ -79,21 +86,21 @@ const int VTIME = 17; // time in 1/10s before returning
 // 	speed_t         c_ospeed;       /* output speed */
 // };
 class TermIOS extends Struct {
-  @IntPtr()
+  @tcflag_t()
   external int c_iflag;
-  @IntPtr()
+  @tcflag_t()
   external int c_oflag;
-  @IntPtr()
+  @tcflag_t()
   external int c_cflag;
-  @IntPtr()
+  @tcflag_t()
   external int c_lflag;
 
-  @Array(20)
-  external Array<Uint8> c_cc;
+  @Array(_NCCS)
+  external Array<cc_t> c_cc;
 
-  @IntPtr()
+  @speed_t()
   external int c_ispeed;
-  @IntPtr()
+  @speed_t()
   external int c_ospeed;
 }
 
