@@ -67,7 +67,8 @@ class Key {
   String char = '';
   ControlCharacter controlChar = ControlCharacter.unknown;
 
-  Key.printable(this.char) : assert(char.length == 1) {
+  Key.printable(this.char)
+      : assert(char.length == 1, 'Char "$char" has invalid length') {
     controlChar = ControlCharacter.none;
   }
 
