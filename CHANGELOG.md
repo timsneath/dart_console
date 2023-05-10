@@ -1,3 +1,7 @@
+## 1.1.3
+
+- Sets the dependency constraint more loosely to fix pub version match on flutter projects that depends on this package
+
 ## 1.1.2
 
 - Remove ioctl and rely on ANSI escape sequences instead. Increases
