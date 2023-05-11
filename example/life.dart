@@ -31,9 +31,10 @@ final neighbors = [
 ];
 
 void draw() {
-  console.setBackgroundColor(ConsoleColor.black);
-  console.setForegroundColor(ConsoleColor.blue);
-  console.clearScreen();
+  console
+    ..setBackgroundColor(ConsoleColor.black)
+    ..setForegroundColor(ConsoleColor.blue)
+    ..clearScreen();
 
   buffer.clear();
 
@@ -95,10 +96,11 @@ void input() {
 }
 
 void resetConsole() {
-  console.clearScreen();
-  console.resetCursorPosition();
-  console.resetColorAttributes();
-  console.rawMode = false;
+  console
+    ..clearScreen()
+    ..resetCursorPosition()
+    ..resetColorAttributes()
+    ..rawMode = false;
 }
 
 void crash(String message) {

@@ -11,20 +11,20 @@ final console = Console();
 List<Function> demoScreens = <Function>[
   // SCREEN 1: Whimsical loading screen :)
   (() {
-    console.setBackgroundColor(ConsoleColor.blue);
-    console.setForegroundColor(ConsoleColor.white);
-    console.clearScreen();
+    console
+      ..setBackgroundColor(ConsoleColor.blue)
+      ..setForegroundColor(ConsoleColor.white)
+      ..clearScreen();
 
     final row = (console.windowHeight / 2).round() - 1;
 
     console.cursorPosition = Coordinate(row - 2, 0);
-    console.writeLine('L O A D I N G', TextAlignment.center);
-
-    console.cursorPosition = Coordinate(row + 2, 0);
-    console.writeLine('Please wait while we make you some avocado toast...',
-        TextAlignment.center);
-
-    console.hideCursor();
+    console
+      ..writeLine('L O A D I N G', TextAlignment.center)
+      ..cursorPosition = Coordinate(row + 2, 0)
+      ..writeLine('Please wait while we make you some avocado toast...',
+          TextAlignment.center)
+      ..hideCursor();
 
     final progressBar = ProgressBar(
       maxValue: 100,
@@ -40,58 +40,57 @@ List<Function> demoScreens = <Function>[
     }
     progressBar.complete();
 
-    console.showCursor();
-
-    console.cursorPosition = Coordinate(console.windowHeight - 3, 0);
+    console
+      ..showCursor()
+      ..cursorPosition = Coordinate(console.windowHeight - 3, 0);
   }),
 
   // SCREEN 2: General demonstration of basic color set and alignment.
   (() {
-    console.setBackgroundColor(ConsoleColor.blue);
-    console.setForegroundColor(ConsoleColor.white);
-    console.writeLine('Simple Demo', TextAlignment.center);
-    console.resetColorAttributes();
-
-    console.writeLine();
-
-    console.writeLine('This console window has ${console.windowWidth} cols and '
-        '${console.windowHeight} rows.');
-    console.writeLine();
-
-    console.writeLine('This text is left aligned.', TextAlignment.left);
-    console.writeLine('This text is center aligned.', TextAlignment.center);
-    console.writeLine('This text is right aligned.', TextAlignment.right);
-
-    console.writeLine();
-    console.setTextStyle(italic: true);
-    console.writeLine('Text is italic (terminal dependent).');
-    console.setTextStyle(bold: true);
-    console.writeLine('Text is bold (terminal dependent).');
-    console.resetColorAttributes();
-    console.writeLine();
+    console
+      ..setBackgroundColor(ConsoleColor.blue)
+      ..setForegroundColor(ConsoleColor.white)
+      ..writeLine('Simple Demo', TextAlignment.center)
+      ..resetColorAttributes()
+      ..writeLine()
+      ..writeLine('This console window has ${console.windowWidth} cols and '
+          '${console.windowHeight} rows.')
+      ..writeLine()
+      ..writeLine('This text is left aligned.', TextAlignment.left)
+      ..writeLine('This text is center aligned.', TextAlignment.center)
+      ..writeLine('This text is right aligned.', TextAlignment.right)
+      ..writeLine()
+      ..setTextStyle(italic: true)
+      ..writeLine('Text is italic (terminal dependent).')
+      ..setTextStyle(bold: true)
+      ..writeLine('Text is bold (terminal dependent).')
+      ..resetColorAttributes()
+      ..writeLine();
 
     for (final color in ConsoleColor.values) {
-      console.setForegroundColor(color);
-      console.writeLine(color.toString().split('.').last);
+      console
+        ..setForegroundColor(color)
+        ..writeLine(color.toString().split('.').last);
     }
     console.resetColorAttributes();
   }),
 
   // SCREEN 3: Show extended foreground colors
   (() {
-    console.setBackgroundColor(ConsoleColor.red);
-    console.setForegroundColor(ConsoleColor.white);
-    console.writeLine(
-        'ANSI Extended 256-Color Foreground Test', TextAlignment.center);
-    console.resetColorAttributes();
-
-    console.writeLine();
+    console
+      ..setBackgroundColor(ConsoleColor.red)
+      ..setForegroundColor(ConsoleColor.white)
+      ..writeLine(
+          'ANSI Extended 256-Color Foreground Test', TextAlignment.center)
+      ..resetColorAttributes()
+      ..writeLine();
 
     for (var i = 0; i < 16; i++) {
       for (var j = 0; j < 16; j++) {
         final color = i * 16 + j;
-        console.setForegroundExtendedColor(color);
-        console.write(color.toString().padLeft(4));
+        console
+          ..setForegroundExtendedColor(color)
+          ..write(color.toString().padLeft(4));
       }
       console.writeLine();
     }
@@ -101,19 +100,20 @@ List<Function> demoScreens = <Function>[
 
   // SCREEN 4: Show extended background colors
   (() {
-    console.setBackgroundColor(ConsoleColor.green);
-    console.setForegroundColor(ConsoleColor.white);
-    console.writeLine(
-        'ANSI Extended 256-Color Background Test', TextAlignment.center);
-    console.resetColorAttributes();
-
-    console.writeLine();
+    console
+      ..setBackgroundColor(ConsoleColor.green)
+      ..setForegroundColor(ConsoleColor.white)
+      ..writeLine(
+          'ANSI Extended 256-Color Background Test', TextAlignment.center)
+      ..resetColorAttributes()
+      ..writeLine();
 
     for (var i = 0; i < 16; i++) {
       for (var j = 0; j < 16; j++) {
         final color = i * 16 + j;
-        console.setBackgroundExtendedColor(color);
-        console.write(color.toString().padLeft(4));
+        console
+          ..setBackgroundExtendedColor(color)
+          ..write(color.toString().padLeft(4));
       }
       console.writeLine();
     }
@@ -123,17 +123,17 @@ List<Function> demoScreens = <Function>[
 
   // SCREEN 5: Tabular display
   (() {
-    console.setBackgroundColor(ConsoleColor.magenta);
-    console.setForegroundColor(ConsoleColor.white);
-    console.writeLine('Tabular Display Examples', TextAlignment.center);
-    console.resetColorAttributes();
-
-    console.writeLine();
+    console
+      ..setBackgroundColor(ConsoleColor.magenta)
+      ..setForegroundColor(ConsoleColor.white)
+      ..writeLine('Tabular Display Examples', TextAlignment.center)
+      ..resetColorAttributes()
+      ..writeLine();
 
     final calendar = Calendar.now();
-    console.write(calendar);
-
-    console.writeLine();
+    console
+      ..write(calendar)
+      ..writeLine();
 
     final table = Table()
       ..borderColor = ConsoleColor.blue
@@ -170,13 +170,13 @@ List<Function> demoScreens = <Function>[
       stars.removeFirst();
     }
 
-    console.setBackgroundColor(ConsoleColor.yellow);
-    console.setForegroundColor(ConsoleColor.brightBlack);
-    console.writeLine('Stars', TextAlignment.center);
-    console.resetColorAttributes();
-
-    console.hideCursor();
-    console.setForegroundColor(ConsoleColor.brightYellow);
+    console
+      ..setBackgroundColor(ConsoleColor.yellow)
+      ..setForegroundColor(ConsoleColor.brightBlack)
+      ..writeLine('Stars', TextAlignment.center)
+      ..resetColorAttributes()
+      ..hideCursor()
+      ..setForegroundColor(ConsoleColor.brightYellow);
 
     for (var i = 0; i < numStars; i++) {
       if (i < numStars - maxStarsOnScreen) {
@@ -188,9 +188,10 @@ List<Function> demoScreens = <Function>[
       sleep(const Duration(milliseconds: 1));
     }
 
-    console.resetColorAttributes();
-    console.cursorPosition = Coordinate(console.windowHeight - 3, 0);
-    console.showCursor();
+    console
+      ..resetColorAttributes()
+      ..cursorPosition = Coordinate(console.windowHeight - 3, 0)
+      ..showCursor();
   }),
 ];
 

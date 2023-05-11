@@ -1,3 +1,7 @@
+## 1.2.0
+
+- Update to latest win32 dependency
+
 ## 1.1.2
 
 - Remove ioctl and rely on ANSI escape sequences instead. Increases

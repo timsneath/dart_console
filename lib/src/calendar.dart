@@ -1,6 +1,6 @@
-import 'package:dart_console/src/ansi.dart';
 import 'package:intl/intl.dart';
 
+import 'ansi.dart';
 import 'consolecolor.dart';
 import 'table.dart';
 import 'textalignment.dart';

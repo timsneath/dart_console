@@ -27,6 +27,7 @@ void main() {
   print('Cursor position X/Y: (${bufferInfo.dwCursorPosition.X}, '
       '${bufferInfo.dwCursorPosition.Y})');
 
-  calloc.free(pBufferInfo);
-  calloc.free(cursorPosition);
+  calloc
+    ..free(pBufferInfo)
+    ..free(cursorPosition);
 }

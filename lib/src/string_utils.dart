@@ -82,7 +82,7 @@ extension StringUtils on String {
     const nineCodeUnit = 0x39;
 
     final buffer = StringBuffer();
-    for (var c in characters) {
+    for (final c in characters) {
       final firstCodeUnit = c.codeUnits.first;
       if (c.codeUnits.length == 1 &&
           firstCodeUnit >= zeroCodeUnit &&

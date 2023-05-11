@@ -1,5 +1,6 @@
-import 'package:dart_console/dart_console.dart';
 import 'dart:io';
+
+import 'package:dart_console/dart_console.dart';
 
 void main() {
   final calendar = Calendar(DateTime(1969, 08, 15));
@@ -8,7 +9,5 @@ void main() {
 
   print(calendar);
 
-  final golden = File('golden.txt').openSync(mode: FileMode.writeOnly);
-  golden.writeStringSync(calendar.toString());
-  golden.closeSync();
+  File('golden.txt').writeAsStringSync(calendar.toString());
 }

@@ -57,10 +57,11 @@ void initEditor() {
 }
 
 void crash(String message) {
-  console.clearScreen();
-  console.resetCursorPosition();
-  console.rawMode = false;
-  console.write(message);
+  console
+    ..clearScreen()
+    ..resetCursorPosition()
+    ..rawMode = false
+    ..write(message);
   exit(1);
 }
 
@@ -250,9 +251,10 @@ void editorQuit() {
       }
     }
   }
-  console.clearScreen();
-  console.resetCursorPosition();
-  console.rawMode = false;
+  console
+    ..clearScreen()
+    ..resetCursorPosition()
+    ..rawMode = false;
   exit(0);
 }
 
@@ -397,12 +399,12 @@ void editorDrawStatusBar() {
   final rightString = '${cursorRow + 1}/${fileRows.length}';
   final padding = editorWindowWidth - leftString.length - rightString.length;
 
-  console.write('$leftString'
-      '${" " * padding}'
-      '$rightString');
-
-  console.resetColorAttributes();
-  console.writeLine();
+  console
+    ..write('$leftString'
+        '${" " * padding}'
+        '$rightString')
+    ..resetColorAttributes()
+    ..writeLine();
 }
 
 void editorDrawMessageBar() {
@@ -416,8 +418,9 @@ void editorDrawMessageBar() {
 void editorRefreshScreen() {
   editorScroll();
 
-  console.hideCursor();
-  console.clearScreen();
+  console
+    ..hideCursor()
+    ..clearScreen();
 
   editorDrawRows();
   editorDrawStatusBar();

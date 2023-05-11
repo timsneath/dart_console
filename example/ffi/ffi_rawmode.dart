@@ -92,7 +92,7 @@ const int VTIME = 17; // time in 1/10s before returning
 // 	speed_t         c_ispeed;       /* input speed */
 // 	speed_t         c_ospeed;       /* output speed */
 // };
-class TermIOS extends Struct {
+final class TermIOS extends Struct {
   @IntPtr()
   external int c_iflag;
   @IntPtr()
@@ -158,6 +158,7 @@ void main() {
 
   print('\nORIGINAL MODE: Here is some text.\nHere is some more text.');
 
-  calloc.free(origTermIOS);
-  calloc.free(newTermIOS);
+  calloc
+    ..free(origTermIOS)
+    ..free(newTermIOS);
 }

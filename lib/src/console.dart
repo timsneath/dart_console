@@ -6,11 +6,10 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'ffi/termlib.dart';
-import 'ffi/win/termlib_win.dart';
-
 import 'ansi.dart';
 import 'consolecolor.dart';
+import 'ffi/termlib.dart';
+import 'ffi/win/termlib_win.dart';
 import 'key.dart';
 import 'scrollbackbuffer.dart';
 import 'string_utils.dart';
@@ -21,7 +20,7 @@ import 'textalignment.dart';
 /// for the underlying system representation (e.g. one-based for VT-style
 /// displays).
 class Coordinate extends Point<int> {
-  const Coordinate(int row, int col) : super(row, col);
+  const Coordinate(super.row, super.col);
 
   int get row => x;
   int get col => y;
@@ -111,8 +110,7 @@ class Console {
   /// Clears the entire screen
   void clearScreen() {
     if (Platform.isWindows) {
-      final winTermlib = _termlib as TermLibWindows;
-      winTermlib.clearScreen();
+      (_termlib as TermLibWindows).clearScreen();
     } else {
       stdout.write(ansiEraseInDisplayAll + ansiResetCursorPosition);
     }
@@ -234,8 +232,7 @@ class Console {
   set cursorPosition(Coordinate? cursor) {
     if (cursor != null) {
       if (Platform.isWindows) {
-        final winTermlib = _termlib as TermLibWindows;
-        winTermlib.setCursorPosition(cursor.col, cursor.row);
+        (_termlib as TermLibWindows).setCursorPosition(cursor.col, cursor.row);
       } else {
         stdout.write(ansiCursorPosition(cursor.row + 1, cursor.col + 1));
       }
@@ -320,11 +317,12 @@ class Console {
   /// Writes an error message to the console, with newline automatically
   /// appended.
   void writeErrorLine(Object text) {
-    stderr.write(text);
+    stderr
+      ..write(text)
 
-    // Even if we're in raw mode, we write '\n', since raw mode only applies
-    // to stdout
-    stderr.write('\n');
+      // Even if we're in raw mode, we write '\n', since raw mode only applies
+      // to stdout
+      ..write('\n');
   }
 
   /// Writes a line to the console, optionally with alignment provided by the
@@ -336,7 +334,7 @@ class Console {
   /// Text alignment operates based off the current window width, and pads
   /// the remaining characters with a space character.
   void writeLine([Object? text, TextAlignment alignment = TextAlignment.left]) {
-    final int width = windowWidth;
+    final width = windowWidth;
     if (text != null) {
       writeAligned(text.toString(), width, alignment);
     }

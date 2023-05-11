@@ -7,7 +7,7 @@
 
 import 'dart:math' as math;
 
-import 'package:dart_console/dart_console.dart';
+import '../dart_console.dart';
 
 /// A facility for drawing a progress bar in the terminal.
 ///
@@ -124,9 +124,10 @@ class ProgressBar {
     }
 
     // And write the progress bar to the terminal.
-    _console.write(progressBar);
+    _console
+      ..write(progressBar)
 
-    // Pop current cursor location.
-    _console.cursorPosition = originalCursorPosition;
+      // Pop current cursor location.
+      ..cursorPosition = originalCursorPosition;
   }
 }

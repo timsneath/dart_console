@@ -74,9 +74,7 @@ void main() {
         ..insertColumn(
             header: 'Orbital Distance', alignment: TextAlignment.right)
         ..insertRows(planets)
-        ..borderStyle = BorderStyle.square;
-
-      table
+        ..borderStyle = BorderStyle.square
         ..insertColumn(header: 'Mass')
         ..insertColumn(header: 'Radius', index: 1)
         ..insertColumn(header: 'Density')
@@ -99,16 +97,16 @@ void main() {
     });
 
     test('Removing all columns should leave an empty table', () {
-      final table = Table()..insertRows(planets);
-      table
+      final table = Table()
+        ..insertRows(planets)
         ..deleteColumn(1)
         ..deleteColumn(0);
       expect(table.toString(), isEmpty);
     });
 
     test('Not possible to remove more columns than exist', () {
-      final table = Table()..insertRows(planets);
-      table
+      final table = Table()
+        ..insertRows(planets)
         ..deleteColumn(1)
         ..deleteColumn(0);
       expect(() => table.deleteColumn(0), throwsArgumentError);
@@ -149,9 +147,9 @@ void main() {
     });
 
     test('Delete rows', () {
-      final table = Table()..insertRows(planets);
-
-      table.deleteRow(2);
+      final table = Table()
+        ..insertRows(planets)
+        ..deleteRow(2);
       expect(table.toString, isNot(contains('Earth')));
     });
 
@@ -165,9 +163,9 @@ void main() {
         ..insertColumn(header: 'Coordinates', alignment: TextAlignment.right)
         ..insertColumn(header: 'Integers', alignment: TextAlignment.right)
         ..insertColumn(header: 'Doubles', alignment: TextAlignment.right)
-        ..insertRow(['qwertyuiop', Coordinate(0, 0), 0, 1.234567])
-        ..insertRow(['asdfghjkl', Coordinate(80, 24), 2 << 60, math.pi])
-        ..insertRow(['zxcvbnm', Coordinate(17, 17), 42, math.e]);
+        ..insertRow(['qwertyuiop', const Coordinate(0, 0), 0, 1.234567])
+        ..insertRow(['asdfghjkl', const Coordinate(80, 24), 2 << 60, math.pi])
+        ..insertRow(['zxcvbnm', const Coordinate(17, 17), 42, math.e]);
       expect(table.render(), equals('''
 [92m╔════════════╦═════════════╦═════════════════════╦═══════════════════╗[m
 [92m║ [m[1;4mStrings   [m[92m ║ [m[1;4mCoordinates[m[92m ║ [m[1;4m           Integers[m[92m ║ [m[1;4m          Doubles[m[92m ║[m
@@ -421,8 +419,7 @@ kumquats    59
     });
 
     test('Rounded border vertical', () {
-      final table = Table();
-      table
+      final table = Table()
         ..borderColor = ConsoleColor.green
         ..borderStyle = BorderStyle.rounded
         ..borderType = BorderType.vertical

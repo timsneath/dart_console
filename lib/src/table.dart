@@ -1,6 +1,6 @@
 import 'dart:math' show max;
 
-import 'package:dart_console/src/ansi.dart';
+import 'ansi.dart';
 
 import 'consolecolor.dart';
 import 'string_utils.dart';
@@ -29,27 +29,27 @@ class BoxGlyphSet {
   String get teeRight => glyphs?[10] ?? '';
 
   factory BoxGlyphSet.none() {
-    return BoxGlyphSet(null);
+    return const BoxGlyphSet(null);
   }
 
   factory BoxGlyphSet.ascii() {
-    return BoxGlyphSet('-|----+--||');
+    return const BoxGlyphSet('-|----+--||');
   }
 
   factory BoxGlyphSet.square() {
-    return BoxGlyphSet('─│┌┐└┘┼┴┬┤├');
+    return const BoxGlyphSet('─│┌┐└┘┼┴┬┤├');
   }
 
   factory BoxGlyphSet.rounded() {
-    return BoxGlyphSet('─│╭╮╰╯┼┴┬┤├');
+    return const BoxGlyphSet('─│╭╮╰╯┼┴┬┤├');
   }
 
   factory BoxGlyphSet.bold() {
-    return BoxGlyphSet('━┃┏┓┗┛╋┻┳┫┣');
+    return const BoxGlyphSet('━┃┏┓┗┛╋┻┳┫┣');
   }
 
   factory BoxGlyphSet.double() {
-    return BoxGlyphSet('═║╔╗╚╝╬╩╦╣╠');
+    return const BoxGlyphSet('═║╔╗╚╝╬╩╦╣╠');
   }
 }
 
@@ -200,7 +200,7 @@ class Table {
       throw ArgumentError('index must be a valid column index');
     }
 
-    for (var row in _table) {
+    for (final row in _table) {
       row.removeAt(index);
     }
 
@@ -217,11 +217,12 @@ class Table {
     // adding an empty header row and setting defaults for the table structure.
     if (_table[0].isEmpty) {
       _table[0] = List<String>.filled(row.length, '', growable: true);
-      _columnAlignments.clear();
-      _columnAlignments.insertAll(
-          0, List<TextAlignment>.filled(columns, TextAlignment.left));
-      _columnWidths.clear();
-      _columnWidths.insertAll(0, List<int>.filled(columns, 0));
+      _columnAlignments
+        ..clear()
+        ..insertAll(0, List<TextAlignment>.filled(columns, TextAlignment.left));
+      _columnWidths
+        ..clear()
+        ..insertAll(0, List<int>.filled(columns, 0));
       showHeader = false;
     }
 
@@ -289,7 +290,7 @@ class Table {
 
   List<int> _calculateColumnWidths() {
     return List<int>.generate(columns, (column) {
-      int maxLength = 0;
+      var maxLength = 0;
       for (final row in _table) {
         maxLength = max(
             maxLength, row[column].toString().stripEscapeCharacters().length);
@@ -299,7 +300,7 @@ class Table {
   }
 
   int _calculateRowHeight(List<String> row) {
-    int maxHeight = 1;
+    var maxHeight = 1;
     for (final column in row) {
       maxHeight = max(maxHeight, column.toString().split('\n').length);
     }
@@ -451,9 +452,9 @@ class Table {
 
   String _setFontStyle(FontStyle style) {
     return ansiSetTextStyles(
-        bold: (style == FontStyle.bold || style == FontStyle.boldUnderscore),
-        underscore: (style == FontStyle.underscore ||
-            style == FontStyle.boldUnderscore));
+        bold: style == FontStyle.bold || style == FontStyle.boldUnderscore,
+        underscore:
+            style == FontStyle.underscore || style == FontStyle.boldUnderscore);
   }
 
   String _resetFontStyle() => ansiResetColor;
@@ -481,9 +482,9 @@ class Table {
 
     // Print table rows
     final startRow = showHeader ? 0 : 1;
-    for (int row = startRow; row < _table.length; row++) {
+    for (var row = startRow; row < _table.length; row++) {
       final wrappedRow = <String>[];
-      for (int column = 0; column < columns; column++) {
+      for (var column = 0; column < columns; column++) {
         // Wrap the text if there's a viable width
         if (column < _columnWidths.length && _columnWidths[column] > 0) {
           wrappedRow.add(
@@ -495,10 +496,10 @@ class Table {
       // Count number of lines in each row
       final rowHeight = _calculateRowHeight(wrappedRow);
 
-      for (int line = 0; line < rowHeight; line++) {
+      for (var line = 0; line < rowHeight; line++) {
         buffer.write(_rowStart());
 
-        for (int column = 0; column < columns; column++) {
+        for (var column = 0; column < columns; column++) {
           final lines = wrappedRow[column].toString().split('\n');
           final cell = line < lines.length ? lines[line] : '';
           final columnAlignment = column < _columnAlignments.length

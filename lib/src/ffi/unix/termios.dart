@@ -85,7 +85,7 @@ const _NCCS = 20;
 // 	speed_t         c_ispeed;       /* input speed */
 // 	speed_t         c_ospeed;       /* output speed */
 // };
-class TermIOS extends Struct {
+base class TermIOS extends Struct {
   @tcflag_t()
   external int c_iflag;
   @tcflag_t()

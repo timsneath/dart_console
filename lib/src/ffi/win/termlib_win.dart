@@ -90,9 +90,10 @@ class TermLibWindows implements TermLib {
 
       SetConsoleCursorPosition(outputHandle, origin.ref);
     } finally {
-      calloc.free(origin);
-      calloc.free(pCharsWritten);
-      calloc.free(pBufferInfo);
+      calloc
+        ..free(origin)
+        ..free(pCharsWritten)
+        ..free(pBufferInfo);
     }
   }
 
