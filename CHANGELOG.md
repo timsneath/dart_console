@@ -1,6 +1,7 @@
 ## 1.2.0
 
 - Update to latest win32 dependency
+- Update to Dart 3
 
 ## 1.1.2
 
