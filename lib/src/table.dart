@@ -1,4 +1,4 @@
-import 'dart:math' show max;
+import 'dart:math' show max, min;
 
 import 'package:dart_console/src/ansi.dart';
 
@@ -290,9 +290,18 @@ class Table {
   List<int> _calculateColumnWidths() {
     return List<int>.generate(columns, (column) {
       int maxLength = 0;
-      for (final row in _table) {
-        maxLength = max(
-            maxLength, row[column].toString().stripEscapeCharacters().length);
+      if (_columnWidths[column] != 0) {
+        for (final row in _table) {
+          maxLength = max(
+              maxLength,
+              min(_columnWidths[column],
+                  row[column].toString().stripEscapeCharacters().length));
+        }
+      } else {
+        for (final row in _table) {
+          maxLength = max(
+              maxLength, row[column].toString().stripEscapeCharacters().length);
+        }
       }
       return maxLength;
     }, growable: false);
